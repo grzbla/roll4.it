@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="lib/croppie.css" />
+        <link rel="stylesheet" href="lib/leaflet.css" />
+        <link rel="stylesheet" href="lib/font-awesome/css/all.min.css" />
+        <style media="screen">
+            body
+            {
+                background-color: #232323;
+                margin: 0;
+            }
+            .overlay
+            {
+                width: 100vw;
+                height: 100vw;
+                overflow: hidden;
+                background-color: #2c2c2c9e;
+                position: fixed;
+                left: 0;
+                top: 0;
+            }
+            .fluffFrame
+            {
+                margin: auto;
+                width: 1280px;
+                height: 1000px;
+            }
+            .characterName, .characterClasses
+            {
+                text-align: center;
+                margin: 10px;
+                margin: auto;
+                color: #ffffffaa;
+                font-size: 32px;
+                font-variant: small-caps;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+                cursor: pointer;
+            }
+            .characterName:empty
+            {
+                display: block;
+                width: 200px;
+                border: 1px solid #ffffffaa;
+                border-radius: 3px;
+            }
+            .characterName:empty::after
+            {
+                content: "Character name";
+            }
+            .characterClasses:empty
+            {
+                display: block;
+                width: 300px;
+                border: 1px solid #ffffffaa;
+                border-radius: 3px;
+            }
+            .characterClasses:empty::after
+            {
+                content: "Character classes";
+            }
+            .fluffMajor
+            {
+                top: 10px;
+                left: -61px;
+                width: 1274px;
+                position: relative;
+                transform: perspective(111px) rotateY(-1deg);
+                border-radius: 25px 25px 0px 0px;
+                padding-bottom: 30px;
+            }
+            .fluffMinor
+            {
+                position: relative;
+                top: 18px;
+                width: 1202px;
+                height: 160px;
+                transform: perspective(55px) rotateY(1.35deg);
+                left: 204px;
+                padding-bottom: 30px;
+            }
+            .fluffAccessories
+            {
+                position: relative;
+                top: 31.4px;
+                left: -185px;
+                margin: 0 auto;
+                width: 1182px;
+                height: 160px;
+                transform: perspective(55px) rotateY(-1.525deg);
+                border-radius: 0px 0px 25px 25px;
+            }
+            .bgShade
+            {
+                background-color: #00000033;
+            }
+            .fluffWeapon
+            {
+                border-radius: 25px 0px 0px 0px;
+            }
+            .fluffArmor
+            {
+                border-radius: 0px 25px 0px 0px;
+            }
+            .fluffCardLarge
+            {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+                display: inline-block;
+                margin: 0px 0px 0px 2px;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                width: 420px;
+                height: 460px;
+                position: relative;
+                cursor: pointer;
+            }
+            .fluffCardLarge .fluffCardLabel
+            {
+                position: absolute;
+                bottom: -16px;
+                width: 100%;
+                text-align: center;
+                color: #ffffffaa;
+                font-size: 32px;
+                font-variant: small-caps;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+            }
+
+            .fluffMinor .fluffCardSmall
+            {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+                width: 194.4px;
+                height: 160px;
+                display: inline-block;
+                margin: 0px 1.25px 0px 1.25px;
+                position: relative;
+                vertical-align: middle;
+            }
+            .fluffAccessories .fluffCardSmall
+            {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+                width: 192.65px;
+                height: 160px;
+                display: inline-block;
+                margin: 0px 0px 0px 1px;
+                position: relative;
+                vertical-align: middle;
+            }
+            .fluffCardSmall
+            {
+                cursor: pointer;
+            }
+            .fluffCardSmall .fluffCardLabel
+            {
+                position: absolute;
+                top: -16px;
+                width: 100%;
+                text-align: center;
+                color: #ffffffaa;
+                font-size: 24px;
+                font-variant: small-caps;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+            }
+            .fluffRightRing
+            {
+                border-radius: 0px 0px 25px 0px;
+            }
+            .fluffEarrings
+            {
+                border-radius: 0px 0px 25px 25px;
+            }
+
+            .cropperContainer
+            {
+                width: 540px;
+                left: calc(calc(100vw - 540px) * 0.5);
+                height: 600px;
+                padding: 20px 10px 10px 10px;
+                position: fixed;
+                top: 80px;
+                background-color: #323232;
+                border-radius: 15px;
+                border: 1px solid black;
+            }
+            .cropperConfirm
+            {
+                width: 48px;
+                height: 48px;
+                right: 45px;
+                bottom: 4px;
+                font-size: 48px;
+                color: #ffffffaa;
+                cursor: pointer;
+                position: absolute;
+                text-shadow: 2px 2px 2px #000000;
+                transition: color 0.25s ease-in-out;
+            }
+            .cropperConfirm:hover
+            {
+                color: #e99d13aa;
+            }
+            .cropperConfirm i
+            {
+                pointer-events: none;
+            }
+            .rulesFrame
+            {
+                margin: auto;
+                width: 1280px;
+                height: 1000px;
+                top: 20px;
+                color: #ffffffaa;
+                font-size: 32px;
+                font-variant: small-caps;
+            }
+            .attributesFrame
+            {
+                position: relative;
+                top: 20px;
+                left: 125px;
+                margin: 0 auto;
+                width: 1238px;
+                height: 220px;;
+                transform: perspective(55px) rotateY(1deg);
+                border-radius: 25px 25px 0px 0px;
+            }
+            .attributeFrame
+            {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+                width: 197px;
+                height: 200px;
+                display: inline-block;
+                margin: 0px 1.25px 0px 1.25px;
+                position: relative;
+                vertical-align: middle;
+            }
+            .attributeFrame .attributeLabel
+            {
+                width: 100%;
+                top: -16px;
+                text-align: center;
+                position: relative;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+            }
+            .itemEditor
+            {
+                width: 825px;
+                left: calc(calc(100vw - 825px) * 0.5);
+                height: auto;
+                padding: 20px 10px 10px 10px;
+                position: fixed;
+                top: 80px;
+                background-color: #323232;
+                border-radius: 15px;
+                border: 1px solid black;
+            }
+            .itemEditor .name, .itemEditor .url,
+            .assetContainer .name, .assetContainer .url
+            {
+                font-size: 20px;
+                font-variant: small-caps;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000;
+                text-align: center;
+                cursor: pointer;
+            }
+            .itemEditor .name:empty::after,
+            .assetContainer .name:empty::after
+            {
+                content: "Name";
+            }
+            .itemEditor .description,
+            .assetContainer .description
+            {
+                font-size: 20px;
+                font-variant: small-caps;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000;
+                padding-bottom: 28px;
+                cursor: pointer;
+            }
+            .itemEditor .description:empty::after,
+            .assetContainer .description:empty::after
+            {
+                content: "Description";
+                font-size: 20px;
+                font-variant: small-caps;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000;
+                text-align: center;
+                display: block;
+                width: 300px;
+                height: 440px;
+                left: calc(calc(100% - 300px) * 0.5);
+                border-radius: 3px;
+                position: relative;
+            }
+            .itemEditor .url:empty::after,
+            .assetContainer .url:empty::after
+            {
+                content: "Link";
+            }
+
+            .itemEditor .name:empty, .itemEditor .url:empty,
+            .assetContainer .name:empty, .assetContainer .url:empty
+            {
+                display: block;
+                width: 300px;
+                left: calc(calc(100% - 300px) * 0.5);
+                border: 1px solid #ffffffaa;
+                border-radius: 3px;
+                position: relative;
+            }
+            .itemEditor .description:empty,
+            .assetContainer .description:empty
+            {
+                display: block;
+                width: 300px;
+                height: 440px;
+                left: calc(calc(100% - 300px) * 0.5);
+                border-radius: 3px;
+                position: relative;
+                border: 1px solid #ffffffaa;
+            }
+            .itemEditor .imageUpload, .itemEditor .link,
+            .assetContainer .imageUpload, .assetContainer .link
+            {
+                display: inline-block;
+                padding-top: 16px;
+                width: 48px;
+                height: auto;
+                float: right;
+                position: relative;
+                cursor: pointer;
+                border-radius: 5px;
+                font-size: 32px;
+                color: #ffffffaa;
+                text-align: center;
+                transition: color 0.25s ease-in-out;
+            }
+            .itemEditor .imageUpload:hover,
+            .assetContainer .imageUpload:hover
+            {
+                color: #ffffffdd;
+            }
+            .itemEditor .imageUpload i,
+            .assetContainer .imageUpload i
+            {
+                pointer-events: none;
+            }
+
+            .itemEditor .link:hover,
+            .assetContainer .link:hover,
+            {
+                color: #12d3e7aa;
+            }
+            .itemEditor .link i,
+            .assetContainer .link i
+            {
+                pointer-events: none;
+            }
+
+            .itemEditor .description,
+            .assetContainer .description
+            {
+                margin: 10px 0px 10px 0px;
+            }
+            .itemEditor .url
+            {
+
+            }
+            .itemEditor .link
+            {
+
+            }
+
+            .characterAssetsFrame .attributeLabel
+            {
+                width: 100%;
+                top: -20px;
+                text-align: center;
+                position: relative;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+            }
+
+            .attributeStrength
+            {
+                border-radius: 15px 0px 0px 0px;
+            }
+            .attributeCharisma
+            {
+                border-radius: 0px 15px 0px 0px;
+            }
+            .attributeFrame .attributeMod
+            {
+                position: relative;
+                top: -16px;
+                width: 100%;
+                text-align: center;
+                font-size: 96px;
+                background-color: transparent;
+                border: 0px;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000
+            }
+
+            /* remove increment/decrement buttons */
+            .attributeFrame .attributeMod::-webkit-outer-spin-button,
+            .attributeFrame .attributeMod::-webkit-inner-spin-button,
+            .attributeFrame .attributeValue::-webkit-outer-spin-button,
+            .attributeFrame .attributeValue::-webkit-inner-spin-button
+            {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            .attributeFrame .attributeMod[type=number],
+            .attributeFrame .attributeValue[type=number]
+            {
+                -moz-appearance: textfield;
+            }
+            .attributeFrame .attributeMod:focus,
+            .attributeFrame .attributeValue:focus
+            {
+                outline: none;
+            }
+
+            .attributeFrame .attributeValue
+            {
+                position: relative;
+                width: 100%;
+                top: -16px;
+                text-align: center;
+                font-size: 48px;
+                background-color: transparent;
+                border: 0px;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000
+            }
+            .characterFrame
+            {
+                top: 25px;
+                left: -55px;
+                position: relative;
+                margin: auto;
+                width: 1280px;
+                height: 500px;
+                transform: perspective(135px) rotateY(-1deg);
+            }
+            .characterFrame .characterAssetsFrame
+            {
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+                width: 419px;
+                height: 480px;
+                display: inline-block;
+                margin: 0px 0px 0px 2px;
+                position: relative;
+                vertical-align: middle;
+            }
+            .characterFrame .characterAssetsFrame:hover > .addCharacterAsset
+            {
+                display: block;
+            }
+            .addCharacterAsset
+            {
+                font-size: 48px;
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                right: 0px;
+                top: 0px;
+                margin: 10px 10px 0px 0px;
+                color: #ffffffaa;
+                text-shadow: 2px 2px 2px #000000;
+                transition: color 0.25s ease-in-out;
+                cursor: pointer;
+            }
+            .addCharacterAsset:hover
+            {
+                color: #e99d13aa;
+            }
+            .addCharacterAsset i
+            {
+                pointer-events: none;
+            }
+
+            .assetContainer
+            {
+                width: 540px;
+                left: calc(calc(100vw - 540px) * 0.5);
+                height: 600px;
+                padding: 20px 10px 10px 10px;
+                position: fixed;
+                top: 80px;
+                background-color: #323232;
+                border-radius: 15px;
+                border: 1px solid black;
+            }
+
+
+
+            .spellsFrame
+            {
+                position: relative;
+                top: 31px;
+                left: 116px;
+                margin: 0 auto;
+                width: 1245px;
+                height: 220px;
+                transform: perspective(60px) rotateY(1deg);
+                border-radius: 0px 0px 25px 25px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                border: 2px solid black;
+            }
+            .spellsFrame .attributeLabel
+            {
+                width: 100%;
+                top: -20px;
+                text-align: center;
+                position: relative;
+                text-shadow: 2px 2px 2px #000000;
+                user-select: none;
+            }
+            .spellList
+            {
+                top: -37px;
+                position: relative;
+                width: 100%;
+                height: 100%;
+                border-radius: 0px 0px 25px 25px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="sheetContainer">
+            <div class="fluffFrame">
+                <div class="characterName" contenteditable="true"></div>
+                <div class="characterClasses" contenteditable="true"></div>
+                <div class="fluffMajor bgShade" flufftype="major">
+                    <div class="fluffCardLarge fluffWeapon"><div class="fluffCardLabel">Weapon</div></div>
+                    <div class="fluffCardLarge fluffPortrait"><div class="fluffCardLabel">Portrait</div></div>
+                    <div class="fluffCardLarge fluffArmor"><div class="fluffCardLabel">Apparel</div></div>
+                </div>
+                <div class="fluffMinor bgShade">
+                    <div class="fluffCardSmall fluffHead bgShade"><div class="fluffCardLabel">Head</div></div>
+                    <div class="fluffCardSmall fluffShoulders bgShade"><div class="fluffCardLabel">Shoulders</div></div>
+                    <div class="fluffCardSmall fluffForearms bgShade"><div class="fluffCardLabel">Forearms</div></div>
+                    <div class="fluffCardSmall fluffHands bgShade"><div class="fluffCardLabel">Hands</div></div>
+                    <div class="fluffCardSmall fluffWaist bgShade"><div class="fluffCardLabel">Waist</div></div>
+                    <div class="fluffCardSmall fluffFeet bgShade"><div class="fluffCardLabel">Feet</div></div>
+                </div>
+                <div class="fluffAccessories bgShade">
+                    <div class="fluffCardSmall fluffEarrings bgShade"><div class="fluffCardLabel">Earrings</div></div>
+                    <div class="fluffCardSmall fluffNeck bgShade"><div class="fluffCardLabel">Necklace</div></div>
+                    <div class="fluffCardSmall fluffLeftBracelet bgShade"><div class="fluffCardLabel">Left Bracelet</div></div>
+                    <div class="fluffCardSmall fluffRightBracelet bgShade"><div class="fluffCardLabel">Right Bracelet</div></div>
+                    <div class="fluffCardSmall fluffLeftRing bgShade"><div class="fluffCardLabel">Left Ring</div></div>
+                    <div class="fluffCardSmall fluffRightRing bgShade"><div class="fluffCardLabel">Right Ring</div></div>
+                </div>
+            </div>
+            <div class="rulesFrame">
+                <div class="attributesFrame bgShade">
+                    <div class="attributeFrame attributeStrength bgShade" attribute="str">
+                        <div class="attributeLabel">Strength</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                    <div class="attributeFrame attributeDexterity bgShade" attribute="dex">
+                        <div class="attributeLabel">Dexterity</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                    <div class="attributeFrame attributeConstitution bgShade" attribute="con">
+                        <div class="attributeLabel">Constitution</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                    <div class="attributeFrame attributeIntelligence bgShade" attribute="int">
+                        <div class="attributeLabel">Intelligence</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                    <div class="attributeFrame attributeWisdom bgShade" attribute="wis">
+                        <div class="attributeLabel">Wisdom</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                    <div class="attributeFrame attributeCharisma bgShade" attribute="cha">
+                        <div class="attributeLabel">Charisma</div>
+                        <input class="attributeMod" type="number" value="">
+                        <input class="attributeValue" type="number" value="">
+                    </div>
+                </div>
+                <div class="characterFrame bgShade">
+                    <div class="characterAssetsFrame characterCompetences bgShade" assetType="competences">
+                        <div class="attributeLabel">Competences</div>
+                        <div class="addCharacterAsset"><i class="fas fa-plus-octagon"></i></div>
+                    </div>
+                    <div class="characterAssetsFrame characterPossessions bgShade"assetType="possessions">
+                        <div class="attributeLabel">Possessions</div>
+                        <div class="addCharacterAsset"><i class="fas fa-plus-octagon"></i></div>
+                    </div>
+                    <div class="characterAssetsFrame classTraits bgShade" assetType="classtraits">
+                        <div class="attributeLabel">Class Traits</div>
+                        <div class="addCharacterAsset"><i class="fas fa-plus-octagon"></i></div>
+                    </div>
+                </div>
+                <div class="spellsFrame bgShade">
+                    <div class="attributeLabel">Spellbook</div>
+                    <div class="spellList bgShade"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+    // if ('serviceWorker' in navigator)
+    // {
+    //     navigator.serviceWorker.register('cachebwoiiii.js', {scope: "/"});
+    // }
+    </script>
+    <script src="lib/croppie.min.js"></script>
+    <script src="lib/pouchdb.min.js"></script>
+    <script src="lib/pouchdb.upsert.min.js"></script>
+    <script src="lib/leaflet.js"></script>
+    <script src="lib/L.TileLayer.PouchDBCached.js"></script>
+
+    <script src="js/common.js"></script>
+    <script src="js/fluff.js"></script>
+</html>
