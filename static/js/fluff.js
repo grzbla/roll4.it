@@ -1,7 +1,5 @@
 let croppie;
 
-function
-
 function run()
 {
     // sets event handling for fluff image cards

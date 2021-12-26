@@ -25,6 +25,7 @@
                 background-color: var(--background-color);
                 overflow: hidden;
                 margin: 0;
+                white-space: nowrap;
             }
             .overlay
             {
@@ -46,6 +47,16 @@
                 overflow-y: auto;
                 user-select: none;
             }
+
+            .fluff .name .text
+            {
+
+            }
+            .fluff .levels .text
+            {
+
+            }
+
             .style
             {
                 position: relative;
@@ -209,6 +220,18 @@
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                             pointer-events: none;
             }
+            .attributes .strength .name,
+            .attributes .dexterity .name,
+            .attributes .constitution .name
+            {
+                transform: skew(-6deg);
+            }
+            .attributes .intelligence .name,
+            .attributes .wisdom .name,
+            .attributes .charisma .name
+            {
+                transform: skew(6deg);
+            }
             .attributes .strength .mod,
             .attributes .dexterity .mod,
             .attributes .constitution .mod
@@ -317,24 +340,16 @@
             }
             .secondary .hp
             {
-                height: 10vw;
-                width: 9vw;
-                position: absolute;
-                top: -10vw;
-                left: 46.3vw;
-                pointer-events: all;
-            }
-            .secondary .hp .border
-            {
-                transform: perspective(900px) rotateX(134deg);
-                width: 9vw;
-                height: 13vw;
-                top: -1.1vw;
+                transform: perspective(900px) rotateX(314deg);
                 border: 1px solid var(--stat-border-color);
                 background-color: var(--background-color);
-                position: relative;
-                cursor: pointer;
+                width: 9vw;
+                height: 13vw;
+                position: absolute;
+                top: -11.5vw;
+                left: 46.3vw;
                 pointer-events: all;
+                cursor: pointer;
             }
             .secondary .hp .name
             {
@@ -356,9 +371,9 @@
             .secondary .hp .value
             {
                 position: absolute;
-                font-size: 4.4vw;
+                font-size: 5.4vw;
                 color: var(--stat-border-color);
-                top: 2vw;
+                top: 2.5vw;
                 width: 100%;
                 text-align: center;
                 pointer-events: none;
@@ -467,49 +482,18 @@
                 top: 11vw;
                 left: 44.6vw;
                 cursor: pointer;
+                pointer-events: all;
+            }
+            .secondary .ac .image
+            {
+                height: 12.3vw;
+                width: 12.3vw;
+                stroke: var(--stat-border-color);
+                stroke-width: 1.5px;
+                fill: transparent;
                 pointer-events: none;
-            }
-            .secondary .ac .hackyCover
-            {
                 position: absolute;
-                width: 11.2vw;
-                height: 3.1vw;
-                z-index: 2;
-                left: 0.6vw;
-                top: -1.5vw;
-                pointer-events: all;
-                cursor: initial;
-            }
-            .secondary .ac .borderTop
-            {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
-                transform: perspective(900px) rotateX(60deg);
-                height: 6.1vw;
-                width: 11.9vw;
-                position: absolute;
-                border-bottom: 0px;
-                border-top: 4px solid var(--stat-border-color);
-                z-index: 2;
-                left: 0.2vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .ac .borderBottom
-            {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
-                height: 9vw;
-                width: 9vw;
-                position: absolute;
-                border-left: 0px;
-                border-top: 0px;
-                transform: rotate(45deg);
-                left: 1.7vw;
-                top: 0.3vw;
-                z-index: 1;
-                cursor: pointer;
-                pointer-events: all;
+                top: 1.3vw;
             }
             .secondary .ac .name
             {
@@ -608,6 +592,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .earrings
             {
@@ -629,6 +614,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .shoulders
             {
@@ -648,6 +634,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .necklace
             {
@@ -669,6 +656,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
 
             .secondary .forearms
@@ -691,6 +679,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .leftBracelet
             {
@@ -712,6 +701,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .rightBracelet
             {
@@ -733,6 +723,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
 
             .secondary .leftRing
@@ -755,6 +746,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .hands
             {
@@ -775,6 +767,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .rightRing
             {
@@ -796,6 +789,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
 
             .secondary .waist
@@ -817,6 +811,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
             .secondary .feet
             {
@@ -837,6 +832,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
+                pointer-events: none;
             }
 
             .secondary .head .name,
@@ -860,6 +856,7 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
+                pointer-events: none;
             }
 
             .secondary .earrings .name,
@@ -883,6 +880,7 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
+                pointer-events: none;
             }
 
             .competences, .possessions, .classes
@@ -1011,11 +1009,13 @@
                     <div class="value">+1</div>
                 </div>
                 <div class="ac">
-                    <div class="borderTop"></div>
-                    <div class="borderBottom"></div>
+                    <svg class="image" width="285.31" height="271.69" version="1.1" viewBox="0 0 75.487 71.886" xmlns="http://www.w3.org/2000/svg">
+                     <g transform="translate(-28.304 -26.775)"> <!-- form inkscape-->
+                      <path transform="scale(.26458)" d="m166.06 101.7 175.57 0.36117 50.048 78.264-138.39 191.73-145.69-192.31z"/>
+                     </g>
+                    </svg>
                     <div class="name">Armor Class</div>
                     <div class="value">18</div>
-                    <div class="hackyCover"></div>
                 </div>
                 <div class="passiveWis">
                     <div class="name">Passive Wis</div>
@@ -1087,17 +1087,19 @@
                     <div class="value"></div>
                 </div>
             </div>
-            <div class="competences">
-                <div class="name">Competences</div>
-                <div class="table"></div>
-            </div>
-            <div class="possessions">
-                <div class="name">Possessions</div>
-                <div class="table"></div>
-            </div>
-            <div class="classes">
-                <div class="name">Classes</div>
-                <div class="table"></div>
+            <div class="mechanics">
+                <div class="competences">
+                    <div class="name">Competences</div>
+                    <div class="table"></div>
+                </div>
+                <div class="possessions">
+                    <div class="name">Possessions</div>
+                    <div class="table"></div>
+                </div>
+                <div class="classes">
+                    <div class="name">Classes</div>
+                    <div class="table"></div>
+                </div>
             </div>
         </div>
     </body>
@@ -1114,5 +1116,6 @@
     <script src="lib/L.TileLayer.PouchDBCached.js"></script>
 
     <script src="js/common.js"></script>
-    <script src="js/fluff.js"></script>
+    <script src="js/load.js"></script>
+    <!-- <script src="js/fluff.js"></script> -->
 </html>
