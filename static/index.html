@@ -127,7 +127,7 @@
                 background-position: 70% 50%;
                 background-size: 150% 100%;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
             .style .portrait .text,
             .style .weapon .text,
@@ -147,7 +147,7 @@
                             -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
-                pointer-events: none;
+
             }
             .attributes
             {
@@ -157,7 +157,7 @@
                 left: 15.8vw;
                 top: -2vw;
                 z-index: 2;
-                pointer-events: none;
+
             }
             .attributes .strength,
             .attributes .dexterity,
@@ -166,13 +166,13 @@
                 display: inline-block;
                 width: 8vw;
                 height: 6vw;
-                border: 1px solid var(--stat-border-color);
+                border: 0.1vw solid var(--stat-border-color);
                 transform: skew(6deg);
                 margin-right: 2vw;
                 background-color: var(--background-color);
                 z-index: 2;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .attributes .intelligence
             {
@@ -186,13 +186,13 @@
                 display: inline-block;
                 width: 8vw;
                 height: 6vw;
-                border: 1px solid var(--stat-border-color);
+                border: 0.1vw solid var(--stat-border-color);
                 transform: skew(-6deg);
                 margin-right: 2vw;
                 background-color: var(--background-color);
                 z-index: 2;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .attributes .charisma
             {
@@ -218,7 +218,7 @@
                             -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
-                            pointer-events: none;
+                pointer-events: none;
             }
             .attributes .strength .name,
             .attributes .dexterity .name,
@@ -258,8 +258,8 @@
                 position: absolute;
                 width: 100%;
                 height: 4vw;
-                pointer-events: none;
                 top: 0.5vw;
+                outline: 0px solid transparent;
             }
             .attributes .strength .value,
             .attributes .dexterity .value,
@@ -286,47 +286,62 @@
                 position: absolute;
                 width: 100%;
                 height: 1.5vw;
-                pointer-events: none;
                 bottom: 0.3vw;
+                outline: 0px solid transparent;
             }
-            .attributes .strength .proficiency,
-            .attributes .dexterity .proficiency,
-            .attributes .constitution .proficiency,
-            .attributes .intelligence .proficiency,
-            .attributes .wisdom .proficiency,
-            .attributes .charisma .proficiency
+            .attributes .strength .proficiency:hover,
+            .attributes .dexterity .proficiency:hover,
+            .attributes .constitution .proficiency:hover,
+            .attributes .intelligence .proficiency:hover,
+            .attributes .wisdom .proficiency:hover,
+            .attributes .charisma .proficiency:hover
             {
-                color: var(--prof-icon-color);
+                animation: proficiencyBar 1s infinite;
+                animation-timing-function: ease;
+                animation-direction: alternate;
+            }
+            @keyframes proficiencyBar
+            {
+                0% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 79%, rgba(35,35,35,1) 80%, rgba(35,35,35,1) 100%); }
+                7% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 82%, rgba(35,35,35,1) 82%, rgba(35,35,35,1) 100%); }
+                15% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 71%, rgba(35,35,35,1) 72%, rgba(35,35,35,1) 100%); }
+                20% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 83%, rgba(35,35,35,1) 84%, rgba(35,35,35,1) 100%); }
+                27% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 77%, rgba(35,35,35,1) 79%, rgba(35,35,35,1) 100%); }
+                35% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 69%, rgba(35,35,35,1) 71%, rgba(35,35,35,1) 100%); }
+                42% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 88%, rgba(35,35,35,1) 89%, rgba(35,35,35,1) 100%); }
+                50% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 82%, rgba(35,35,35,1) 84%, rgba(35,35,35,1) 100%); }
+                60% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 77%, rgba(35,35,35,1) 78%, rgba(35,35,35,1) 100%); }
+                70% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 82%, rgba(35,35,35,1) 84%, rgba(35,35,35,1) 100%); }
+                77% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 74%, rgba(35,35,35,1) 75%, rgba(35,35,35,1) 100%); }
+                85% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 83%, rgba(35,35,35,1) 85%, rgba(35,35,35,1) 100%); }
+                95% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 81%, rgba(35,35,35,1) 82%, rgba(35,35,35,1) 100%); }
+                100% { background: linear-gradient(0deg, rgba(129,172,166,1) 0%, rgba(129,172,166,1) 73%, rgba(35,35,35,1) 75%, rgba(35,35,35,1) 100%); }
+
             }
 
             .attributes .strength .proficiency,
             .attributes .dexterity .proficiency,
             .attributes .constitution .proficiency
             {
-                font-size: 1.4vw;
-                color: var(--stat-border-color);
-                text-align: center;
                 position: absolute;
-                height: 1.5vw;
-                pointer-events: none;
-                top: 0.3vw;
-                left: 0.3vw;
-                pointer-events: none;
-                transform: scaleX(-1);
+                height: 100%;
+                top: -0.05vw;
+                left: 8vw;
+                width: 0.3vw;
+                border: 0.1vw solid var(--stat-border-color);
+                background-color: var(--background-color);
             }
             .attributes .intelligence .proficiency,
             .attributes .wisdom .proficiency,
             .attributes .charisma .proficiency
             {
-                font-size: 1.4vw;
-                color: var(--stat-border-color);
-                text-align: center;
                 position: absolute;
-                height: 1.5vw;
-                pointer-events: none;
-                top: 0.3vw;
-                right: 0.3vw;
-                pointer-events: none;
+                height: 100%;
+                top: -0.07vw;
+                left: -0.4vw;
+                width: 0.3vw;
+                border: 0.1vw solid var(--stat-border-color);
+                background-color: var(--background-color);
             }
 
             .secondary
@@ -336,7 +351,7 @@
                 margin-top: 1vw;
                 z-index: 2;
                 user-select: none;
-                pointer-events: none;
+
             }
             .secondary .hp
             {
@@ -348,7 +363,7 @@
                 position: absolute;
                 top: -11.5vw;
                 left: 46.3vw;
-                pointer-events: all;
+
                 cursor: pointer;
             }
             .secondary .hp .name
@@ -366,7 +381,7 @@
                             -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
-                pointer-events: none;
+
             }
             .secondary .hp .value
             {
@@ -376,7 +391,7 @@
                 top: 2.5vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
             }
             .secondary .hp .bar
             {
@@ -390,9 +405,9 @@
                 height: 8vw;
                 width: 8vw;
                 position: absolute;
-                top: 1vw;
+                top: 15vw;
                 left: 46.8vw;
-                pointer-events: all;
+
                 cursor: pointer;
             }
             .secondary .inspiration .name,
@@ -414,7 +429,7 @@
                             -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
-                pointer-events: none;
+
             }
             .secondary .inspiration .icon
             {
@@ -425,7 +440,7 @@
                 top: 1.5vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+
             }
             .secondary .proficiency
             {
@@ -434,10 +449,10 @@
                 height: 8vw;
                 width: 8vw;
                 position: absolute;
-                top: 1vw;
-                left: 16.5vw;
+                top: 13vw;
+                left: 36vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .proficiency .value
             {
@@ -448,7 +463,8 @@
                 top: 2vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
+
             }
             .secondary .initiative
             {
@@ -457,10 +473,10 @@
                 height: 8vw;
                 width: 8vw;
                 position: absolute;
-                top: 1vw;
-                left: 77vw;
+                top: 13vw;
+                left: 57.5vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .initiative .value
             {
@@ -471,7 +487,8 @@
                 top: 2vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
+
             }
             .secondary .ac
             {
@@ -479,10 +496,10 @@
                 height: 12.3vw;
                 width: 12.3vw;
                 position: absolute;
-                top: 11vw;
+                top: 1vw;
                 left: 44.6vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .ac .image
             {
@@ -491,9 +508,9 @@
                 stroke: var(--stat-border-color);
                 stroke-width: 1.5px;
                 fill: transparent;
-                pointer-events: none;
+
                 position: absolute;
-                top: 1.3vw;
+                top: 0vw;
             }
             .secondary .ac .name
             {
@@ -502,7 +519,7 @@
                 font-size: 1.6vw;
                 color: var(--stat-border-color);
                 font-variant: small-caps;
-                top: 0.6vw;
+                top: -0.7vw;
                 width: 100%;
                 text-align: center;
                 text-shadow: -0.23vw 0px 0px var(--background-color), 0.23vw 0px 0px var(--background-color),
@@ -511,7 +528,7 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
-                pointer-events: none;
+
             }
             .secondary .ac .value
             {
@@ -519,12 +536,12 @@
                 font-size: 4.4vw;
                 color: var(--stat-border-color);
                 font-variant: small-caps;
-                top: 3vw;
+                top: 2.1vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
                 z-index: 12;
-                pointer-events: none;
+
             }
 
             .secondary .passiveWis
@@ -535,9 +552,9 @@
                 width: 8vw;
                 position: absolute;
                 top: 25vw;
-                left: 26vw;
+                left: 40vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .passiveWis .value
             {
@@ -548,7 +565,7 @@
                 top: 2vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
             }
             .secondary .speed
             {
@@ -558,9 +575,8 @@
                 width: 8vw;
                 position: absolute;
                 top: 25vw;
-                left: 67.5vw;
+                left: 53.5vw;
                 cursor: pointer;
-                pointer-events: all;
             }
             .secondary .speed .value
             {
@@ -571,7 +587,7 @@
                 top: 2vw;
                 width: 100%;
                 text-align: center;
-                pointer-events: none;
+                outline: 0px solid transparent;
             }
 
             .secondary .head
@@ -583,7 +599,9 @@
                 left: 34vw;
                 position: absolute;
                 cursor: pointer;
-                pointer-events: all;
+
+                top: 12vw;
+                left: 23.9vw;
             }
             .secondary .head .image
             {
@@ -592,7 +610,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
             .secondary .earrings
             {
@@ -600,12 +618,12 @@
                 background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                left: 27vw;
+                left: 16.7vw;
                 position: absolute;
                 z-index: 2;
-                top: 1vw;
+                top: 13vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .earrings .image
             {
@@ -614,7 +632,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
             .secondary .shoulders
             {
@@ -622,10 +640,11 @@
                 background-color: var(--background-color);
                 height: 10vw;
                 width: 10vw;
-                left: 57.5vw;
+                left: 67.5vw;
+                top: 12vw;
                 position: absolute;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .shoulders .image
             {
@@ -634,142 +653,9 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
             .secondary .necklace
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 8vw;
-                width: 8vw;
-                left: 66.5vw;
-                position: absolute;
-                z-index: 2;
-                top: 1vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .necklace .image
-            {
-                background: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2b2bd7e7-3211-422b-a107-eb923b834165/dbqg2gu-b4680209-5321-4423-b57a-e85959647a62.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJiMmJkN2U3LTMyMTEtNDIyYi1hMTA3LWViOTIzYjgzNDE2NVwvZGJxZzJndS1iNDY4MDIwOS01MzIxLTQ0MjMtYjU3YS1lODU5NTk2NDdhNjIuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.wBhSGjl1ueIzqqengot7ywvZvJfitBOxUvUagbLKINs");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-
-            .secondary .forearms
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 10vw;
-                width: 10vw;
-                left: 24vw;
-                position: absolute;
-                top: 12vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .forearms .image
-            {
-
-                background: url("data:image/jpeg;base64,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");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-            .secondary .leftBracelet
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 8vw;
-                width: 8vw;
-                position: absolute;
-                z-index: 2;
-                top: 13vw;
-                left: 17vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .leftBracelet .image
-            {
-                background: url("https://cdnen.samurai-gamers.com/wp-content/uploads/2020/03/21091701/FF7-Remake-Sorcerers-Armlet-300x286.jpg");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-            .secondary .rightBracelet
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 8vw;
-                width: 8vw;
-                left: 33vw;
-                position: absolute;
-                z-index: 2;
-                top: 13vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .rightBracelet .image
-            {
-                background: url("https://i.ebayimg.com/images/g/LbgAAOSwj1RfL70T/s-l300.jpg");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-
-            .secondary .leftRing
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 8vw;
-                width: 8vw;
-                position: absolute;
-                z-index: 2;
-                top: 13vw;
-                left: 60.5vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .leftRing .image
-            {
-                background: url("https://cdna.artstation.com/p/assets/images/images/039/723/374/4k/hideyuki-ashizawa-20210720-studio.jpg?1626750144");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-            .secondary .hands
-            {
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-                height: 10vw;
-                width: 10vw;
-                left: 67.5vw;
-                position: absolute;
-                top: 12vw;
-                cursor: pointer;
-                pointer-events: all;
-            }
-            .secondary .hands .image
-            {
-                background: url("https://cdnb.artstation.com/p/marketplace/presentation_assets/001/275/437/large/file.jpg?1633591259");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-                pointer-events: none;
-            }
-            .secondary .rightRing
             {
                 border: 1px solid var(--fluff-border-color);
                 background-color: var(--background-color);
@@ -780,7 +666,138 @@
                 z-index: 2;
                 top: 13vw;
                 cursor: pointer;
-                pointer-events: all;
+
+            }
+            .secondary .necklace .image
+            {
+                background: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2b2bd7e7-3211-422b-a107-eb923b834165/dbqg2gu-b4680209-5321-4423-b57a-e85959647a62.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJiMmJkN2U3LTMyMTEtNDIyYi1hMTA3LWViOTIzYjgzNDE2NVwvZGJxZzJndS1iNDY4MDIwOS01MzIxLTQ0MjMtYjU3YS1lODU5NTk2NDdhNjIuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.wBhSGjl1ueIzqqengot7ywvZvJfitBOxUvUagbLKINs");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+
+            .secondary .forearms
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 10vw;
+                width: 10vw;
+                left: 24vw;
+                position: absolute;
+                cursor: pointer;
+
+            }
+            .secondary .forearms .image
+            {
+
+                background: url("data:image/jpeg;base64,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");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+            .secondary .leftBracelet
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 8vw;
+                width: 8vw;
+                position: absolute;
+                z-index: 2;
+                top: 1vw;
+                left: 17vw;
+                cursor: pointer;
+
+            }
+            .secondary .leftBracelet .image
+            {
+                background: url("https://cdnen.samurai-gamers.com/wp-content/uploads/2020/03/21091701/FF7-Remake-Sorcerers-Armlet-300x286.jpg");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+            .secondary .rightBracelet
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 8vw;
+                width: 8vw;
+                left: 33vw;
+                position: absolute;
+                z-index: 2;
+                top: 1vw;
+                cursor: pointer;
+
+            }
+            .secondary .rightBracelet .image
+            {
+                background: url("https://i.ebayimg.com/images/g/LbgAAOSwj1RfL70T/s-l300.jpg");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+
+            .secondary .leftRing
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 8vw;
+                width: 8vw;
+                position: absolute;
+                z-index: 2;
+                top: 1vw;
+                left: 60.5vw;
+                cursor: pointer;
+
+            }
+            .secondary .leftRing .image
+            {
+                background: url("https://cdna.artstation.com/p/assets/images/images/039/723/374/4k/hideyuki-ashizawa-20210720-studio.jpg?1626750144");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+            .secondary .hands
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 10vw;
+                width: 10vw;
+                left: 67.5vw;
+                position: absolute;
+                cursor: pointer;
+
+            }
+            .secondary .hands .image
+            {
+                background: url("https://cdnb.artstation.com/p/marketplace/presentation_assets/001/275/437/large/file.jpg?1633591259");
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+
+            }
+            .secondary .rightRing
+            {
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+                height: 8vw;
+                width: 8vw;
+                left: 76.5vw;
+                position: absolute;
+                z-index: 2;
+                top: 1vw;
+                cursor: pointer;
+
             }
             .secondary .rightRing .image
             {
@@ -789,7 +806,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
 
             .secondary .waist
@@ -798,11 +815,11 @@
                 background-color: var(--background-color);
                 height: 10vw;
                 width: 10vw;
-                left: 36.5vw;
+                left: 27.9vw;
                 position: absolute;
                 top: 24vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .waist .image
             {
@@ -811,7 +828,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
             .secondary .feet
             {
@@ -819,11 +836,11 @@
                 background-color: var(--background-color);
                 height: 10vw;
                 width: 10vw;
-                left: 55vw;
+                left: 64.5vw;
                 position: absolute;
                 top: 24vw;
                 cursor: pointer;
-                pointer-events: all;
+
             }
             .secondary .feet .image
             {
@@ -832,7 +849,7 @@
                 height: 100%;
                 background-size: contain;
                 background-repeat: no-repeat;
-                pointer-events: none;
+
             }
 
             .secondary .head .name,
@@ -856,7 +873,7 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
-                pointer-events: none;
+
             }
 
             .secondary .earrings .name,
@@ -880,7 +897,7 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
-                pointer-events: none;
+
             }
 
             .competences, .possessions, .classes
@@ -912,17 +929,17 @@
             }
             .competences
             {
-                top: 25vw;
+                top: 26vw;
                 left: 12vw;
             }
             .possessions
             {
-                top: 26vw;
+                top: 28vw;
                 left: 14.5vw;
             }
             .classes
             {
-                top: 25vw;
+                top: 26vw;
                 left: 17vw;
             }
 
@@ -955,50 +972,50 @@
             <div class="attributes">
                 <div class="strength">
                     <div class="name">Strength</div>
-                    <div class="value">8</div>
-                    <div class="mod">-1</div>
-                    <div class="proficiency"><i class="fas fa-feather-alt"></i></div>
+                    <div class="value" contenteditable="true">8</div>
+                    <div class="mod" contenteditable="true">-1</div>
+                    <div class="proficiency"></div>
                 </div>
                 <div class="dexterity">
                     <div class="name">Dexterity</div>
-                    <div class="value">12</div>
-                    <div class="mod">+1</div>
+                    <div class="value" contenteditable="true">12</div>
+                    <div class="mod" contenteditable="true">+1</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="constitution">
                     <div class="name">Constitution</div>
-                    <div class="value">14</div>
-                    <div class="mod">+2</div>
+                    <div class="value" contenteditable="true">14</div>
+                    <div class="mod" contenteditable="true">+2</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="intelligence">
                     <div class="name">Intelligence</div>
-                    <div class="value">11</div>
-                    <div class="mod">+0</div>
-                    <div class="proficiency"><i class="fas fa-feather-alt"></i></div>
+                    <div class="value" contenteditable="true">11</div>
+                    <div class="mod" contenteditable="true">+0</div>
+                    <div class="proficiency"></div>
                 </div>
                 <div class="wisdom">
                     <div class="name">Wisdom</div>
-                    <div class="value">14</div>
-                    <div class="mod">+2</div>
+                    <div class="value" contenteditable="true">14</div>
+                    <div class="mod" contenteditable="true">+2</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="charisma">
                     <div class="name">Charisma</div>
-                    <div class="value">13</div>
-                    <div class="mod">+1</div>
-                    <div class="proficiency"><i class="fas fa-feather-alt"></i></div>
+                    <div class="value" contenteditable="true">13</div>
+                    <div class="mod" contenteditable="true">+1</div>
+                    <div class="proficiency"></div>
                 </div>
             </div>
             <div class="secondary">
                 <div class="hp">
                     <div class="border"></div>
                     <div class="name">Hit Points</div>
-                    <div class="value">28</div>
+                    <div class="value" contenteditable="true">28</div>
                 </div>
                 <div class="proficiency">
                     <div class="name">Proficiency</div>
-                    <div class="value">+2</div>
+                    <div class="value" contenteditable="true">+2</div>
                 </div>
                 <div class="inspiration">
                     <div class="name">Inspiration</div>
@@ -1006,7 +1023,7 @@
                 </div>
                 <div class="initiative">
                     <div class="name">Initiative</div>
-                    <div class="value">+1</div>
+                    <div class="value" contenteditable="true">+1</div>
                 </div>
                 <div class="ac">
                     <svg class="image" width="285.31" height="271.69" version="1.1" viewBox="0 0 75.487 71.886" xmlns="http://www.w3.org/2000/svg">
@@ -1015,15 +1032,15 @@
                      </g>
                     </svg>
                     <div class="name">Armor Class</div>
-                    <div class="value">18</div>
+                    <div class="value" contenteditable="true">18</div>
                 </div>
                 <div class="passiveWis">
                     <div class="name">Passive Wis</div>
-                    <div class="value">14</div>
+                    <div class="value" contenteditable="true">14</div>
                 </div>
                 <div class="speed">
                     <div class="name">Speed</div>
-                    <div class="value">30</div>
+                    <div class="value" contenteditable="true">30</div>
                 </div>
 
                 <div class="earrings">
