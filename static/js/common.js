@@ -1,22 +1,37 @@
-function _put(db, data)
+function _put(db, req, callback)
 {
-    db.upsert(data._id, function (doc)
-    {
-        return data;
-    });
+    return db.upsert(req, callback);
 }
 
+function _get(db, req)
+{
+    return db.get(req).then((response) => { return response; }).catch((e) => { return false;});
+}
+
+/* setup databases */
 let db =
 {
-    fluffAssets: { db: new PouchDB("fluffAssets"),
-        put: function (data) { _put(this.db, data); },
-        get: function (data) { return this.db.get(data); }
+    characters: { db: new PouchDB("characters"),
+        put: function (req, callback) { return _put(this.db, req, callback); },
+        get: function (req) { return _get(this.db, req); }
     },
-    charData: { db: new PouchDB("charData"),
-        put: function (data) { _put(this.db, data); },
-        get: function (data) { return this.db.get(data); }
-    }
+    games: { db: new PouchDB("games"),
+        put: function (req, callback) { return _put(this.db, req, callback); },
+        get: function (req) { return _get(this.db, req); }
+    },
+    user: { db: new PouchDB("user"),
+        put: function (req, callback) { return _put(this.db, req, callback); },
+        get: function (req) { return _get(this.db, req); }
+    },
+    peers: { db: new PouchDB("peers"),
+        put: function (req, callback) { return _put(this.db, req, callback); },
+        get: function (req) { return _get(this.db, req); }
+    },
 }
+
+/* db utils */
+
+
 
 function preventBrowserDefaultEvent(event)
 {
