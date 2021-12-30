@@ -6,14 +6,20 @@
         <link rel="stylesheet" href="lib/croppie.css" />
         <link rel="stylesheet" href="lib/leaflet.css" />
         <link rel="stylesheet" href="lib/font-awesome/css/all.min.css" />
+        <link rel="icon" type="image/png" href="assets/icon@164.png"/>
         <style media="screen">
             :root
             {
                 --background-color: #232323;
                 --fluff-border-color: #729fcf;
+                --stat-background-midpoint-color: #526865;
                 --stat-border-color: #81aca6;
                 --competences-border-color: #4d818f;
                 --prof-icon-color: #67979B;
+            }
+            .hidden
+            {
+                display: none;
             }
             @font-face
             {
@@ -36,7 +42,101 @@
                 position: fixed;
                 left: 0;
                 top: 0;
+                z-index: 2;
             }
+            .loading
+            {
+                color: #ffffff;
+                font-size: 90px;
+                text-indent: -9999em;
+                overflow: hidden;
+                width: 1em;
+                height: 1em;
+                border-radius: 50%;
+                margin: 72px auto;
+                position: absolute;
+                left: 49vw;
+                top: 40vh;
+                color: var(--stat-border-color);
+                -webkit-transform: translateZ(0);
+                -ms-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-animation: load6 1.7s infinite ease, round 1.7s infinite ease;
+                animation: load6 1.7s infinite ease, round 1.7s infinite ease;
+                transition: opacity 0.3s ease;
+                index-z: 0;
+            }
+            .loading.invisible
+            {
+                opacity: 0;
+            }
+
+            /* TODO: SHIT IS COPY-PASTED. TIDY IT UP. */
+            @-webkit-keyframes load6 {
+              0% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+              5%,
+              95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+              10%,
+              59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+              }
+              20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+              }
+              38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+              }
+              100% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+            }
+            @keyframes load6 {
+              0% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+              5%,
+              95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+              10%,
+              59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+              }
+              20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+              }
+              38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+              }
+              100% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+              }
+            }
+            @-webkit-keyframes round {
+              0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+            @keyframes round {
+              0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+
 
             .characterSheet
             {
@@ -46,6 +146,13 @@
                 height: calc(100vh - 2px);
                 overflow-y: auto;
                 user-select: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 1;
+            }
+            .characterSheet.visible
+            {
+                opacity: 1;
             }
 
             .fluff .name .text
@@ -127,7 +234,7 @@
                 background-position: 70% 50%;
                 background-size: 150% 100%;
                 background-repeat: no-repeat;
-
+                pointer-events: none;
             }
             .style .portrait .text,
             .style .weapon .text,
@@ -157,7 +264,7 @@
                 left: 15.8vw;
                 top: -2vw;
                 z-index: 2;
-
+                pointer-events: none;
             }
             .attributes .strength,
             .attributes .dexterity,
@@ -174,6 +281,7 @@
                 z-index: 2;
                 cursor: pointer;
                 box-sizing: border-box;
+                pointer-events: all;
             }
             .attributes .intelligence
             {
@@ -195,6 +303,7 @@
                 z-index: 2;
                 cursor: pointer;
                 box-sizing: border-box;
+                pointer-events: all;
             }
             .attributes .charisma
             {
@@ -235,25 +344,25 @@
             {
                 transform: skew(6deg);
             }
-            .attributes .strength .mod,
-            .attributes .dexterity .mod,
-            .attributes .constitution .mod
+            .attributes .strength .modifier,
+            .attributes .dexterity .modifier,
+            .attributes .constitution .modifier
             {
                 transform: skew(354deg);
             }
-            .attributes .intelligence .mod,
-            .attributes .wisdom .mod,
-            .attributes .charisma .mod
+            .attributes .intelligence .modifier,
+            .attributes .wisdom .modifier,
+            .attributes .charisma .modifier
             {
                 transform: skew(6deg);
             }
 
-            .attributes .strength .mod,
-            .attributes .dexterity .mod,
-            .attributes .constitution .mod,
-            .attributes .intelligence .mod,
-            .attributes .wisdom .mod,
-            .attributes .charisma .mod
+            .attributes .strength .modifier,
+            .attributes .dexterity .modifier,
+            .attributes .constitution .modifier,
+            .attributes .intelligence .modifier,
+            .attributes .wisdom .modifier,
+            .attributes .charisma .modifier
             {
                 font-size: 3.4vw;
                 color: var(--stat-border-color);
@@ -294,60 +403,47 @@
                 bottom: 0.3vw;
                 outline: 0px solid transparent;
             }
-            .attributes .strength .proficiency:after,
-            .attributes .dexterity .proficiency:after,
-            .attributes .constitution .proficiency:after,
-            .attributes .intelligence .proficiency:after,
-            .attributes .wisdom .proficiency:after,
-            .attributes .charisma .proficiency:after
+            .attributes .strength .proficiency:hover,
+            .attributes .dexterity .proficiency:hover,
+            .attributes .constitution .proficiency:hover,
+            .attributes .intelligence .proficiency:hover,
+            .attributes .wisdom .proficiency:hover,
+            .attributes .charisma .proficiency:hover
             {
-                content: "";
-                position: absolute;
-                display: block;
-                background: var(--background-color);
-                height: 100%;
-                width: 0%;
-                transition: background 0.5s ease, height 0.5s ease;
-                bottom: 0px;
+                background: var(--stat-background-midpoint-color);
             }
-            .attributes .strength .proficiency:hover:after,
-            .attributes .dexterity .proficiency:hover:after,
-            .attributes .constitution .proficiency:hover:after,
-            .attributes .intelligence .proficiency:hover:after,
-            .attributes .wisdom .proficiency:hover:after,
-            .attributes .charisma .proficiency:hover:after
+
+            .attributes .strength .proficiency,
+            .attributes .dexterity .proficiency,
+            .attributes .constitution .proficiency,
+            .attributes .intelligence .proficiency,
+            .attributes .wisdom .proficiency,
+            .attributes .charisma .proficiency
             {
-                background: var(--stat-border-color);
-                width: 50%;
+                position: absolute;
+                width: 0.5vw;
+                top: -0.1vw;
+                border: 0.1vw solid var(--stat-border-color);
+                background: var(--background-color);
+                transition: background 0.5s ease;
             }
 
             .attributes .strength .proficiency,
             .attributes .dexterity .proficiency,
             .attributes .constitution .proficiency
             {
-                position: absolute;
-                width: 0.3vw;
                 height: 5.8vw;
-                top: -0.1vw;
-                left: -0.3vw;
-                border: 0.1vw solid var(--stat-border-color);
-                background: var(--background-color);
+                left: -0.7vw;
             }
             .attributes .intelligence .proficiency,
             .attributes .wisdom .proficiency,
             .attributes .charisma .proficiency
             {
-                position: absolute;
-                width: 0.3vw;
                 height: 5.8vw;
-                top: -0.1vw;
-                left: 7.9vw;
-                border: 0.1vw solid var(--stat-border-color);
-                background: var(--background-color);
+                left: 7.8vw;
             }
-            .proficiency.proficient:after
+            .proficiency.proficient
             {
-                width: 100% !important;
                 background: var(--stat-border-color) !important;
             }
 
@@ -469,7 +565,7 @@
                 top: 1.5vw;
                 width: 100%;
                 text-align: center;
-
+                pointer-events: none;
             }
             .secondary .proficiency
             {
@@ -619,27 +715,31 @@
                 outline: 0px solid transparent;
             }
 
-            .secondary .head
+            .secondary div[type="gear"]
             {
                 border: 1px solid var(--fluff-border-color);
                 background-color: var(--background-color);
-                height: 10vw;
-                width: 10vw;
-                left: 34vw;
                 position: absolute;
                 cursor: pointer;
-
+            }
+            .secondary div[type="gear"] .image
+            {
+                width: 100%;
+                height: 100%;
+                background-size: contain;
+                background-repeat: no-repeat;
+                pointer-events: none;
+            }
+            .secondary .head
+            {
+                height: 10vw;
+                width: 10vw;
                 top: 12vw;
                 left: 23.9vw;
             }
             .secondary .head .image
             {
                 background: url("https://i.pinimg.com/originals/c4/55/a9/c455a9a7eb07b5dad44cb4465949771b.jpg");
-                width: 100%;
-                height: 100%;
-                background-size: contain;
-                background-repeat: no-repeat;
-
             }
             .secondary .earrings
             {
@@ -975,6 +1075,7 @@
         </style>
     </head>
     <body>
+        <div class="loading"></div>
         <div class="characterSheet">
             <div class="fluff">
                 <div class="name">
@@ -985,15 +1086,15 @@
                 </div>
             </div>
             <div class="style">
-                <div class="weapon">
+                <div class="weapon" var="weapon">
                     <div class="image"></div>
                     <div class="text">Weapon</div>
                 </div>
-                <div class="portrait">
+                <div class="portrait" var="portrait">
                     <div class="image"></div>
-                    <div class="text">Character</div>
+                    <div class="text">Portrait</div>
                 </div>
-                <div class="apparel">
+                <div class="apparel" var="apparel">
                     <div class="image"></div>
                     <div class="text">Apparel</div>
                 </div>
@@ -1002,59 +1103,59 @@
                 <div class="strength" var="strength">
                     <div class="name">Strength</div>
                     <div class="value" contenteditable="true">8</div>
-                    <div class="mod" contenteditable="true">-1</div>
+                    <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="dexterity" var="dexterity">
                     <div class="name">Dexterity</div>
                     <div class="value" contenteditable="true">12</div>
-                    <div class="mod" contenteditable="true">+1</div>
+                    <div class="modifier" contenteditable="true">+1</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="constitution" var="constitution">
                     <div class="name">Constitution</div>
                     <div class="value" contenteditable="true">14</div>
-                    <div class="mod" contenteditable="true">+2</div>
+                    <div class="modifier" contenteditable="true">+2</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="intelligence" var="intelligence">
                     <div class="name">Intelligence</div>
                     <div class="value" contenteditable="true">11</div>
-                    <div class="mod" contenteditable="true">+0</div>
+                    <div class="modifier" contenteditable="true">+0</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="wisdom" var="wisdom">
                     <div class="name">Wisdom</div>
                     <div class="value" contenteditable="true">14</div>
-                    <div class="mod" contenteditable="true">+2</div>
+                    <div class="modifier" contenteditable="true">+2</div>
                     <div class="proficiency"></div>
                 </div>
                 <div class="charisma" var="charisma">
                     <div class="name">Charisma</div>
                     <div class="value" contenteditable="true">13</div>
-                    <div class="mod" contenteditable="true">+1</div>
+                    <div class="modifier" contenteditable="true">+1</div>
                     <div class="proficiency"></div>
                 </div>
             </div>
             <div class="secondary">
-                <div class="hp" var="hp">
+                <div class="hp" var="hitpoints">
                     <div class="border"></div>
                     <div class="name">Hit Points</div>
                     <div class="value" contenteditable="true">28</div>
                 </div>
-                <div class="proficiency" var="pro">
+                <div class="proficiency" var="proficiency">
                     <div class="name">Proficiency</div>
                     <div class="value" contenteditable="true">+2</div>
                 </div>
-                <div class="inspiration" var="insp">
+                <div class="inspiration" var="inspiration">
                     <div class="name">Inspiration</div>
                     <div class="icon"><i class="fas fa-dice-d20"></i></div>
                 </div>
-                <div class="initiative" var="init">
+                <div class="initiative" var="initiative">
                     <div class="name">Initiative</div>
                     <div class="value" contenteditable="true">+1</div>
                 </div>
-                <div class="ac" var="ac">
+                <div class="ac" var="armorclass">
                     <svg class="image" width="285.31" height="271.69" version="1.1" viewBox="0 0 75.487 71.886" xmlns="http://www.w3.org/2000/svg">
                      <g transform="translate(-28.304 -26.775)"> <!-- form inkscape-->
                       <path transform="scale(.26458)" d="m166.06 101.7 175.57 0.36117 50.048 78.264-138.39 191.73-145.69-192.31z"/>
@@ -1063,71 +1164,71 @@
                     <div class="name">Armor Class</div>
                     <div class="value" contenteditable="true">18</div>
                 </div>
-                <div class="passiveWis" var="pwis">
+                <div class="passiveWis" var="passivewis">
                     <div class="name">Passive Wis</div>
                     <div class="value" contenteditable="true">14</div>
                 </div>
-                <div class="speed" var="spd">
+                <div class="speed" var="speed">
                     <div class="name">Speed</div>
                     <div class="value" contenteditable="true">30</div>
                 </div>
 
-                <div class="earrings">
+                <div class="earrings" var="earrings" type="gear">
                     <div class="name">Earrings</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="head">
+                <div class="head" var="head" type="gear">
                     <div class="name">Head</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="shoulders">
+                <div class="shoulders" var="shoulders" type="gear">
                     <div class="name">Shoulders</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="necklace">
+                <div class="necklace" var="necklace" type="gear">
                     <div class="name">Necklace</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="leftBracelet">
+                <div class="leftBracelet" var="leftBracelet" type="gear">
                     <div class="name">Bracelet</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="forearms">
+                <div class="forearms" var="forearms" type="gear">
                     <div class="name">Forearms</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="rightBracelet">
+                <div class="rightBracelet" var="rightBracelet" type="gear">
                     <div class="name">Bracelet</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="leftRing">
+                <div class="leftRing" var="leftRing" type="gear">
                     <div class="name">Ring</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="hands">
+                <div class="hands" var="hands" type="gear">
                     <div class="name">Hands</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="rightRing">
+                <div class="rightRing" var="rightRing" type="gear">
                     <div class="name">Ring</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="waist">
+                <div class="waist" var="waist" type="gear">
                     <div class="name">Waist</div>
                     <div class="image"></div>
                     <div class="value"></div>
                 </div>
-                <div class="feet">
+                <div class="feet" var="feet" type="gear">
                     <div class="name">Feet</div>
                     <div class="image"></div>
                     <div class="value"></div>
@@ -1164,5 +1265,4 @@
 
     <script src="js/common.js"></script>
     <script src="js/load.js"></script>
-    <!-- <script src="js/fluff.js"></script> -->
 </html>

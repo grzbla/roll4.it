@@ -10,6 +10,16 @@ async function init()
 
         /* LOAD SAVED */
         loadCharacter();
+
+        /* DISPLAY CHARSHEET */
+        setTimeout(() => //delay by 300ms for smoother experience
+        {
+            let loading = document.querySelector(".loading");
+            loading.classList.add("invisible");
+            setTimeout( (loading) => { loading.parentNode.removeChild(loading); }, 300, loading);
+            document.querySelector(".characterSheet").classList.remove("invisible");
+            document.querySelector(".characterSheet").classList.add("visible");
+        }, 300);
     }
     else
         initUserID();
@@ -38,25 +48,40 @@ async function loadCharacter()
 
     Object.keys(character).forEach((key) =>
     {
-        let v = character[key];
+        let v = character[key]; //v as in variable, ingenious, i know
         if (typeof v === 'object')
         {
             let element = document.querySelector("[var=\"" + key + "\"]");
+
+
             //loat attributes
             if (v.value)
                 element.querySelector(".value").textContent = v.value;
-            if (v.mod)
-                element.querySelector(".mod").textContent = v.mod;
-            if (v.pro)
+            if (v.modifier)
+                element.querySelector(".modifier").textContent = v.modifier;
+            if (v.proficiency)
                 element.querySelector(".proficiency").classList.add("proficient");
+            if (v.checked === false)
+                element.querySelector(".icon").classList.add("hidden");
+            if (v.bigPic)
+                console.log(v.bigPic);
+            if (v.smallPic)
+                console.log(v.bigPic);
         }
     });
 }
-
 function attachControlEvents()
 {
+    //set fluff image upload and edit events
+    document.querySelectorAll(".characterSheet .style div").forEach((element) =>
+    {
+        element.addEventListener("drop", handleDroppedImage);
+        element.addEventListener("click", itemEditor);
+        element.addEventListener("dragover", preventBrowserDefaultEvent);
+    });
+
     // attribute mod input events
-    document.querySelectorAll(".characterSheet .attributes div .mod").forEach((element) =>
+    document.querySelectorAll(".characterSheet .attributes div .modifier").forEach((element) =>
     {
         element.addEventListener("keypress", attributeModInputEvent);
 
@@ -75,44 +100,105 @@ function attachControlEvents()
     });
 
     //hp value event
-    document.querySelectorAll(".characterSheet .secondary .hp .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", hpInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .hp .value").addEventListener("keypress", secondaryValInputEvent);
 
     //ac value event
-    document.querySelectorAll(".characterSheet .secondary .ac .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", acInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .ac .value").addEventListener("keypress", secondaryValInputEvent);
 
     //proficiency value event
-    document.querySelectorAll(".characterSheet .secondary .proficiency .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", modInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .proficiency .value").addEventListener("keypress", secondaryModInputEvent);
+
+    //inspiration value event
+    document.querySelector(".characterSheet .secondary .inspiration").addEventListener("click", inspirationInputEvent);
 
     //initiative value event
-    document.querySelectorAll(".characterSheet .secondary .initiative .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", modInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .initiative .value").addEventListener("keypress", secondaryModInputEvent);
 
     //passive wis value event
-    document.querySelectorAll(".characterSheet .secondary .passiveWis .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", valInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .passiveWis .value").addEventListener("keypress", secondaryValInputEvent);
 
     //speed value event
-    document.querySelectorAll(".characterSheet .secondary .speed .value").forEach((element) =>
-    {
-        element.addEventListener("keypress", valInputEvent);
-    });
+    document.querySelector(".characterSheet .secondary .speed .value").addEventListener("keypress", secondaryValInputEvent);
 
+    //set gear image upload and edit events
+    document.querySelectorAll(".characterSheet .secondary div[type=\"gear\"]").forEach((element) =>
+    {
+        element.addEventListener("drop", handleDroppedImage);
+        element.addEventListener("click", itemEditor);
+        element.addEventListener("dragover", preventBrowserDefaultEvent);
+    });
 }
 
 /* functions */
+function handleDroppedImage(event)
+{
+    let topEvent = event;
+    preventBrowserDefaultEvent(event);
+    var files = event.dataTransfer.files;
+
+    //prevent errors
+    if (!FileReader || !files || !files.length)
+        return;
+
+    var reader = new FileReader();
+    reader.onload = function(event)
+    {
+        //write file to idb
+        let characterId = "characterid";
+        let pictureType = topEvent.target.getAttribute("var");
+        db.characters.put(characterId, (character) =>
+        {
+            if (!character[pictureType])
+                character[pictureType] = {};
+
+            character[pictureType].fullPicture = event.target.result;
+
+            return character;
+        }).then( () =>
+        {
+            createOverlay();
+
+            //display cropper
+            openCroppie(event.target.result, pictureType);
+        });
+    };
+    reader.readAsDataURL(files[0]);
+}
+
+function openCroppie(fullPicture, pictureType)
+{
+    let element = document.querySelector("." + pictureType);
+
+    let boundingRect = element.getBoundingClientRect();
+
+    let rect = {
+        top: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2) + "vw",
+        left: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2) + "vw",
+        width: (((boundingRect.right - boundingRect.left) / window.innerWidth) * 100).toFixed(2) + "vw",
+        height: (((boundingRect.bottom - boundingRect.top) / window.innerWidth) * 100).toFixed(2) + "vw"
+    };
+
+    console.log(rect.top, rect.left, rect.width, rect.height);
+
+    let target = document.createElement("div");
+    target.style.position = "absolute";
+    target.style.width = rect.width;
+    target.style.height = rect.height;
+    target.style.top = rect.top;
+    target.style.left = rect.left;
+    target.style.zIndex = "3";
+    document.body.appendChild(target);
+
+    croppie = new Croppie(target,
+    {
+        viewport: { width: rect.width, height: rect.height},
+        boundary: { width: rect.width, height: rect.height}
+    });
+    croppie.bind(fullPicture);
+}
+
+function itemEditor(event){console.log(event.target);}
+
 function attributeModInputEvent(event)
 {
     modInputEvent(event, async (event) =>
@@ -137,7 +223,7 @@ function attributeModInputEvent(event)
                 character[attribute] = {};
 
             character[attribute].value = valueString;
-            character[attribute].mod = modString;
+            character[attribute].modifier = modString;
             return character;
         });
 
@@ -153,7 +239,8 @@ function attributeValInputEvent(event)
         let valueString = event.target.textContent;
         let modInt = Math.floor((parseInt(valueString) * 0.5) - 5);
         let modString = String(modInt);
-        event.target.parentNode.querySelector(".mod").textContent = (modInt > 0) ? "+" + modString : modString;
+        modString = (modInt > 0) ? "+" + modString : modString;
+        event.target.parentNode.querySelector(".modifier").textContent = modString;
 
         //save locally
         /*
@@ -168,7 +255,7 @@ function attributeValInputEvent(event)
                 character[attribute] = {};
 
             character[attribute].value = valueString;
-            character[attribute].mod = modString;
+            character[attribute].modifier = modString;
             return character;
         });
 
@@ -188,7 +275,7 @@ function attributeProfInputEvent(event)
         // disable proficiency
         db.characters.put(characterId, (character) =>
         {
-            delete character[attribute].pro;
+            delete character[attribute].proficiency;
             return character;
         }).then(() =>
         {
@@ -204,7 +291,7 @@ function attributeProfInputEvent(event)
             if (!character[attribute])
                 character[attribute] = {};
 
-            character[attribute].pro = true;
+            character[attribute].proficiency= true;
 
             return character;
         }).then(() =>
@@ -214,11 +301,69 @@ function attributeProfInputEvent(event)
     }
 }
 
-function hpInputEvent()
+function inspirationInputEvent(event)
 {
+    let icon = event.target.querySelector(".icon");
+    if (icon.classList.contains("hidden"))
+    {
+        // enable inspiration
+        icon.classList.remove("hidden");
 
+        let characterId = "characterid";
+        db.characters.put(characterId, (character) =>
+        {
+            // TODO: remove this if
+            if (!character.inspiration)
+                character.inspiration = {};
+
+            character.inspiration.checked = true;
+            return character;
+        });
+    }
+    else
+    {
+        // disable inspiration
+        icon.classList.add("hidden");
+
+        let characterId = "characterid";
+        db.characters.put(characterId, (character) =>
+        {
+            // TODO: remove this if
+            if (!character.inspiration)
+                character.inspiration = {};
+
+            character.inspiration.checked = false;
+            return character;
+        });
+    }
+    console.log(icon);
 }
-function acInputEvent()
+
+function secondaryModInputEvent(event)
+{
+    modInputEvent(event, (event) =>
+    {
+        //save locally
+        /*
+            //TODO: multiple character support
+        */
+        let attribute = event.target.parentNode.getAttribute("var");
+        console.log(attribute);
+
+        let characterId = "characterid";
+        db.characters.put(characterId, (character) =>
+        {
+            if (!character[attribute])
+                character[attribute] = {};
+
+            character[attribute].value = event.target.textContent;
+            return character;
+        });
+
+        //broadcast to peers
+    })
+}
+function secondaryValInputEvent(event)
 {
     valInputEvent(event, (event) =>
     {
@@ -306,7 +451,6 @@ function valInputEvent(event, callback)
         return;
     }
 
-    console.log(event.key);
     let selection = window.getSelection();
     let isSelection = (selection.extentOffset - selection.baseOffset) > 0 ? true : false;
 
