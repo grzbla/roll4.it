@@ -172,27 +172,28 @@ function openCroppie(fullPicture, pictureType)
     let boundingRect = element.getBoundingClientRect();
 
     let rect = {
-        top: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2) + "vw",
-        left: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2) + "vw",
-        width: (((boundingRect.right - boundingRect.left) / window.innerWidth) * 100).toFixed(2) + "vw",
-        height: (((boundingRect.bottom - boundingRect.top) / window.innerWidth) * 100).toFixed(2) + "vw"
+        top: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2),
+        left: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2),
+        width: (((boundingRect.right - boundingRect.left) / window.innerWidth) * 100).toFixed(2),
+        height: (((boundingRect.bottom - boundingRect.top) / window.innerWidth) * 100).toFixed(2),
+        unit: "vw"
     };
 
     console.log(rect.top, rect.left, rect.width, rect.height);
 
     let target = document.createElement("div");
     target.style.position = "absolute";
-    target.style.width = rect.width;
-    target.style.height = rect.height;
-    target.style.top = rect.top;
-    target.style.left = rect.left;
+    target.style.width = rect.width + rect.unit;
+    target.style.height = (rect.height + 2) + rect.unit;
+    target.style.top = rect.top + rect.unit;
+    target.style.left = rect.left + rect.unit;
     target.style.zIndex = "3";
     document.body.appendChild(target);
 
     croppie = new Croppie(target,
     {
-        viewport: { width: rect.width, height: rect.height},
-        boundary: { width: rect.width, height: rect.height}
+        viewport: { width: rect.width + rect.unit, height: rect.height + rect.unit},
+        boundary: { width: rect.width + rect.unit, height: rect.height + rect.unit}
     });
     croppie.bind(fullPicture);
 }

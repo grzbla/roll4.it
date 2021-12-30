@@ -16,6 +16,7 @@
                 --stat-border-color: #81aca6;
                 --competences-border-color: #4d818f;
                 --prof-icon-color: #67979B;
+                --overlay-color: var(--background-color);
             }
             .hidden
             {
@@ -38,7 +39,8 @@
                 width: 100vw;
                 height: 100vh;
                 overflow: hidden;
-                background-color: #2c2c2c9e;
+                filter: opacity(0.75);
+                background-color: var(--overlay-color);
                 position: fixed;
                 left: 0;
                 top: 0;
