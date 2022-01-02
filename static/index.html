@@ -22,16 +22,22 @@
                 width: 100%;
                 margin: 0;
                 text-align: center;
-                margin-top: 0.5vw;
             }
             .croppie-container .cr-slider-wrap .cr-slider
             {
                 -webkit-appearance: none;
                 width: 90%;
+                width: fill-available;
+                width: -webkit-fill-available;
                 padding: 1.1vw 1vw 1.1vw 1vw;
                 cursor: pointer;
-                background: var(--stat-background-midpoint-color);
-                border-radius: 15px;
+                background: var(--fluff-background-midpoint-color);
+                border-radius: 0px;
+                margin: 0;
+            }
+            .croppie-container .cr-viewport
+            {
+                border-color: var(--fluff-background-midpoint-color);
             }
 
             /* STYLES */
@@ -39,6 +45,7 @@
             {
                 --background-color: #232323;
                 --fluff-border-color: #729fcf;
+                --fluff-background-midpoint-color: #4B6179;
                 --stat-background-midpoint-color: #526865;
                 --stat-border-color: #81aca6;
                 --competences-border-color: #4d818f;
