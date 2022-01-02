@@ -1,3 +1,5 @@
+let croppie;
+
 function _put(db, req, callback)
 {
     return db.upsert(req, callback);
@@ -41,7 +43,7 @@ function preventBrowserDefaultEvent(event)
 
 function createOverlay()
 {
-    var overlay = document.createElement("div");
+    let overlay = document.createElement("div");
     overlay.setAttribute("class", "overlay");
 
     overlay.addEventListener("click", removeOverlay);

@@ -1,3 +1,4 @@
+var c;
 /* LOAD */
 //get user id
 async function init()
@@ -53,7 +54,6 @@ async function loadCharacter()
         {
             let element = document.querySelector("[var=\"" + key + "\"]");
 
-
             //loat attributes
             if (v.value)
                 element.querySelector(".value").textContent = v.value;
@@ -63,10 +63,10 @@ async function loadCharacter()
                 element.querySelector(".proficiency").classList.add("proficient");
             if (v.checked === false)
                 element.querySelector(".icon").classList.add("hidden");
-            if (v.bigPic)
-                console.log(v.bigPic);
-            if (v.smallPic)
-                console.log(v.bigPic);
+            if (v.croppedPic)
+            {
+                element.querySelector(".image").style.backgroundImage = "url(\"" + v.croppedPic + "\")";
+            }
         }
     });
 }
@@ -151,12 +151,30 @@ function handleDroppedImage(event)
             if (!character[pictureType])
                 character[pictureType] = {};
 
-            character[pictureType].fullPicture = event.target.result;
+            character[pictureType].fullPic = event.target.result;
 
             return character;
         }).then( () =>
         {
+            /* add closing function to overlay */
             createOverlay();
+            document.querySelector(".overlay").addEventListener("click", (event) =>
+            {
+                if (croppie)
+                croppie.result({type: "base64", size: "viewport", format: "webp"}).then((image) =>
+                {
+                    document.querySelector("." + pictureType +" .image").style.backgroundImage = "url(\"" + image + "\")";
+                    croppie.destroy();
+                    let cropperContainer = document.querySelector(".cropperContainer");
+                    cropperContainer.parentNode.removeChild(cropperContainer);
+
+                    db.characters.put(characterId, (character) =>
+                    {
+                        character[pictureType].croppedPic = image;
+                        return character;
+                    });
+                });
+            });
 
             //display cropper
             openCroppie(event.target.result, pictureType);
@@ -165,29 +183,37 @@ function handleDroppedImage(event)
     reader.readAsDataURL(files[0]);
 }
 
-function openCroppie(fullPicture, pictureType)
+function calculateElementRect(element) //um
 {
-    let element = document.querySelector("." + pictureType);
-
     let boundingRect = element.getBoundingClientRect();
 
     let rect = {
         top: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2),
         left: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2),
-        width: (((boundingRect.right - boundingRect.left) / window.innerWidth) * 100).toFixed(2),
-        height: (((boundingRect.bottom - boundingRect.top) / window.innerWidth) * 100).toFixed(2),
-        unit: "vw"
+        width: (((boundingRect.right - boundingRect.left) * (window.screen.availWidth / window.innerWidth))).toFixed(2),
+        height: (((boundingRect.bottom - boundingRect.top) * (window.screen.availWidth / window.innerWidth))).toFixed(2),
     };
 
-    console.log(rect.top, rect.left, rect.width, rect.height);
+    let a = (boundingRect.right - boundingRect.left);
+    let b = (window.screen.availWidth / window.innerWidth);
+
+    console.log(a * b);
+    console.log(rect.width);
+
+    return rect;
+}
+
+function openCroppie(image, pictureType)
+{
+    let rect = calculateElementRect(document.querySelector("." + pictureType));
 
     let target = document.createElement("div");
-    target.style.position = "absolute";
-    target.style.width = rect.width + rect.unit;
-    target.style.height = (rect.height + 2) + rect.unit;
-    target.style.top = rect.top + rect.unit;
-    target.style.left = rect.left + rect.unit;
-    target.style.zIndex = "3";
+    target.className = "cropperContainer";
+    target.style.width = rect.width + "px";
+    target.style.height = rect.height + "px";
+    target.style.top = (rect.top - 1) + "vw";
+    target.style.left = (rect.left - 1) + "vw";
+    target.style.backgroundColor = "var(--background-color)";
     document.body.appendChild(target);
 
     croppie = new Croppie(target,
@@ -195,7 +221,7 @@ function openCroppie(fullPicture, pictureType)
         viewport: { width: rect.width + rect.unit, height: rect.height + rect.unit},
         boundary: { width: rect.width + rect.unit, height: rect.height + rect.unit}
     });
-    croppie.bind(fullPicture);
+    croppie.bind(image);
 }
 
 function itemEditor(event){console.log(event.target);}
