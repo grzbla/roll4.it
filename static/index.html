@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Roll for it, roll with it.</title>
         <link rel="stylesheet" href="lib/croppie.css" />
         <link rel="stylesheet" href="lib/leaflet.css" />
         <link rel="stylesheet" href="lib/font-awesome/css/all.min.css" />
@@ -55,6 +55,10 @@
             .hidden
             {
                 display: none;
+            }
+            .popOut
+            {
+                z-index: 4 !important;
             }
             @font-face
             {
@@ -208,46 +212,49 @@
                 top: 1vw;
                 user-select: none;
             }
+            .weapon, .portrait, .apparel
+            {
+                cursor: pointer;
+                border: 1px solid var(--fluff-border-color);
+                background-color: var(--background-color);
+            }
+            .weapon
+            {
+                width: 22.5vw;
+                height: 26vw;
+                z-index: 2;
+            }
+            .portrait
+            {
+                width: 30vw;
+                height: 34vw;
+                z-index: 1;
+            }
+            .apparel
+            {
+                width: 22.5vw;
+                height: 26vw;
+                z-index: 2;
+            }
             .style .weapon
             {
                 display: inline-block;
                 position: relative;
-                width: 22.5vw;
-                height: 26vw;
                 top: -5vw;
-                border: 1px solid var(--fluff-border-color);
-                z-index: 2;
                 margin-left: 2.5vw;
-                background-color: var(--background-color);
             }
             .style .portrait
             {
                 display: inline-block;
                 position: relative;
-                width: 30vw;
-                height: 34vw;
                 margin-left: -2vw;
-                border: 1px solid var(--fluff-border-color);
-                z-index: 1;
-                background-color: var(--background-color);
             }
             .style .apparel
             {
                 display: inline-block;
                 position: relative;
-                width: 22.5vw;
-                height: 26vw;
                 top: -5vw;
                 margin-left: -2vw;
-                z-index: 2;
-                border: 1px solid var(--fluff-border-color);
-                background-color: var(--background-color);
-            }
-            .style .portrait,
-            .style .weapon,
-            .style .apparel
-            {
-                cursor: pointer;
             }
             .style .weapon .image
             {
@@ -261,9 +268,9 @@
             {
                 background-image: url("https://i.etsystatic.com/12040312/r/il/8faceb/2117110642/il_fullxfull.2117110642_iq5j.jpg");
             }
-            .style .weapon .image,
-            .style .portrait .image,
-            .style .apparel .image
+            .weapon .image,
+            .portrait .image,
+            .apparel .image
             {
                 width: 100%;
                 height: 100%;
@@ -271,10 +278,11 @@
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
                 pointer-events: none;
+                cursor: pointer;
             }
-            .style .portrait .text,
-            .style .weapon .text,
-            .style .apparel .text
+            .portrait .text,
+            .weapon .text,
+            .apparel .text
             {
                 position: absolute;
                 font-family: "Enchanted Lands";
@@ -512,7 +520,6 @@
                 margin-top: 1vw;
                 z-index: 2;
                 user-select: none;
-
             }
             .secondary .hp
             {
@@ -524,7 +531,6 @@
                 position: absolute;
                 top: -11.5vw;
                 left: 46.3vw;
-
                 cursor: pointer;
             }
             .secondary .hp .name
@@ -568,7 +574,6 @@
                 position: absolute;
                 top: 15vw;
                 left: 46.8vw;
-
                 cursor: pointer;
             }
             .secondary .inspiration .name,
@@ -613,7 +618,6 @@
                 top: 13vw;
                 left: 36vw;
                 cursor: pointer;
-
             }
             .secondary .proficiency .value
             {
@@ -625,7 +629,6 @@
                 width: 100%;
                 text-align: center;
                 outline: 0px solid transparent;
-
             }
             .secondary .initiative
             {
@@ -637,7 +640,6 @@
                 top: 13vw;
                 left: 57.5vw;
                 cursor: pointer;
-
             }
             .secondary .initiative .value
             {
@@ -649,7 +651,6 @@
                 width: 100%;
                 text-align: center;
                 outline: 0px solid transparent;
-
             }
             .secondary .ac
             {
@@ -659,8 +660,6 @@
                 position: absolute;
                 top: 1vw;
                 left: 44.6vw;
-                cursor: pointer;
-
             }
             .secondary .ac .image
             {
@@ -689,7 +688,6 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
-
             }
             .secondary .ac .value
             {
@@ -702,7 +700,7 @@
                 text-align: center;
                 outline: 0px solid transparent;
                 z-index: 12;
-
+                cursor: pointer;
             }
 
             .secondary .passiveWis
@@ -715,7 +713,6 @@
                 top: 25vw;
                 left: 40vw;
                 cursor: pointer;
-
             }
             .secondary .passiveWis .value
             {

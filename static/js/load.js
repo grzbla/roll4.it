@@ -188,17 +188,11 @@ function calculateElementRect(element) //um
     let boundingRect = element.getBoundingClientRect();
 
     let rect = {
-        top: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2),
-        left: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2),
-        width: (((boundingRect.right - boundingRect.left) * (window.screen.availWidth / window.innerWidth))).toFixed(2),
-        height: (((boundingRect.bottom - boundingRect.top) * (window.screen.availWidth / window.innerWidth))).toFixed(2),
+        top: { vw: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2) },
+        left: { vw: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2) }, //vw
+        width: { px: (((boundingRect.right - boundingRect.left) * (window.screen.availWidth / window.innerWidth))).toFixed(2) }, //px
+        height: { px: (((boundingRect.bottom - boundingRect.top) * (window.screen.availWidth / window.innerWidth))).toFixed(2) }, //px
     };
-
-    let a = (boundingRect.right - boundingRect.left);
-    let b = (window.screen.availWidth / window.innerWidth);
-
-    console.log(a * b);
-    console.log(rect.width);
 
     return rect;
 }
@@ -209,22 +203,61 @@ function openCroppie(image, pictureType)
 
     let target = document.createElement("div");
     target.className = "cropperContainer";
-    target.style.width = rect.width + "px";
-    target.style.height = rect.height + "px";
-    target.style.top = (rect.top - 1) + "vw";
-    target.style.left = (rect.left - 1) + "vw";
+    target.style.width = rect.width.px + "px";
+    target.style.height = rect.height.px + "px";
+    target.style.top = (rect.top.vw - 1)  + "vw";
+    target.style.left = (rect.left.vw - 1) + "vw";
     target.style.backgroundColor = "var(--background-color)";
     document.body.appendChild(target);
 
     croppie = new Croppie(target,
     {
-        viewport: { width: rect.width + rect.unit, height: rect.height + rect.unit},
-        boundary: { width: rect.width + rect.unit, height: rect.height + rect.unit}
+        viewport: { width: rect.width.px + "px", height: rect.height.px + "px"},
+        boundary: { width: rect.width.px + "px", height: rect.height.px + "px"}
     });
     croppie.bind(image);
 }
 
-function itemEditor(event){console.log(event.target);}
+function itemEditor(event)
+{
+    var topEvent = event;
+    createOverlay();
+    //close item editor on overlay click
+    document.querySelector(".overlay").addEventListener("click", (event) =>
+    {
+        let itemEditor = document.querySelector(".itemEditor");
+        itemEditor.parentNode.removeChild(itemEditor);
+    });
+
+    //create picture in original position
+    let rect = calculateElementRect(topEvent.target);
+    let picFrame =  document.createElement("div");
+    picFrame.classList.add(topEvent.target.getAttribute("var"));
+    picFrame.classList.add("itemEditor");
+    picFrame.style.top = rect.top.vw + "vw";
+    picFrame.style.left = rect.left.vw + "vw";
+    picFrame.style.position = "absolute";
+
+    let image = document.createElement("div");
+    image.className = "image";
+    image.style.backgroundImage = topEvent.target.querySelector(".image").style.backgroundImage;
+    picFrame.appendChild(image);
+
+    document.body.appendChild(picFrame);
+
+    // open image file / change image
+    picFrame.addEventListener("click", function(event) { console.log("ass") });
+
+    // select item from possessions icon
+
+
+    // display description
+    // left/bottom/right side
+
+    // display text
+    // left/right side
+    // recrop image
+}
 
 function attributeModInputEvent(event)
 {
