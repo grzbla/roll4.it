@@ -237,12 +237,19 @@ function itemEditor(event)
     picFrame.style.top = rect.top.vw + "vw";
     picFrame.style.left = rect.left.vw + "vw";
     picFrame.style.position = "absolute";
+    picFrame.style.zIndex = "3";
+    picFrame.setAttribute("type", topEvent.target.getAttribute("type"));
 
     let image = document.createElement("div");
-    image.className = "image";
+    image.className = topEvent.target.querySelector(".image").className;
     image.style.backgroundImage = topEvent.target.querySelector(".image").style.backgroundImage;
-    picFrame.appendChild(image);
 
+    let name = document.createElement("div");
+    name.className = "name";
+    name.textContent = topEvent.target.querySelector(".name").textContent;
+
+    picFrame.appendChild(image);
+    picFrame.appendChild(name);
     document.body.appendChild(picFrame);
 
     // open image file / change image
