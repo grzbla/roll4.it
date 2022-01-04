@@ -41,20 +41,16 @@ function preventBrowserDefaultEvent(event)
     event.stopPropagation();
 }
 
-function createOverlay()
+function displayOverlay()
 {
-    let overlay = document.createElement("div");
-    overlay.setAttribute("class", "overlay");
-
-    overlay.addEventListener("click", removeOverlay);
-
-    document.body.appendChild(overlay);
+    let overlay = document.querySelector(".overlay");
+    overlay.classList.remove("hidden");
 }
 
-function removeOverlay()
+function hideOverlay()
 {
     let overlay = document.body.querySelector(".overlay");
-    overlay.parentNode.removeChild(overlay);
+    overlay.classList.add("hidden");
 }
 
 function removeCropperContainer()

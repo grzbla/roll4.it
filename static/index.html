@@ -31,26 +31,34 @@
                 width: -webkit-fill-available;
                 padding: 1.1vw 1vw 1.1vw 1vw;
                 cursor: pointer;
-                background: var(--fluff-background-midpoint-color);
+                background: var(--style-background-midpoint-color);
                 border-radius: 0px;
                 margin: 0;
             }
             .croppie-container .cr-viewport
             {
-                border-color: var(--fluff-background-midpoint-color);
+                border-color: var(--style-background-midpoint-color);
+            }
+            .description #pagecontent
+            {
+                width: 50vw !important;
             }
 
             /* STYLES */
             :root
             {
                 --background-color: #232323;
-                --fluff-border-color: #729fcf;
-                --fluff-background-midpoint-color: #4B6179;
+                --style-border-color: #729fcf;
+                --style-background-midpoint-color: #4B6179;
                 --stat-background-midpoint-color: #526865;
+                --item-editor-background-color: #323232;
                 --stat-border-color: #81aca6;
                 --competences-border-color: #4d818f;
                 --prof-icon-color: #67979B;
                 --overlay-color: var(--background-color);
+                --fluff-color: #cf9372;
+                --fluff-background-midpoint-color: #9C7A62;
+                --fluff-background-color: #686152;
             }
             .hidden
             {
@@ -65,6 +73,11 @@
                 font-family: "Enchanted Lands";
                 src: url("assets/fonts/enchanted-land.regular.otf");
             }
+            @font-face
+            {
+                font-family: "Fantiasie Artistique";
+                src: url("assets/fonts/fantaisie-artistique.otf");
+            }
             body
             {
                 background-color: var(--background-color);
@@ -75,11 +88,11 @@
             .overlay
             {
                 width: 100vw;
-                height: 100vh;
+                height: 100%;
                 overflow: hidden;
                 filter: opacity(0.75);
                 background-color: var(--overlay-color);
-                position: fixed;
+                position: absolute;
                 left: 0;
                 top: 0;
                 z-index: 2;
@@ -189,19 +202,54 @@
                 opacity: 0;
                 transition: opacity 0.3s ease;
                 z-index: 1;
+                scroll-behavior: smooth;
             }
             .characterSheet.visible
             {
                 opacity: 1;
             }
 
-            .fluff .name .text
+            .fluff
             {
-
+                height: 5vw;
             }
-            .fluff .levels .text
+            .fluff div
             {
-
+                position: absolute;
+                width: 20vw;
+                height: 3vw;
+                color: var(--fluff-color);
+                border: 1px solid var(--fluff-color);
+                font-size: 1.7vw;
+                font-family: "Fantiasie Artistique";
+                font-variant: small-caps;
+                text-shadow: -0.23vw 0px 0px var(--background-color), 0.23vw 0px 0px var(--background-color),
+                0.08vw 0.08vw 0.08vw var(--background-color), 0.08vw -0.08vw 0.08vw var(--background-color),
+                -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
+                0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
+                -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
+                outline: none;
+                text-align: center;
+                line-height: 3vw;
+                transition: border 0.3s ease-out;
+                opacity: 1;
+                top: 1vw;
+                cursor: pointer;
+                background-color: var(--background-color);
+            }
+            .fluff div:hover
+            {
+                border: 1px solid var(--fluff-background-midpoint-color);
+            }
+            .fluff .name
+            {
+                left: 14vw;
+                transform: skew(-6deg);
+            }
+            .fluff .levels
+            {
+                left: 69vw;
+                transform: skew(6deg);
             }
 
             .style
@@ -209,14 +257,20 @@
                 position: relative;
                 width: 75vw;
                 left: 12.5vw;
-                top: 1vw;
                 user-select: none;
             }
-            .weapon, .portrait, .apparel
+            div[type="style"]:hover,
+            div[type="gear"]:hover
+            {
+                border: 1px solid var(--style-background-midpoint-color);
+            }
+            div[type="style"],
+            div[type="gear"]
             {
                 cursor: pointer;
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
+                transition: border 0.3s ease-out;
             }
             .weapon
             {
@@ -240,7 +294,7 @@
             {
                 display: inline-block;
                 position: relative;
-                top: -5vw;
+                top: -4vw;
                 margin-left: 2.5vw;
             }
             .style .portrait
@@ -248,12 +302,13 @@
                 display: inline-block;
                 position: relative;
                 margin-left: -2vw;
+                margin-top: -3.5vw;
             }
             .style .apparel
             {
                 display: inline-block;
                 position: relative;
-                top: -5vw;
+                top: -4vw;
                 margin-left: -2vw;
             }
             .weapon .image
@@ -275,6 +330,12 @@
                 filter: grayscale(100%);
                 opacity: 0.1;
             }
+            .style .weapon .image,
+            .style .portrait .image,
+            .style .apparel .image
+            {
+                pointer-events: none;
+            }
             .weapon .image,
             .portrait .image,
             .apparel .image
@@ -284,8 +345,13 @@
                 background-position: 50% 50%;
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
-                pointer-events: none;
                 cursor: pointer;
+            }
+            .style .portrait .name,
+            .style .weapon .name,
+            .style .apparel .name
+            {
+                pointer-events: none;
             }
             .portrait .name,
             .weapon .name,
@@ -294,18 +360,17 @@
                 position: absolute;
                 font-family: "Enchanted Lands";
                 font-size: 2vw;
-                color: var(--fluff-border-color);
+                color: var(--style-border-color);
                 font-variant: small-caps;
                 top: -1.3vw;
-                width: 34%;
-                margin: 0px 33%;
+                width: 100%;
                 text-align: center;
                 text-shadow: -0.23vw 0px 0px var(--background-color), 0.23vw 0px 0px var(--background-color),
                             0.08vw 0.08vw 0.08vw var(--background-color), 0.08vw -0.08vw 0.08vw var(--background-color),
                             -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
-
+                outline: none;
             }
             .attributes
             {
@@ -317,22 +382,31 @@
                 z-index: 2;
                 pointer-events: none;
             }
+            div[type="attribute"]:hover
+            {
+                border: 1px solid var(--stat-background-midpoint-color);
+            }
+            div[type="attribute"]
+            {
+                cursor: pointer;
+                border: 1px solid var(--stat-border-color);
+                background-color: var(--background-color);
+                transition: border 0.3s ease-out;
+                display: inline-block;
+                box-sizing: border-box;
+                cursor: pointer;
+                z-index: 2;
+                box-sizing: border-box;
+                pointer-events: all;
+            }
             .attributes .strength,
             .attributes .dexterity,
             .attributes .constitution
             {
-                display: inline-block;
                 width: 8vw;
                 height: 6vw;
-                border: 0.1vw solid var(--stat-border-color);
-                box-sizing: border-box;
                 transform: skew(6deg);
                 margin-right: 2vw;
-                background-color: var(--background-color);
-                z-index: 2;
-                cursor: pointer;
-                box-sizing: border-box;
-                pointer-events: all;
             }
             .attributes .intelligence
             {
@@ -343,18 +417,10 @@
             .attributes .wisdom,
             .attributes .charisma
             {
-                display: inline-block;
                 width: 8vw;
                 height: 6vw;
-                border: 0.1vw solid var(--stat-border-color);
-                box-sizing: border-box;
                 transform: skew(-6deg);
                 margin-right: 2vw;
-                background-color: var(--background-color);
-                z-index: 2;
-                cursor: pointer;
-                box-sizing: border-box;
-                pointer-events: all;
             }
             .attributes .charisma
             {
@@ -528,17 +594,25 @@
                 z-index: 2;
                 user-select: none;
             }
+            div[type="secondary"]
+            {
+                position: absolute;
+                cursor: pointer;
+                border: 1px solid var(--stat-border-color);
+                background-color: var(--background-color);
+                transition: border 0.3s ease-out;
+            }
+            div[type="secondary"]:hover
+            {
+                border: 1px solid var(--stat-background-midpoint-color);
+            }
             .secondary .hp
             {
                 transform: perspective(900px) rotateX(314deg);
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 width: 9vw;
                 height: 13vw;
-                position: absolute;
                 top: -11.5vw;
                 left: 46.3vw;
-                cursor: pointer;
             }
             .secondary .hp .name
             {
@@ -574,14 +648,10 @@
 
             .secondary .inspiration
             {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                position: absolute;
                 top: 15vw;
                 left: 46.8vw;
-                cursor: pointer;
             }
             .secondary .inspiration .name,
             .secondary .proficiency .name,
@@ -617,14 +687,10 @@
             }
             .secondary .proficiency
             {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                position: absolute;
                 top: 13vw;
                 left: 36vw;
-                cursor: pointer;
             }
             .secondary .proficiency .value
             {
@@ -639,14 +705,10 @@
             }
             .secondary .initiative
             {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                position: absolute;
                 top: 13vw;
                 left: 57.5vw;
-                cursor: pointer;
             }
             .secondary .initiative .value
             {
@@ -661,13 +723,22 @@
             }
             .secondary .ac
             {
+                border: 0px solid transparent;
                 background-color: var(--background-color);
                 height: 12.3vw;
                 width: 12.3vw;
-                position: absolute;
                 top: 1vw;
                 left: 44.6vw;
             }
+            .secondary .ac:hover
+            {
+                border: none;
+            }
+            .secondary .ac:hover .image
+            {
+                stroke: var(--stat-background-midpoint-color);
+            }
+
             .secondary .ac .image
             {
                 height: 12.3vw;
@@ -675,10 +746,11 @@
                 stroke: var(--stat-border-color);
                 stroke-width: 1.5px;
                 fill: transparent;
-
                 position: absolute;
                 top: 0vw;
+                transition: stroke 0.3s ease-out;
             }
+
             .secondary .ac .name
             {
                 position: absolute;
@@ -712,14 +784,10 @@
 
             .secondary .passiveWis
             {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                position: absolute;
                 top: 25vw;
                 left: 40vw;
-                cursor: pointer;
             }
             .secondary .passiveWis .value
             {
@@ -734,14 +802,10 @@
             }
             .secondary .speed
             {
-                border: 1px solid var(--stat-border-color);
-                background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
-                position: absolute;
                 top: 25vw;
                 left: 53.5vw;
-                cursor: pointer;
             }
             .secondary .speed .value
             {
@@ -757,7 +821,7 @@
 
             div[type="gear"]
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 position: absolute;
                 cursor: pointer;
@@ -784,7 +848,7 @@
             }
             .secondary .ears
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
@@ -797,7 +861,7 @@
             }
             .secondary .shoulders
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 10vw;
                 width: 10vw;
@@ -809,7 +873,7 @@
             }
             .secondary .neck
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
@@ -822,7 +886,7 @@
             }
             .secondary .forearms
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 10vw;
                 width: 10vw;
@@ -833,7 +897,7 @@
             }
             .secondary .leftWrist
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
@@ -846,7 +910,7 @@
             }
             .secondary .rightWrist
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 left: 33vw;
                 position: absolute;
@@ -859,7 +923,7 @@
             .leftFinger, .rightFinger, .leftWrist, .rightWrist, .ears, .neck { height: 8vw; width: 8vw; }
             .secondary .leftFinger
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 height: 8vw;
                 width: 8vw;
@@ -872,7 +936,7 @@
             }
             .secondary .hands
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 left: 67.5vw;
                 position: absolute;
@@ -880,19 +944,18 @@
             }
             .secondary .rightFinger
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 left: 76.5vw;
                 position: absolute;
                 z-index: 2;
                 top: 1vw;
                 cursor: pointer;
-
             }
 
             .secondary .waist
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 left: 27.9vw;
                 position: absolute;
@@ -902,7 +965,7 @@
             }
             .secondary .feet
             {
-                border: 1px solid var(--fluff-border-color);
+                border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
                 left: 64.5vw;
                 position: absolute;
@@ -932,7 +995,7 @@
                 position: absolute;
                 font-family: "Enchanted Lands";
                 font-size: 1.4vw;
-                color: var(--fluff-border-color);
+                color: var(--style-border-color);
                 font-variant: small-caps;
                 top: -1.1vw;
                 width: 100%;
@@ -956,7 +1019,7 @@
                 position: absolute;
                 font-family: "Enchanted Lands";
                 font-size: 1.4vw;
-                color: var(--fluff-border-color);
+                color: var(--style-border-color);
                 font-variant: small-caps;
                 top: -1vw;
                 width: 100%;
@@ -967,7 +1030,228 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
+                outline: none;
+            }
+            .itemEditor
+            {
+                position: absolute;
+                z-index: 3;
+            }
+            .itemEditor .description
+            {
+                color: var(--stat-border-color);
+                border: 1px solid var(--stat-border-color);
+                background-color: var(--item-editor-background-color);
+                width: 50vw;
+                height: 32vw;
+                position: relative;
+                padding: 0.5vw;
+                overflow-y: auto;
+                outline: none;
+            }
+            .itemEditor.weapon .description
+            {
+                top: -29vw;
+                left: 24.4vw;
+            }
+            .itemEditor.portrait .description
+            {
+                top: 1.5vw;
+                left: -10.8vw;
+            }
+            .itemEditor.apparel .description
+            {
+                top: -29vw;
+                left: -53.1vw;
+            }
+            [type="style"] .blurb
+            {
+                position: absolute;
+                width: 7.5vw;
+                height: 5vw;
+                font-size: 5vw;
+                color: var(--stat-border-color);
+                line-height: 5vw;
+                outline: none;
+                overflow: hidden;
+            }
+            .itemEditor[type="style"] .blurb:empty
+            {
+                background-color: var(--item-editor-background-color);
+                border-radius: 5px;
+            }
+            .weapon[type="style"] .blurb
+            {
+                top: 1vw;
+                left: 13.9vw;
+                text-align: right;
+            }
+            .apparel[type="style"] .blurb
+            {
+                top: 1vw;
+                left: 1vw;
+                text-align: left;
+            }
+            .itemEditor.portrait .blurb,
+            .itemEditor[type="gear"] .blurb
+            {
+                display: none;
+            }
+            .itemEditor .button
+            {
+                border: 1px solid var(--style-border-color);
+                position: absolute;
+                color: var(--style-background-midpoint-color);
+                font-size: 2.5vw;
+                line-height: 5.3vw;
+                text-align: center;
+                background-color: var(--item-editor-background-color);
+                transition: color 0.3s ease-out, border 0.3s ease-out;
+                width: 4vw;
+                height: 5vw;
+            }
+            .itemEditor .button:hover
+            {
+                color: var(--style-border-color);
+                border: 1px solid var(--style-background-midpoint-color);
+            }
+            .itemEditor.weapon .recrop
+            {
+                top: 3vw;
+                left: -5.6vw;
+            }
+            .itemEditor.apparel .recrop
+            {
+                top: 3vw;
+                left: 24vw;
+            }
+            .itemEditor.portrait .recrop
+            {
+                top: 14.3vw;
+                left: 31.5vw;
+            }
+            .itemEditor.weapon .itemList
+            {
+                top: 10.1vw;
+                left: -5.6vw;
+            }
+            .itemEditor.apparel .itemList
+            {
+                top: 10.1vw;
+                left: 24vw;
+            }
+            .itemEditor.portrait .itemList
+            {
+                top: 20.8vw;
+                left: 31.5vw;
+            }
+            .itemEditor.weapon .itemLink
+            {
+                top: 17.2vw;
+                left: -5.6vw;
+            }
+            .itemEditor.apparel .itemLink
+            {
+                top: 17.2vw;
+                left: 24vw;
+            }
+            .itemEditor.portrait .itemLink
+            {
+                top: 27.3vw;
+                left: 31.5vw;
+            }
+            .itemEditor div i
+            {
+                pointer-events: none;
+            }
 
+            .itemEditor.leftFinger .description,
+            .itemEditor.hands .description,
+            .itemEditor.rightFinger .description,
+            .itemEditor.shoulders .description,
+            .itemEditor.neck .description,
+            .itemEditor.feet .description
+            {
+                top: -20vw;
+                left: -52.7vw;
+            }
+
+            .itemEditor.leftWrist .description,
+            .itemEditor.forearms .description,
+            .itemEditor.rightWrist .description,
+            .itemEditor.head .description,
+            .itemEditor.ears .description,
+            .itemEditor.waist .description
+            {
+                top: -12vw;
+                right: -52.5vw;
+                position: absolute;
+            }
+
+            .itemEditor.leftFinger .recrop,
+            .itemEditor.hands .recrop,
+            .itemEditor.rightFinger .recrop,
+            .itemEditor.shoulders .recrop,
+            .itemEditor.neck .recrop,
+            .itemEditor.feet .recrop
+            {
+                top: -5.1vw;
+                right: -5.7vw;
+            }
+
+            .itemEditor.leftFinger .itemList,
+            .itemEditor.hands .itemList,
+            .itemEditor.rightFinger .itemList,
+            .itemEditor.shoulders .itemList,
+            .itemEditor.neck .itemList,
+            .itemEditor.feet .itemList
+            {
+                top: 1.5vw;
+                right: -5.7vw;
+            }
+
+            .itemEditor.leftFinger .itemLink,
+            .itemEditor.hands .itemLink,
+            .itemEditor.rightFinger .itemLink,
+            .itemEditor.shoulders .itemLink,
+            .itemEditor.neck .itemLink,
+            .itemEditor.feet .itemLink
+            {
+                top: 8.1vw;
+                right: -5.7vw;
+            }
+
+            .itemEditor.leftWrist .recrop,
+            .itemEditor.forearms .recrop,
+            .itemEditor.rightWrist .recrop,
+            .itemEditor.head .recrop,
+            .itemEditor.ears .recrop,
+            .itemEditor.waist .recrop
+            {
+                top: -5.1vw;
+                left: -5.7vw;
+            }
+
+            .itemEditor.leftWrist .itemList,
+            .itemEditor.forearms .itemList,
+            .itemEditor.rightWrist .itemList,
+            .itemEditor.head .itemList,
+            .itemEditor.ears .itemList,
+            .itemEditor.waist .itemList
+            {
+                top: 1.5vw;
+                left: -5.7vw;
+            }
+
+            .itemEditor.leftWrist .itemLink,
+            .itemEditor.forearms .itemLink,
+            .itemEditor.rightWrist .itemLink,
+            .itemEditor.head .itemLink,
+            .itemEditor.ears .itemLink,
+            .itemEditor.waist .itemLink
+            {
+                top: 8.1vw;
+                left: -5.7vw;
             }
 
             .competences, .possessions, .classes
@@ -1019,59 +1303,58 @@
         <div class="loading"></div>
         <div class="characterSheet">
             <div class="fluff">
-                <div class="name">
-                    <div class="text"></div>
-                </div>
-                <div class="levels">
-                    <div class="text"></div>
-                </div>
+                <div class="name" contenteditable="true" title="Character name."></div>
+                <div class="levels" contenteditable="true" title="Class levels."></div>
             </div>
             <div class="style">
-                <div class="weapon" var="weapon" type="style">
+                <div class="weapon" var="weapon" type="style" title="Tool of manual conquest.">
                     <div class="image empty"></div>
+                    <div class="blurb"></div>
                     <div class="name">Weapon</div>
                 </div>
-                <div class="portrait" var="portrait" type="style">
+                <div class="portrait" var="portrait" type="style" title="Character's mug.">
                     <div class="image empty"></div>
+                    <div class="blurb"></div>
                     <div class="name">Portrait</div>
                 </div>
-                <div class="apparel" var="apparel" type="style">
+                <div class="apparel" var="apparel" type="style" title="Show me your shtyle.">
                     <div class="image empty"></div>
+                    <div class="blurb"></div>
                     <div class="name">Apparel</div>
                 </div>
             </div>
             <div class="attributes">
-                <div class="strength" var="strength">
+                <div class="strength" var="strength" type="attribute">
                     <div class="name">Strength</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
-                <div class="dexterity" var="dexterity">
+                <div class="dexterity" var="dexterity" type="attribute">
                     <div class="name">Dexterity</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
-                <div class="constitution" var="constitution">
+                <div class="constitution" var="constitution" type="attribute">
                     <div class="name">Constitution</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
-                <div class="intelligence" var="intelligence">
+                <div class="intelligence" var="intelligence" type="attribute">
                     <div class="name">Intelligence</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
-                <div class="wisdom" var="wisdom">
+                <div class="wisdom" var="wisdom" type="attribute">
                     <div class="name">Wisdom</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
                     <div class="proficiency"></div>
                 </div>
-                <div class="charisma" var="charisma">
+                <div class="charisma" var="charisma" type="attribute">
                     <div class="name">Charisma</div>
                     <div class="value" contenteditable="true">8</div>
                     <div class="modifier" contenteditable="true">-1</div>
@@ -1079,24 +1362,24 @@
                 </div>
             </div>
             <div class="secondary">
-                <div class="hp" var="hitpoints">
+                <div class="hp" var="hitpoints" type="secondary">
                     <div class="border"></div>
                     <div class="name">Hit Points</div>
                     <div class="value" contenteditable="true">1</div>
                 </div>
-                <div class="proficiency" var="proficiency">
+                <div class="proficiency" var="proficiency" type="secondary">
                     <div class="name">Proficiency</div>
                     <div class="value" contenteditable="true">+1</div>
                 </div>
-                <div class="inspiration" var="inspiration">
+                <div class="inspiration" var="inspiration" type="secondary">
                     <div class="name">Inspiration</div>
                     <div class="icon"><i class="fas fa-dice-d20"></i></div>
                 </div>
-                <div class="initiative" var="initiative">
+                <div class="initiative" var="initiative" type="secondary">
                     <div class="name">Initiative</div>
                     <div class="value" contenteditable="true">0</div>
                 </div>
-                <div class="ac" var="armorclass">
+                <div class="ac" var="armorclass" type="secondary">
                     <svg class="image" width="285.31" height="271.69" version="1.1" viewBox="0 0 75.487 71.886" xmlns="http://www.w3.org/2000/svg">
                      <g transform="translate(-28.304 -26.775)"> <!-- form inkscape-->
                       <path transform="scale(.26458)" d="m166.06 101.7 175.57 0.36117 50.048 78.264-138.39 191.73-145.69-192.31z"/>
@@ -1105,13 +1388,13 @@
                     <div class="name">Armor Class</div>
                     <div class="value" contenteditable="true">9</div>
                 </div>
-                <div class="passiveWis" var="passivewis">
+                <div class="passiveWis" var="passivewis" type="secondary">
                     <div class="name">Passive Wis</div>
                     <div class="value" contenteditable="true">9</div>
                 </div>
-                <div class="speed" var="speed">
+                <div class="speed" var="speed" type="secondary">
                     <div class="name">Speed</div>
-                    <div class="value" contenteditable="true">30</div>
+                    <div class="value" contenteditable="true">20</div>
                 </div>
 
                 <div class="ears" var="ears" type="gear">
@@ -1189,6 +1472,16 @@
                     <div class="table"></div>
                 </div>
             </div>
+        </div>
+        <div class="overlay hidden"></div>
+        <div class="itemEditor hidden">
+            <div class="image empty" title="Upload image."></div>
+            <div class="name" contenteditable="true">Apparel</div>
+            <div class="description" contenteditable="true" title="Item description."></div>
+            <div class="blurb" contenteditable="true" title="Most important three characters of your item."></div>
+            <div class="button recrop" title="Re-crop image."><i class="fas fa-crop-alt"></i></div>
+            <div class="button itemList" title="Open item from character's Wealth."><i class="fas fa-stream"></i></div>
+            <div class="button itemLink" title="Copy Item Link."><i class="fas fa-link"></i></div>
         </div>
     </body>
     <script>

@@ -65,7 +65,9 @@ async function loadCharacter()
                 element.querySelector(".icon").classList.add("hidden");
             if (v.croppedPic)
             {
-                element.querySelector(".image").style.backgroundImage = "url(\"" + v.croppedPic + "\")";
+                let image = element.querySelector(".image");
+                image.style.backgroundImage = "url(\"" + v.croppedPic + "\")";
+                image.classList.remove("empty");
             }
         }
     });
@@ -127,6 +129,8 @@ function attachControlEvents()
         element.addEventListener("click", itemEditor);
         element.addEventListener("dragover", preventBrowserDefaultEvent);
     });
+
+    document.querySelector(".overlay").addEventListener("click", hideOverlay);
 }
 
 /* functions */
@@ -157,13 +161,15 @@ function handleDroppedImage(event)
         }).then( () =>
         {
             /* add closing function to overlay */
-            createOverlay();
+            displayOverlay();
             document.querySelector(".overlay").addEventListener("click", (event) =>
             {
                 if (croppie)
                 croppie.result({type: "base64", size: "viewport", format: "webp"}).then((image) =>
                 {
-                    document.querySelector("." + pictureType +" .image").style.backgroundImage = "url(\"" + image + "\")";
+                    let imageElement = document.querySelector("." + pictureType +" .image");
+                    imageElement.style.backgroundImage = "url(\"" + image + "\")";
+                    imageElement.classList.remove("empty");
                     croppie.destroy();
                     let cropperContainer = document.querySelector(".cropperContainer");
                     cropperContainer.parentNode.removeChild(cropperContainer);
@@ -190,8 +196,16 @@ function calculateElementRect(element) //um
     let rect = {
         top: { vw: ((boundingRect.top / window.innerWidth) * 100 ).toFixed(2) },
         left: { vw: ((boundingRect.left / window.innerWidth) * 100 ).toFixed(2) }, //vw
-        width: { px: (((boundingRect.right - boundingRect.left) * (window.screen.availWidth / window.innerWidth))).toFixed(2) }, //px
-        height: { px: (((boundingRect.bottom - boundingRect.top) * (window.screen.availWidth / window.innerWidth))).toFixed(2) }, //px
+        width:
+        {
+            px: (((boundingRect.right - boundingRect.left) * (window.screen.availWidth / window.innerWidth))).toFixed(0), //px
+            vw: (((boundingRect.right - boundingRect.left) / window.innerWidth) * 100).toFixed(2) //vw
+        },
+        height:
+        {
+            px: (((boundingRect.bottom - boundingRect.top) * (window.screen.availWidth / window.innerWidth))).toFixed(2), //px
+            vw: (((boundingRect.bottom - boundingRect.top) / window.innerWidth) * 100).toFixed(2) //vw
+        }
     };
 
     return rect;
@@ -221,49 +235,70 @@ function openCroppie(image, pictureType)
 function itemEditor(event)
 {
     var topEvent = event;
-    createOverlay();
+    displayOverlay();
     //close item editor on overlay click
     document.querySelector(".overlay").addEventListener("click", (event) =>
     {
         let itemEditor = document.querySelector(".itemEditor");
-        itemEditor.parentNode.removeChild(itemEditor);
+        itemEditor.className = "itemEditor hidden";
+        //reset itemEditor
+        itemEditor.querySelector(".name").textContent = "Apparel";
+        itemEditor.querySelector(".description").innerHTML = "";
+        itemEditor.querySelector(".blurb").textContent = "";
+
     });
 
-    //create picture in original position
+    //recreate picture in original position
     let rect = calculateElementRect(topEvent.target);
-    let picFrame =  document.createElement("div");
-    picFrame.classList.add(topEvent.target.getAttribute("var"));
-    picFrame.classList.add("itemEditor");
-    picFrame.style.top = rect.top.vw + "vw";
-    picFrame.style.left = rect.left.vw + "vw";
-    picFrame.style.position = "absolute";
-    picFrame.style.zIndex = "3";
-    picFrame.setAttribute("type", topEvent.target.getAttribute("type"));
+    let itemEditor =  document.querySelector(".itemEditor");
+    itemEditor.classList.add(topEvent.target.getAttribute("var"));
+    itemEditor.style.top = rect.top.vw + "vw";
+    itemEditor.style.left = rect.left.vw + "vw";
+    itemEditor.setAttribute("type", topEvent.target.getAttribute("type"));
 
-    let image = document.createElement("div");
-    image.className = topEvent.target.querySelector(".image").className;
+    let image = document.querySelector(".itemEditor .image");
     image.style.backgroundImage = topEvent.target.querySelector(".image").style.backgroundImage;
-
-    let name = document.createElement("div");
-    name.className = "name";
-    name.textContent = topEvent.target.querySelector(".name").textContent;
-
-    picFrame.appendChild(image);
-    picFrame.appendChild(name);
-    document.body.appendChild(picFrame);
+    image.setAttribute("title", "Upload image.");
 
     // open image file / change image
-    picFrame.addEventListener("click", function(event) { console.log("ass") });
-
-    // select item from possessions icon
+    image.addEventListener("click", function(event) { console.log("ass") });
 
 
-    // display description
-    // left/bottom/right side
+    let name = document.querySelector(".itemEditor .name");
+    name.textContent = topEvent.target.querySelector(".name").textContent;
+    name.addEventListener("input", function(event)
+    {
+        console.log(event.target);
+        event.target.textContent;
+        // get slot id
+        // get slot id item
+        //
+    });
 
-    // display text
-    // left/right side
-    // recrop image
+    // item description frame
+    let description = document.querySelector(".itemEditor .description");
+    //TODO: add event listener
+    //TODO: load saved data
+
+    // item blurb
+    let blurb = document.querySelector(".itemEditor .blurb");
+    //TODO: add event listener
+    //TODO: load saved data
+
+
+    //recrop image
+    let recrop = document.querySelector(".itemEditor .recrop");
+    //TODO: add event listener
+
+    //item list
+    let itemList = document.querySelector(".itemEditor .itemList");
+    //TODO: add event listener
+
+    //link item
+    let itemLink = document.querySelector(".itemEditor .itemLink");
+    //TODO: add event listener
+
+    itemEditor.classList.remove("hidden");
 }
 
 function attributeModInputEvent(event)
@@ -275,7 +310,6 @@ function attributeModInputEvent(event)
         let modInt = parseInt(modString.replace("+", ""));
         let valueString = String((modInt * 2) + 10);
         event.target.parentNode.querySelector(".value").textContent = valueString;
-
 
         //save locally
         /*
