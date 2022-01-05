@@ -71,9 +71,28 @@ async function loadCharacter()
             }
         }
     });
+
+    if (character.name)
+        document.querySelector(".fluff .name").textContent = character.name;
+    if (character.levels)
+        document.querySelector(".fluff .levels").textContent = character.levels;
+
 }
 function attachControlEvents()
 {
+    // character name and level
+    document.querySelectorAll(".characterSheet .fluff div").forEach((element) =>
+    {
+        element.addEventListener("input", (event) =>
+        {
+            db.characters.put("characterid", (character) =>
+            {
+                character[event.target.className] = element.textContent;
+                return character;
+            });
+        });
+    });
+
     //set fluff image upload and edit events
     document.querySelectorAll(".characterSheet .style div").forEach((element) =>
     {
@@ -171,8 +190,10 @@ function handleDroppedImage(event)
                     imageElement.style.backgroundImage = "url(\"" + image + "\")";
                     imageElement.classList.remove("empty");
                     croppie.destroy();
+
                     let cropperContainer = document.querySelector(".cropperContainer");
-                    cropperContainer.parentNode.removeChild(cropperContainer);
+                    cropperContainer.classList.add("hidden");
+                    cropperContainer.removeAttribute("style");
 
                     db.characters.put(characterId, (character) =>
                     {
@@ -215,14 +236,12 @@ function openCroppie(image, pictureType)
 {
     let rect = calculateElementRect(document.querySelector("." + pictureType));
 
-    let target = document.createElement("div");
-    target.className = "cropperContainer";
+    let target = document.querySelector(".cropperContainer");
     target.style.width = rect.width.px + "px";
     target.style.height = rect.height.px + "px";
     target.style.top = (rect.top.vw - 1)  + "vw";
     target.style.left = (rect.left.vw - 1) + "vw";
-    target.style.backgroundColor = "var(--background-color)";
-    document.body.appendChild(target);
+    target.classList.remove("hidden");
 
     croppie = new Croppie(target,
     {
@@ -245,7 +264,6 @@ function itemEditor(event)
         itemEditor.querySelector(".name").textContent = "Apparel";
         itemEditor.querySelector(".description").innerHTML = "";
         itemEditor.querySelector(".blurb").textContent = "";
-
     });
 
     //recreate picture in original position

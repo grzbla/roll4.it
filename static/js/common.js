@@ -52,9 +52,3 @@ function hideOverlay()
     let overlay = document.body.querySelector(".overlay");
     overlay.classList.add("hidden");
 }
-
-function removeCropperContainer()
-{
-    let container = document.querySelector(".cropperContainer");
-    container.parentNode.removeChild(container);
-}
