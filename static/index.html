@@ -593,7 +593,7 @@
             .secondary
             {
                 position: relative;
-                height: 10vw;
+                height: 0vw;
                 margin-top: 1vw;
                 z-index: 2;
                 user-select: none;
@@ -843,14 +843,22 @@
                 filter: grayscale(100%);
                 opacity: 0.1;
             }
-            .secondary .head
+            .gear
+            {
+                position: relative;
+                height: 0vw;
+                margin-top: 1vw;
+                z-index: 2;
+                user-select: none;
+            }
+            .gear .head
             {
                 height: 10vw;
                 width: 10vw;
                 top: 12vw;
                 left: 23.9vw;
             }
-            .secondary .ears
+            .gear .ears
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -863,7 +871,7 @@
                 cursor: pointer;
 
             }
-            .secondary .shoulders
+            .gear .shoulders
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -875,7 +883,7 @@
                 cursor: pointer;
 
             }
-            .secondary .neck
+            .gear .neck
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -888,7 +896,7 @@
                 cursor: pointer;
 
             }
-            .secondary .forearms
+            .gear .forearms
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -899,7 +907,7 @@
                 cursor: pointer;
 
             }
-            .secondary .leftWrist
+            .gear .leftWrist
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -912,7 +920,7 @@
                 cursor: pointer;
 
             }
-            .secondary .rightWrist
+            .gear .rightWrist
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -925,7 +933,7 @@
             }
             .hands, .forearms, .head, .shoulders, .waist, .feet { height: 10vw; width: 10vw; }
             .leftFinger, .rightFinger, .leftWrist, .rightWrist, .ears, .neck { height: 8vw; width: 8vw; }
-            .secondary .leftFinger
+            .gear .leftFinger
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -938,7 +946,7 @@
                 cursor: pointer;
 
             }
-            .secondary .hands
+            .gear .hands
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -946,7 +954,7 @@
                 position: absolute;
                 cursor: pointer;
             }
-            .secondary .rightFinger
+            .gear .rightFinger
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -957,7 +965,7 @@
                 cursor: pointer;
             }
 
-            .secondary .waist
+            .gear .waist
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -967,7 +975,7 @@
                 cursor: pointer;
 
             }
-            .secondary .feet
+            .gear .feet
             {
                 border: 1px solid var(--style-border-color);
                 background-color: var(--background-color);
@@ -1010,7 +1018,8 @@
                             0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
-
+                outline: none;
+                pointer-events: none;
             }
 
             .ears .name,
@@ -1035,6 +1044,22 @@
                             -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
                 z-index: 2;
                 outline: none;
+                pointer-events: none;
+            }
+            .itemEditor.head .name,
+            .itemEditor.shoulders .name,
+            .itemEditor.forearms .name,
+            .itemEditor.hands .name,
+            .itemEditor.waist .name,
+            .itemEditor.feet .name,
+            .itemEditor.ears .name,
+            .itemEditor.neck .name,
+            .itemEditor.leftWrist .name,
+            .itemEditor.rightWrist .name,
+            .itemEditor.leftFinger .name,
+            .itemEditor.rightFinger .name
+            {
+                pointer-events: all;
             }
             .itemEditor
             {
@@ -1263,6 +1288,11 @@
                 left: -5.7vw;
             }
 
+            .mechanics
+            {
+                position: relative;
+                margin-top: 11vw;
+            }
             .competences, .possessions, .classes
             {
                 border: 1px solid var(--competences-border-color);
@@ -1405,7 +1435,8 @@
                     <div class="name">Speed</div>
                     <div class="value" contenteditable="true">20</div>
                 </div>
-
+            </div>
+            <div class="gear">
                 <div class="ears" var="ears" type="gear">
                     <div class="name">Ears</div>
                     <div class="image empty"></div>
@@ -1485,7 +1516,7 @@
         <div class="overlay hidden"></div>
         <div class="itemEditor hidden">
             <div class="image empty" title="Upload image."></div>
-            <div class="name" contenteditable="true">Apparel</div>
+            <div class="name" contenteditable="true"></div>
             <div class="description" contenteditable="true" title="Item description."></div>
             <div class="blurb" contenteditable="true" title="Most important three characters of your item."></div>
             <div class="button recrop" title="Re-crop image."><i class="fas fa-crop-alt"></i></div>

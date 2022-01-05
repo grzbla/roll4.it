@@ -82,6 +82,7 @@ async function loadCharacter()
         document.querySelector(".fluff .levels").textContent = character.levels;
 
 }
+
 function attachControlEvents()
 {
     // character name and level
@@ -146,7 +147,7 @@ function attachControlEvents()
     document.querySelector(".characterSheet .secondary .speed .value").addEventListener("keypress", secondaryValInputEvent);
 
     //set gear image upload and edit events
-    document.querySelectorAll(".characterSheet .secondary div[type=\"gear\"]").forEach((element) =>
+    document.querySelectorAll(".characterSheet .gear div[type=\"gear\"]").forEach((element) =>
     {
         element.addEventListener("drop", handleDroppedImage);
         element.addEventListener("click", itemEditor);
@@ -262,48 +263,39 @@ function openCroppie(image, pictureType)
 
 async function itemEditor(event)
 {
-    var topEvent = event;
     displayOverlay();
     //close item editor on overlay click
     document.querySelector(".overlay").addEventListener("click", (event) =>
     {
         let itemEditor = document.querySelector(".itemEditor");
         itemEditor.className = "itemEditor hidden";
+
         //reset itemEditor
-        itemEditor.querySelector(".name").textContent = "Apparel";
+        itemEditor.querySelector(".name").textContent = "";
         itemEditor.querySelector(".description").innerHTML = "";
         itemEditor.querySelector(".blurb").textContent = "";
     });
 
     //recreate picture in original position
-    let rect = calculateElementRect(topEvent.target);
+    let rect = calculateElementRect(event.target);
     let itemEditor =  document.querySelector(".itemEditor");
-    itemEditor.classList.add(topEvent.target.getAttribute("var"));
+    itemEditor.classList.add(event.target.getAttribute("var"));
     itemEditor.style.top = rect.top.vw + "vw";
     itemEditor.style.left = rect.left.vw + "vw";
 
-    itemEditor.setAttribute("type", topEvent.target.getAttribute("type"));
+    itemEditor.setAttribute("type", event.target.getAttribute("type"));
 
     let image = document.querySelector(".itemEditor .image");
-    image.style.backgroundImage = topEvent.target.querySelector(".image").style.backgroundImage;
+    image.style.backgroundImage = event.target.querySelector(".image").style.backgroundImage;
     image.setAttribute("title", "Upload image.");
 
     // open image file / change image
     image.addEventListener("click", function(event) { console.log("ass") });
 
-
-
     let name = document.querySelector(".itemEditor .name");
-    name.textContent = topEvent.target.querySelector(".name").textContent;
-    name.addEventListener("input", function(event)
-    {
-        console.log(event.target);
-        event.target.textContent;
-        // get slot id
-        // get slot id item
-        //
-    });
-
+    console.log(event.target.getAttribute("type"));
+    console.log(event.target.className);
+    name.textContent = document.querySelector(".characterSheet ." + event.target.getAttribute("type") + " ." + event.target.className + " .name").textContent;
     let description = document.querySelector(".itemEditor .description");
     let blurb = document.querySelector(".itemEditor .blurb");
 
@@ -311,21 +303,18 @@ async function itemEditor(event)
     let characterId = "characterid";
     let character = await db.characters.get(characterId);
 
-    console.log(character);
-    let item = character[topEvent.target.getAttribute("var")];
-    console.log(item);
+    let item = character[event.target.getAttribute("var")];
     if (item)
     {
         if (item.name && (item.name !== name.textContent))
-        name.textContent = item.name;
+            name.textContent = item.name;
 
         if (item.description && (item.description !== description.innerHTML))
-        description.innerHTML = item.description;
+            description.innerHTML = item.description;
 
-        if (item.blurb && (item.blurb !== blurb.innerHTML))
-        blurb.innerHTML = item.blurb;
+        if (item.blurb && (item.blurb !== blurb.textContent))
+            blurb.textContent = item.blurb;
     }
-
 
     itemEditor.classList.remove("hidden");
 }
@@ -601,11 +590,17 @@ function valInputEvent(event, callback)
 function itemEditorText(event)
 {
     let text = event.target.textContent;
-    let item = { field: event.target.className, type: event.target.parentNode.className.split(" ")[1] };
+    let html = event.target.innerHTML;
+    let item = { field: event.target.className, type: event.target.parentNode.classList[1] };
 
-    //save item and update ui
-    let blurb = document.querySelector(".style ." + item.type + " ." + item.field);
-    blurb.textContent = text;
+    let field = document.querySelector("." + event.target.parentNode.getAttribute("type") + " ." + item.type + " ." + item.field);
+    if (field)
+    {
+        if (item.field == "description")
+            field.innerHTML = html
+        else
+            field.textContent = text;
+    }
 
     let characterId = "characterid";
 
@@ -614,7 +609,10 @@ function itemEditorText(event)
         if (!character[item.type])
             character[item.type] = {};
 
-        character[item.type].blurb = text;
+        if (item.field == "description")
+            character[item.type][item.field] = html;
+        else
+            character[item.type][item.field] = text;
 
         return character;
     });
