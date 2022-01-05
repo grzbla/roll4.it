@@ -841,7 +841,7 @@
             div[type="gear"] .image.empty
             {
                 filter: grayscale(100%);
-                opacity: 0.2;
+                opacity: 0.1;
             }
             .secondary .head
             {
@@ -1071,13 +1071,18 @@
             [type="style"] .blurb
             {
                 position: absolute;
-                width: 7.5vw;
+                width: 9vw;
                 height: 5vw;
                 font-size: 5vw;
                 color: var(--stat-border-color);
                 line-height: 5vw;
                 outline: none;
                 overflow: hidden;
+                pointer-events: none;
+            }
+            .itemEditor[type="style"] .blurb
+            {
+                pointer-events: all;
             }
             .itemEditor[type="style"] .blurb:empty
             {
@@ -1087,7 +1092,7 @@
             .weapon[type="style"] .blurb
             {
                 top: 1vw;
-                left: 13.9vw;
+                left: 12vw;
                 text-align: right;
             }
             .apparel[type="style"] .blurb

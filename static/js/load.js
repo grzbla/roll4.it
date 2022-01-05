@@ -69,6 +69,10 @@ async function loadCharacter()
                 image.style.backgroundImage = "url(\"" + v.croppedPic + "\")";
                 image.classList.remove("empty");
             }
+            if (v.blurb)
+                element.querySelector(".blurb").textContent = v.blurb;
+            if (v.name)
+                element.querySelector(".name").textContent = v.name;
         }
     });
 
@@ -150,6 +154,11 @@ function attachControlEvents()
     });
 
     document.querySelector(".overlay").addEventListener("click", hideOverlay);
+
+    document.querySelectorAll(".itemEditor .name, .itemEditor .description, .itemEditor .blurb").forEach((element) =>
+    {
+        element.addEventListener("input", itemEditorText);
+    });
 }
 
 /* functions */
@@ -251,7 +260,7 @@ function openCroppie(image, pictureType)
     croppie.bind(image);
 }
 
-function itemEditor(event)
+async function itemEditor(event)
 {
     var topEvent = event;
     displayOverlay();
@@ -272,6 +281,7 @@ function itemEditor(event)
     itemEditor.classList.add(topEvent.target.getAttribute("var"));
     itemEditor.style.top = rect.top.vw + "vw";
     itemEditor.style.left = rect.left.vw + "vw";
+
     itemEditor.setAttribute("type", topEvent.target.getAttribute("type"));
 
     let image = document.querySelector(".itemEditor .image");
@@ -280,6 +290,7 @@ function itemEditor(event)
 
     // open image file / change image
     image.addEventListener("click", function(event) { console.log("ass") });
+
 
 
     let name = document.querySelector(".itemEditor .name");
@@ -293,28 +304,28 @@ function itemEditor(event)
         //
     });
 
-    // item description frame
     let description = document.querySelector(".itemEditor .description");
-    //TODO: add event listener
-    //TODO: load saved data
-
-    // item blurb
     let blurb = document.querySelector(".itemEditor .blurb");
-    //TODO: add event listener
-    //TODO: load saved data
 
+    //load saved data
+    let characterId = "characterid";
+    let character = await db.characters.get(characterId);
 
-    //recrop image
-    let recrop = document.querySelector(".itemEditor .recrop");
-    //TODO: add event listener
+    console.log(character);
+    let item = character[topEvent.target.getAttribute("var")];
+    console.log(item);
+    if (item)
+    {
+        if (item.name && (item.name !== name.textContent))
+        name.textContent = item.name;
 
-    //item list
-    let itemList = document.querySelector(".itemEditor .itemList");
-    //TODO: add event listener
+        if (item.description && (item.description !== description.innerHTML))
+        description.innerHTML = item.description;
 
-    //link item
-    let itemLink = document.querySelector(".itemEditor .itemLink");
-    //TODO: add event listener
+        if (item.blurb && (item.blurb !== blurb.innerHTML))
+        blurb.innerHTML = item.blurb;
+    }
+
 
     itemEditor.classList.remove("hidden");
 }
@@ -482,6 +493,7 @@ function secondaryModInputEvent(event)
         //broadcast to peers
     })
 }
+
 function secondaryValInputEvent(event)
 {
     valInputEvent(event, (event) =>
@@ -584,6 +596,28 @@ function valInputEvent(event, callback)
         if (callback)
             callback(event);
     }, 100, event);
+}
+
+function itemEditorText(event)
+{
+    let text = event.target.textContent;
+    let item = { field: event.target.className, type: event.target.parentNode.className.split(" ")[1] };
+
+    //save item and update ui
+    let blurb = document.querySelector(".style ." + item.type + " ." + item.field);
+    blurb.textContent = text;
+
+    let characterId = "characterid";
+
+    db.characters.put(characterId, (character) =>
+    {
+        if (!character[item.type])
+            character[item.type] = {};
+
+        character[item.type].blurb = text;
+
+        return character;
+    });
 }
 
 init();
