@@ -160,6 +160,11 @@ function attachControlEvents()
     {
         element.addEventListener("input", itemEditorText);
     });
+
+    document.querySelectorAll(".mechanics div").forEach( (element) =>
+    {
+        element.addEventListener("click", mechanicsEditor);
+    });
 }
 
 /* functions */
@@ -616,6 +621,20 @@ function itemEditorText(event)
 
         return character;
     });
+}
+
+function mechanicsEditor(event)
+{
+    console.log(event);
+    // open mechanic editor
+
+    //load entries for each subcategory
+
+    //add entry button
+
+    //on click show entry editor
+
+    //
 }
 
 init();
