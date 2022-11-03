@@ -1,0 +1,18 @@
+{
+  "name": "Roll For It",
+  "short_name": "roll4.it",
+  "display": "standalone",
+  "background_color": "#232323",
+  "theme_color": "#232323",
+  "description": "100% tabletop RPGs, 0% tops.",
+  "start_url": "/index.html",
+  "icons": [{
+    "src": "./nothing_here/assets/icon@192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },{
+    "src": "./nothing_here/assets/icon@512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
