@@ -5,7 +5,7 @@
   "background_color": "#232323",
   "theme_color": "#232323",
   "description": "100% tabletop RPGs, 0% tops.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "icons": [{
     "src": "./nothing_here/assets/icon@192.png",
     "sizes": "192x192",

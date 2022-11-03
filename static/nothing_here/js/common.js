@@ -33,8 +33,6 @@ let db =
 
 /* db utils */
 
-
-
 function preventBrowserDefaultEvent(event)
 {
     event.preventDefault();

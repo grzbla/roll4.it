@@ -1,29 +1,22 @@
 function roll4it()
 {
+    this.data = {},
     this.boot = async () =>
     {
-        /*
-            FETCH TABLE OF CONTENTS
-        */
-        let toc = await (await fetch("./static.json")).json();
-        console.log(toc);
-
-        /*
-            CREATE LOADING
-        */
+        // init user
+        this.init.user();
     },
-    this.display =
+    this.init =
     {
-        loading: async () =>
+        user: async () =>
         {
-
+            let userID = await db.user.get("userID");
+            console.log(userID);
         }
     }
 };
 
 //
-
-
 
 system = new roll4it();
 system.boot();

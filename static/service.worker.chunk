@@ -3,7 +3,7 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function(cache) {
-                console.info('Cache open function ended. Whatever that means.');
+                //console.info('Cache open function ended. Whatever that means.');
 
                 return cache.addAll(shitToCache);
             })
@@ -23,11 +23,11 @@ self.addEventListener('fetch', function(event)
 
                 if (response)
                 {
-                    console.log('Found this shit in cache.', event.request);
+                    //console.log('Found this shit in cache.', event.request);
                     return response;
                 }
 
-                console.info('No such shit in cache. Getting shit from that shitty server.', event.request);
+                //console.info('No such shit in cache. Getting shit from that shitty server.', event.request);
                 return fetch(event.request);
             })
     );
