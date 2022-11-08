@@ -3,7 +3,8 @@ function roll4it()
     this.data = {},
     this.boot = async () =>
     {
-        // init user
+        // if user get true > init(), else generate user(first time boot)
+        this.user.get() ? this.user.init() : this.user.create();
         this.user.init();
     },
     this.user =
@@ -12,6 +13,11 @@ function roll4it()
         {
             this.data.userID = await db.user.get("userID");
             return (this.data.userID ? true : false);
+        },
+        create: async () =>
+        {
+            this.userID = uuidv4();
+            this.machineID = uuidv4();
         },
         init: async () =>
         {
