@@ -4,14 +4,18 @@ function roll4it()
     this.boot = async () =>
     {
         // init user
-        this.init.user();
+        this.user.init();
     },
-    this.init =
+    this.user =
     {
-        user: async () =>
+        get: async () =>
         {
-            let userID = await db.user.get("userID");
-            console.log(userID);
+            this.data.userID = await db.user.get("userID");
+            return (this.data.userID ? true : false);
+        },
+        init: async () =>
+        {
+            console.log(this.data);
         }
     }
 };
