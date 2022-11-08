@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const {join} = require('path');
 
 //globals
-let files = {path: {}, type: {}, directory: {}};
+let files = { path: {}, type: {}, directory: {} };
 let cache = [];
 let cacheVersion = 1;
 let cacheVersionFileName = "./cache.version.txt";
@@ -10,6 +10,7 @@ let startPath = "./nothing_here";
 let staticIndexFileName = "./static.json";
 let cacheManifest = "./manifest.appcache";
 let cacheUseFileName = "./service.worker.use.js";
+let nonoPaths = ["data", "assets"];
 
 //iterate
 const indexFiles = async (dirPath) => await Promise.all(
@@ -20,7 +21,10 @@ const indexFiles = async (dirPath) => await Promise.all(
         let stat = await fs.stat(path);
 
         if (dirent.isDirectory()) //more recursion when folder
-            await indexFiles(path)
+        {
+            if (!nonoPaths.includes(dirent.name))
+                await indexFiles(path);
+        }
         else //get file info when file
         {
 

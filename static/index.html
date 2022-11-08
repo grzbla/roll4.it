@@ -23,15 +23,18 @@
                 --darker5: 5%;
 
                 --border-radius: var(--border-radius);
-
-                --content: '';
-                --label-length: 5vw;
-                --value-length: 7vw;
             }
             body
             {
                 user-select: none;
                 background-color: var(--background-color);
+                margin: 0;
+                padding: 0;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
             }
             loading
             {
@@ -122,12 +125,17 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
+                width: 100vw;
+                height: 100vh;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                margin: 0 1vw 0 0;
+                padding-right: 24px;
+
             }
             screen > *
             {
+                margin: 2vh 1vw 3vh 1vw;
                 position: relative;
                 display: inline-block;
                 height: 40%;
@@ -154,11 +162,10 @@
             {
                 color: var(--font-color);
                 position: absolute;
-                margin-top: -1.85vh;
-                margin-left: 5vw;
+                margin-top: -1.05vw;
+                margin-left: 4.5vw;
                 font-variant: small-caps;
-                font-size: 3vh;
-
+                font-size: 2vw;
             }
             screen > * buttons
             {
@@ -171,13 +178,13 @@
                 bottom: -2.5vh;
                 border-radius: 4em;
                 height: 5vh;
-                font-size: 4vh;
+                font-size: 2.5vw;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 0;
+                z-index: 1;
             }
-            screen > * buttons bar
+            screen > * > buttons bar
             {
                 height: 0;
                 width: 100%;
@@ -190,32 +197,32 @@
                 border-bottom: 0.2vw solid hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + 10%));
                 opacity: 1;
             }
-            screen > * buttons:hover bar
+            screen > * > buttons:hover bar
             {
                 color: var(--font-color);
                 border-bottom: 0.2vw solid transparent;
             }
-            screen > * buttons:hover > *:not(bar)
+            screen > * > buttons:hover > *:not(bar)
             {
                 opacity: 1;
             }
-            screen > * buttons > *
+            screen > * > buttons > *
             {
                 color: var(--font-color);
                 opacity: 0;
             }
-            screen > * buttons > *:not(bar):hover tooltip
+            screen > * > buttons > *:not(bar):hover tooltip
             {
                 opacity: 1;
             }
 
-            screen > * buttons > *:not(bar)
+            screen > * > buttons > *:not(bar)
             {
                 position: relative;
                 top: 0;
                 cursor: pointer;
                 margin: 0.2vw 0.5vw 0.2vw 0.5vw;
-                width: 5vh;
+                width: 3vw;
                 transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out;
                 text-align: center;
             }
@@ -227,7 +234,7 @@
                 border-radius: 4em;
                 left: -0.5vw;
                 top: -0.3vh;
-                width: 6.55vh;
+                width: 3.3vh;
                 height: 100%;
                 opacity: 0;
                 transition: all 0.3s;
@@ -284,14 +291,22 @@
             {
                 box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a))
             }
+            screen * buttons create:hover
+            {
+                 color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a))
+            }
+            screen > * buttons create:after
+            {
+                box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a))
+            }
 
             screen settings
             {
-                margin-top: 2%;
-                margin-left: 2%;
+                margin-top: 3vh;
+                margin-left: 2vw;
                 width: 15%;
             }
-            screen settings:after
+            screen settings:before
             {
                 content: '';
                 position: absolute;
@@ -316,6 +331,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                z-index: 0;
             }
             screen settings editor > *::placeholder
             {
@@ -353,14 +369,11 @@
             }
             screen games
             {
-                margin-top: 2%;
                 margin-left: 2%;
                 width: 77%;
             }
             screen characters
             {
-                margin-top: 2%;
-                margin-left: 2%;
                 width: 79%;
             }
             screen characters:after
@@ -375,15 +388,12 @@
             }
             screen contacts
             {
-                margin-top: 2%;
-                margin-left: 2%;
                 width: 17%;
             }
             screen something
             {
                 margin-top: 2%;
                 margin-left: 2%;
-                margin-bottom: 50%;
                 width: 96%;
             }
             screen something:before
@@ -423,6 +433,14 @@
     <screen>
         <settings>
             <label>Settings</label>
+            <editor>
+                <general>
+                    <option>
+                        <string var="userName" contenteditable="true" name="User name"></string>
+                        <string var="somethingElse" contenteditable="true" name="Something else"></string>
+                    </option>
+                </general>
+            </editor>
             <buttons>
                 <bar></bar>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open settings in full view.</content></tooltip></expand>
@@ -430,12 +448,6 @@
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export settings to file.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
             </buttons>
-            <editor>
-                <general>
-                    <string var="userName" contenteditable="true" name="User name"></string>
-                    <string var="somethingElse" contenteditable="true" name="Something else"></string>
-                </general>
-            </editor>
         </settings>
         <characters>
             <label>Characters</label>
@@ -445,6 +457,7 @@
                 <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import characters from file.</content></tooltip></import>
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export characters to file.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
+                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create character.</content></tooltip></create>
             </buttons>
         </characters>
         <games>
@@ -484,7 +497,7 @@
     <script src="./nothing_here/lib/pouchdb.upsert.min.js"></script>
 
     <!-- <script src="./service.worker.register.js"></script> -->
-    <script src="./nothing_here/js/common.js"></script>
     <script src="./nothing_here/js/system.js"></script>
+    <script src="./nothing_here/js/charsheet.js"></script>
 
 </html>
