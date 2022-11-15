@@ -1,8 +1,6 @@
 function roll4it()
 {
     let t = this;
-    this.db = new PouchDB("settings");
-
     /*
         BASE FUNCTIONS
     */
@@ -40,16 +38,20 @@ function roll4it()
         })
     };
 
+    /*
+        function constructors, need to be used with new prefix
+        for example: put and get function constructors are used in "declares"
+    */
     this.base =
     {
-        PutFunction: function(key) //we're using key to "upsert" and "append" to what's already in db
+        PutFunction: function(dbName) //we're using key to "upsert" and "append" to what's already in db
         {
-            return (append) =>
+            return (key, append) =>
             {
                 return new Promise( resolve => //promise to be able to call it sync with await
                 {
                     let response; //output modified object just in case
-                    t.db.upsert(key, (data) => //key bound at time of new *Function constructor call
+                    t[dbName].db.upsert(key, (data) => //key bound at time of new *Function constructor call
                     {
                         data = {...data, ...append}; //modify db object
                         response = data; //save modified object for output
@@ -62,13 +64,13 @@ function roll4it()
                 });
             }
         },
-        GetFunction: function(key) //need that key for upsert
+        GetFunction: function(dbName) //need that key for upsert
         {
-            return () =>
+            return (key) =>
             {
                 return new Promise((resolve) => //promise to be able to call it sync with await
                 {
-                    t.db.get(key).then((response) => //key bound at time of new *Function constructor call
+                    t[dbName].db.get(key).then((response) => //key bound at time of new *Function constructor call
                     {
                         // console.log(response);
                         resolve(response); //output that object
@@ -78,6 +80,20 @@ function roll4it()
                     });
                 })
             };
+        },
+        HorizontalScrollFunction: function(element, bar)
+        {
+            return (event) =>
+            {
+                event.preventDefault();
+                element.scrollLeft += event.deltaY;
+
+                const percentage = Math.floor(element.scrollLeft / (element.scrollWidth - element.offsetWidth) * 100);
+                if (!isNaN(percentage))
+                    bar.style.width = percentage + "%";
+                else
+                    bar.style.width = "0%";
+            };
         }
     };
 
@@ -86,30 +102,108 @@ function roll4it()
     */
     this.user =
     {
+        db: new PouchDB("user"),
         put: new this.base.PutFunction("user"),
         get: new this.base.GetFunction("user")
     };
 
     this.settings =
     {
+        db: new PouchDB("settings"),
         put: new this.base.PutFunction("settings"),
         get: new this.base.GetFunction("settings")
     };
 
-    this.characters =
+    /*
+        CHARACTER MODULE
+        includes charsheet and characters frame in welcome screen
+    */
+    this.character =
     {
-        put: new this.base.PutFunction("characters"),
-        get: new this.base.GetFunction("characters")
+        db: new PouchDB("character"),
+        put: new this.base.PutFunction("character"),
+        get: new this.base.GetFunction("character"),
+        emptyCards: [{name: "Austin Powers", background: "./nothing_here/assets/img/character.card.backgrounds/0.webp"}],
+
+        init: () =>
+        {
+            let addButton = document.querySelector("characters buttons create");
+            addButton.addEventListener("click", (event) =>
+            {
+                this.character.create();
+            });
+
+            return true;
+        },
+        uuid: async () =>
+        {
+            let charID = uuidv4();
+            let potentialChar = await t.character.get(charID); //get char to check if exists
+            if (potentialChar)
+                return t.character.uuid();
+            return charID;
+        },
+        /*
+            CREATE EMPTY CHARACTER
+        */
+        create: async () =>
+        {
+            let character = {};
+            let settings = await this.settings.get("main");
+
+            character.machineID = settings.machineID;
+            character.id = await this.character.uuid();
+
+            //save to db
+            await this.character.put(character.id, {...character});
+
+            //display that shit
+            this.character.createCard({...this.character.emptyCards[0], id: character.id});
+
+            return character;
+        },
+        /*
+            CREATING CHARACTER CARD FOR DISPLAY AND INTERACTION
+        */
+        createCard:  (character) =>
+        {
+            let card = document.createElement("character");
+            let name = document.createElement("name");
+            name.textContent = character.name;
+            let background = document.createElement("background");
+            background.style.backgroundImage = `url(${character.background})`;
+
+            card.addEventListener("click", (event) =>
+            {
+                this.character.edit(character);
+            });
+
+            card.appendChild(background);
+            card.appendChild(name);
+            document.querySelector("characters editor").appendChild(card);
+        },
+
+        edit: async (character) =>
+        {
+            let char = await this.character.get(character.id);
+            console.log(char);
+
+            // open system selector
+
+            // open edition selector
+
+
+        }
     };
-    this.games =
+    this.game =
     {
-        put: new this.base.PutFunction("games"),
-        get: new this.base.GetFunction("games")
+        put: new this.base.PutFunction("game"),
+        get: new this.base.GetFunction("game")
     };
-    this.contacts =
+    this.contact =
     {
-        put: new this.base.PutFunction("contacts"),
-        get: new this.base.GetFunction("contacts")
+        put: new this.base.PutFunction("contact"),
+        get: new this.base.GetFunction("contact")
     };
     /*
         FUNCTIONS
@@ -117,7 +211,19 @@ function roll4it()
     this.boot = async () =>
     {
         // if user get true > init(), else generate user(first time boot)
-        this.user.init();
+        console.log(await this.user.init());
+        console.log(this.character.init());
+
+        //add events
+
+        let characters = document.querySelector("characters editor"),
+        games = document.querySelector("games editor"),
+        assets = document.querySelector("assets editor");
+
+        characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")));
+        games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")));
+        assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")));
+        this.status = "Assumed ON.";
     };
 
     this.user = {...this.user,
@@ -127,38 +233,21 @@ function roll4it()
             /*
                 FRESH START
             */
-            let user = await this.user.get();
-            let settings = await this.settings.get();
+            let user = await this.user.get("info");
+            let settings = await this.settings.get("main");
+
             if (!user) //when no userid
             {
-                user = await this.user.put({id: uuidv4()});
-                settings = await this.settings.put({machineID: uuidv4()});
+                user = await this.user.put("info", {id: uuidv4()});
+                settings = await this.settings.put("main", {machineID: uuidv4()});
             }
 
             /*
                 LOADING USER
             */
-            console.log(user, settings);
+            return true;
         }
-    }
+    };
+
+    this.boot();
 };
-
-//
-
-system = new roll4it();
-system.boot();
-
-system.test = async function()
-{
-    let classes = {};
-    let file = await (await fetch("./nothing_here/data/5e.tools/class/index.json")).json();
-
-    for (name in file)
-    {
-        let classFile = await (await fetch("./nothing_here/data/5e.tools/class/" + file[name])).json();
-        classes = Object.assign({}, classes, classFile)
-    }
-    // console.log(classes)
-};
-
-system.test();

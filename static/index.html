@@ -8,7 +8,7 @@
         <link rel="icon" type="image/png" href="nothing_here/assets/icon@192.png"/>
         <style media="screen">
             :root {
-                --background-color: #232323;
+                --background-color: #171717;
                 --background-color-h: 0;
                 --background-color-s: 0%;
                 --background-color-l: 14%;
@@ -19,10 +19,33 @@
                 --font-color-l: 100%;
                 --font-color-a: 56%;
 
-                --darker3: 3%;
-                --darker5: 5%;
+                --change1p: 1%;
+                --change2p: 2%;
+                --change5p: 5%;
 
-                --border-radius: var(--border-radius);
+                --border-radius: 0.2vw;
+                --character-card-width: 28vh;
+                --game-card-width: 34vh;
+
+                --ploink-size: 1.5vw;
+                --ploink-blur: 3vw;
+                --ploink-base-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l)), calc(var(--font-color-a) * 0.25));
+
+                --font-hover-shadow: #000;
+
+                --character-button-color: hsla(var(--font-color-h), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
+                --game-button-color: hsla(calc(var(--font-color-h) + 180deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
+                --expand-button-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), var(--font-color-a));
+                --import-button-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
+                --export-button-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
+                --personalize-button-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a));
+                --create-button-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
+
+                --expand-click-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), calc(var(--font-color-a) * 0.25));
+                --import-click-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
+                --export-click-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
+                --personalize-click-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), calc(var(--font-color-a) * 0.25));
+                --create-click-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
             }
             body
             {
@@ -56,16 +79,18 @@
                 height: auto;
                 min-width: 20vw;
                 min-height: 3vh;
-                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) - var(--darker5)));
+                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + var(--change5p)));
                 padding: 1vh 1vw 1vh 1vw;
                 pointer-events: none;
-                top: 7vh;
+                top: 9vh;
                 left: -10vw;
                 transition: opacity 0.3s ease-out;
                 opacity: 0;
                 z-index: 2;
                 border-radius: var(--border-radius);
+                overflow: hidden;
             }
+
             tooltip content
             {
                 display: block;
@@ -129,40 +154,28 @@
                 height: 100vh;
                 overflow-y: scroll;
                 overflow-x: hidden;
-                margin: 0 1vw 0 0;
                 padding-right: 24px;
-
             }
             screen > *
             {
-                margin: 2vh 1vw 3vh 1vw;
+                margin: 4vh 0vw 3vh 6vw;
                 position: relative;
                 display: inline-block;
                 height: 40%;
                 border-radius: var(--border-radius);
-                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) - var(--darker3)));
+                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) - var(--change2p)));
                 z-index: 0;
+                padding-bottom: 2vh;
             }
-            screen *:hover
+            screen > *:hover
             {
                 z-index: 1;
             }
-            screen * background
-            {
-                display: block;
-                width: 100%;
-                height: 100%;
-                background-repeat: no-repeat;
-                background-size: contain;
-                filter: sepia(100%);
-                opacity: 0.25;
-                position: relative;
-            }
-            screen * label
+            screen > * > label
             {
                 color: var(--font-color);
                 position: absolute;
-                margin-top: -1.05vw;
+                margin-top: -1.35vw;
                 margin-left: 4.5vw;
                 font-variant: small-caps;
                 font-size: 2vw;
@@ -184,9 +197,9 @@
                 justify-content: center;
                 z-index: 1;
             }
-            screen > * > buttons bar
+            screen > * > buttons scroll
             {
-                height: 0;
+                height: 0.2vh;
                 width: 100%;
                 position: absolute;
                 border-radius: var(--border-radius);
@@ -196,13 +209,14 @@
                 transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out, opacity 0.25s ease-out;
                 border-bottom: 0.2vw solid hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + 10%));
                 opacity: 1;
+                box-sizing: border-box;
             }
-            screen > * > buttons:hover bar
+            screen > * > buttons:hover scroll
             {
                 color: var(--font-color);
                 border-bottom: 0.2vw solid transparent;
             }
-            screen > * > buttons:hover > *:not(bar)
+            screen > * > buttons:hover > *:not(scroll)
             {
                 opacity: 1;
             }
@@ -211,12 +225,12 @@
                 color: var(--font-color);
                 opacity: 0;
             }
-            screen > * > buttons > *:not(bar):hover tooltip
+            screen > * > buttons > *:not(scroll):hover tooltip
             {
                 opacity: 1;
             }
 
-            screen > * > buttons > *:not(bar)
+            screen > * > buttons > *:not(scroll)
             {
                 position: relative;
                 top: 0;
@@ -226,28 +240,30 @@
                 transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out;
                 text-align: center;
             }
-            screen > * buttons > *:not(bar):after
+            screen > * buttons > *:not(scroll):before,
+            editor > *:before
             {
                 content: "";
                 display: block;
                 position: absolute;
                 border-radius: 4em;
-                left: -0.5vw;
-                top: -0.3vh;
-                width: 3.3vh;
+                left: 0;
+                top: 0;
+                width: inherit;
                 height: 100%;
                 opacity: 0;
                 transition: all 0.3s;
-                box-shadow: 0 0 10px 40px gold;
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--ploink-base-color);
             }
 
-            screen > * buttons > *:not(bar):active:after
+            screen > * buttons > *:not(scroll):active:before,
+            editor > *:active:before
             {
-                  box-shadow: 0 0 0 0 white;
+                  box-shadow: 0 0 0 0 var(--ploink-base-color);
                   position: absolute;
                   border-radius: 4em;
-                  left: -0.5vw;
-                  top: -0.3vh;
+                  left: 0;
+                  top: 0;
                   opacity: 1;
                   transition: 0s;
             }
@@ -261,52 +277,66 @@
             }
             screen * buttons expand:hover
             {
-                 color: hsl(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%));
+                 color: var(--expand-button-color);
             }
-            screen > * buttons expand:after
+            screen > * buttons expand:before
             {
-                box-shadow: 0 0 10px 40px hsl(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%));
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--expand-click-color);
             }
             screen * buttons import:hover
             {
-                color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
+                color: var(--import-button-color);
             }
-            screen > * buttons import:after
+            screen > * buttons import:before
             {
-                box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--import-click-color);
             }
             screen * buttons export:hover
             {
-                 color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a))
+                 color: var(--export-button-color);
             }
-            screen > * buttons export:after
+            screen > * buttons export:before
             {
-                box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 55deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a))
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--export-click-color);
             }
             screen * buttons personalize:hover
             {
-                 color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a))
+                 color: var(--personalize-button-color);
             }
-            screen > * buttons personalize:after
+            screen > * buttons personalize:before
             {
-                box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a))
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--personalize-click-color);
             }
-            screen * buttons create:hover
+            screen > * buttons create:hover
             {
-                 color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a))
+                 color: var(--create-button-color);
             }
-            screen > * buttons create:after
+            screen > * buttons create:before
             {
-                box-shadow: 0 0 10px 40px hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a))
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--create-click-color);
             }
 
-            screen settings
+            scroll > bar
             {
-                margin-top: 3vh;
-                margin-left: 2vw;
-                width: 15%;
+                width: 00%;
+                background-color: var(--font-color);
+                height: 0.2vh;
+                display: block;
+                position: absolute;
+                transition: all 0.2s ease-in;
+                opacity: 0;
             }
-            screen settings:before
+
+            screen games
+            {
+                width: 88vw;
+            }
+            screen characters
+            {
+                width: 88vw;
+                margin-top: 4vw;
+            }
+            screen characters:before
             {
                 content: '';
                 position: absolute;
@@ -315,66 +345,6 @@
                 border-style: solid;
                 border-width: 3vh 5vw 0 0;
                 border-color: var(--background-color) transparent transparent transparent;
-            }
-            screen settings editor
-            {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                padding: 1vh 0.2vw 1vh 0.2vw;
-                overflow-x: hidden;
-                overflow-y: auto;
-                background-color: transparent;
-                color: var(--font-color);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 0;
-            }
-            screen settings editor > *::placeholder
-            {
-                color: var(--font-color);
-            }
-            screen settings editor > *:ms-input-placeholder
-            {
-                color: var(--font-color);
-            }
-            screen settings editor > *::ms-input-placeholder
-            {
-                color: var(--font-color);
-            }
-            screen settings editor * string
-            {
-                position: relative;
-                display: block;
-                background-color: inherit;
-                color: inherit;
-                border: 0;
-                width: var(--value-length);
-                outline: none;
-                margin: 0.5vh 0 0.5vh var(--label-length);
-                border: 1px solid var(--font-color);
-                border-radius: 0.2vw;
-                font-size: 1.5vh;
-            }
-            screen settings editor * string::before
-            {
-                content: var(--content);
-                position: absolute;
-                width: var(--label-length);
-                height: 3vh;
-                left: calc(calc(var(--label-length)  + 0.5vw) * -1);
-            }
-            screen games
-            {
-                margin-left: 2%;
-                width: 77%;
-            }
-            screen characters
-            {
-                width: 79%;
             }
             screen characters:after
             {
@@ -386,17 +356,142 @@
                 border-width: 0 5vw 2vh 0;
                 border-color: transparent var(--background-color) transparent  transparent;
             }
+            screen > *:hover scroll bar
+            {
+                opacity: 1;
+            }
+            * > editor > *
+            {
+                flex-shrink: 0;
+            }
+            screen > * > editor
+            {
+                height: calc(100%);
+                width: calc(100%);
+                vertical-align: middle;
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                transition: all 0.2s ease-in;
+            }
+            editor
+            {
+                height: calc(100% + 24px);
+                overflow: scroll;
+                position: absolute;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            characters editor character
+            {
+                display: inline-flex;
+                position: relative;
+                height: calc(var(--character-card-width) * 1.144);
+                width: var(--character-card-width);
+                margin: 4vh 1vw 4vh 1vw;
+                cursor: pointer;
+                min-width: var(--character-card-width);
+            }
+            characters editor character:hover background
+            {
+                filter: sepia(40%) saturate(1) opacity(1);
+            }
+            editor > * > name
+            {
+                display: block;
+                position: absolute;
+                color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) - 35%), calc(var(--font-color-a) + 35%));
+                width: 100%;
+                height: calc(var(--character-card-width) / 6);
+                bottom: -2.5vh;
+                left: 0;
+                font-size: calc(var(--character-card-width) / 9);
+                line-height: calc(var(--character-card-width) / 6);
+                pointer-events: none;
+                text-align: center;
+                filter: drop-shadow(2px 2px 5px #000);
+                transition: text-shadow 0.3s ease-in;
+            }
+            editor > *:hover > name
+            {
+                text-shadow: -1px -1px 0.25vw var(--font-hover-shadow),
+                              -1vw -1.2vh 0.25vw var(--font-hover-shadow),
+                              0.7vw -0.4vh 0.25vw var(--font-hover-shadow),
+                              0.35vw 0.25vw 0.25vw var(--font-hover-shadow);
+
+            }
+            editor character name.horizontal
+            {
+                display: block;
+                position: absolute;
+                background-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) - 35%), calc(var(--font-color-a) + 35%));
+                color: var(--background-color);
+                width: 2vw;
+                height: 100%;
+                top: 0;
+                font-size: 2vw;
+                line-height: 1.8vw;
+                pointer-events: none;
+                text-align: center;
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                right: 0;
+            }
+            editor > * > background
+            {
+                display: block;
+                background-image: url(./nothing_here/assets/img/character.card.backgrounds/0.webp);
+                background-size: cover;
+                background-repeat: no-repeat;
+                filter: sepia(75%) saturate(0) opacity(0.5);
+                transition: filter 0.3s ease-in;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+            editor character:before
+            {
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--character-button-color);
+            }
+
+            games editor game
+            {
+                display: inline-flex;
+                position: relative;
+                height: calc(var(--game-card-width) * 0.94);
+                width: var(--game-card-width);
+                margin: 4vh 1vw 4vh 1vw;
+                cursor: pointer;
+                flex-direction: row;
+                filter: drop-shadow(2px 2px 5px #000);
+            }
+            games editor game:hover background
+            {
+                filter: sepia(40%) saturate(1) opacity(1);
+            }
+            editor > game > background
+            {
+                background-image: url(./nothing_here/assets/img/game.card.backgrounds/0.jpg);
+            }
+            editor game:before
+            {
+                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--game-button-color);
+            }
             screen contacts
             {
                 width: 17%;
             }
-            screen something
+            screen assets
             {
-                margin-top: 2%;
-                margin-left: 2%;
-                width: 96%;
+                width: 88vw;
             }
-            screen something:before
+            screen assets:before
             {
                 content: '';
                 position: absolute;
@@ -406,7 +501,7 @@
                 border-width: 0 0 2vh 5vw;
                 border-color: transparent transparent var(--background-color) transparent;
             }
-            screen something:after
+            screen assets:after
             {
                 content: '';
                 position: absolute;
@@ -428,31 +523,26 @@
     </head>
     <body>
     <loading>
-
     </loading>
     <screen>
-        <settings>
-            <label>Settings</label>
-            <editor>
-                <general>
-                    <option>
-                        <string var="userName" contenteditable="true" name="User name"></string>
-                        <string var="somethingElse" contenteditable="true" name="Something else"></string>
-                    </option>
-                </general>
-            </editor>
-            <buttons>
-                <bar></bar>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open settings in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import settings from file.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export settings to file.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
-            </buttons>
-        </settings>
         <characters>
             <label>Characters</label>
+            <editor>
+                <character>
+                    <background></background>
+                    <name>Austin Powers</name>
+                </character>
+                <character>
+                    <background></background>
+                    <name>Austin Powers</name>
+                </character>
+                <character>
+                    <background></background>
+                    <name>more Austin Powers</name>
+                </character>
+            </editor>
             <buttons>
-                <bar></bar>
+                <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open characters in full view.</content></tooltip></expand>
                 <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import characters from file.</content></tooltip></import>
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export characters to file.</content></tooltip></export>
@@ -462,34 +552,48 @@
         </characters>
         <games>
             <label>Games</label>
+            <editor>
+                <game>
+                    <background></background>
+                    <name>Slurp-playing Gamz</name>
+                </game>
+                <game>
+                    <background></background>
+                    <name>Very cereal campaign</name>
+                </game>
+                <game>
+                    <background></background>
+                    <name>So fucking cereal i cant even cant</name>
+                </game>
+                <game>
+                    <background></background>
+                    <name>oof</name>
+                </game>
+                <game>
+                    <background></background>
+                    <name>and ass</name>
+                </game>
+            </editor>
             <buttons>
-                <bar></bar>
+                <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open games in full view.</content></tooltip></expand>
                 <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import games from file.</content></tooltip></import>
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export games game data to file.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.to file.</content></tooltip></personalize>
             </buttons>
         </games>
-        <contacts>
-            <label>Contacts</label>
+        <assets>
+            <label>Assets</label>
+            <editor>
+            </editor>
             <buttons>
-                <bar></bar>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open contacts in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import contacts from file.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export contacts to file.</content></tooltip></export>
+                <scroll><bar></bar></scroll>
+                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open Assets in full view.</content></tooltip></expand>
+                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import Assets from local filesystem.</content></tooltip></import>
+                <export><i class="fa-solid fa-download"></i><tooltip><content>Export Assets to local filesystem.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
             </buttons>
-        </contacts>
-        <something>
-            <label>Something, something</label>
-            <buttons>
-                <bar></bar>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open something, something in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import something, something from file.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export something, something to file. And some more content to test.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
-            </buttons>
-        </something>
+        </assets>
     </screen>
     </body>
     <script src="./nothing_here/lib/uuidv4.min.js"></script>
@@ -499,5 +603,6 @@
     <!-- <script src="./service.worker.register.js"></script> -->
     <script src="./nothing_here/js/system.js"></script>
     <script src="./nothing_here/js/charsheet.js"></script>
+    <script src="./nothing_here/js/ploink.js"></script>
 
 </html>
