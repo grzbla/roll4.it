@@ -1,7 +1,6 @@
-async function starto()
+function starto()
 {
     var system = new roll4it();
-    console.log(system);
 
     system.test = async function()
     {

@@ -1,6 +1,11 @@
-function debug()
+
+function De()
 {
-    for (var i = 0; i < arguments.length; i++)
-        console.log(arguments[i]);
-  }
+    this.bug = function()
+    {
+        console.log(...arguments);
+    }
+    return this;
 }
+
+var de = new De();

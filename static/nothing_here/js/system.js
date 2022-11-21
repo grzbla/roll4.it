@@ -1,3 +1,15 @@
+function De()
+{
+    this.bug = function()
+    {
+        console.log(...arguments);
+    }
+    return this;
+}
+
+var de = new De();
+
+
 function roll4it()
 {
     let t = this;
@@ -5,7 +17,7 @@ function roll4it()
         BASE FUNCTIONS
     */
 
-    this.put = function(key, append)
+    this.put = function(db, key, append)
     {
         return new Promise( resolve => //promise to be able to call it sync with await
         {
@@ -23,7 +35,7 @@ function roll4it()
         });
     };
 
-    this.get = function(key) //no param because key already provided during construction
+    this.get = function(db, key) //no param because key already provided during construction
     {
         return new Promise((resolve) => //promise to be able to call it sync with await
         {
@@ -36,6 +48,13 @@ function roll4it()
                 resolve(null); //want those short ifs
             });
         })
+    };
+
+    this.getRandomInt = function(min, max)
+    {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
     /*
@@ -83,17 +102,23 @@ function roll4it()
         },
         HorizontalScrollFunction: function(element, bar)
         {
-            return (event) =>
+            return function (event)
             {
+                this.scroll(
+                {
+                    left: 0,
+                    top: 0,
+                    behavior: 'smooth'
+                });
                 event.preventDefault();
-                element.scrollLeft += event.deltaY;
+                element.scrollLeft += (event.deltaY * 0.33);
 
-                const percentage = Math.floor(element.scrollLeft / (element.scrollWidth - element.offsetWidth) * 100);
+                const percentage = Math.floor((element.scrollLeft / (element.scrollWidth - element.offsetWidth)) * 100);
                 if (!isNaN(percentage))
                     bar.style.width = percentage + "%";
                 else
                     bar.style.width = "0%";
-            };
+            }
         }
     };
 
@@ -133,6 +158,8 @@ function roll4it()
                 this.character.create();
             });
 
+
+            this.character.editor.init();
             return true;
         },
         uuid: async () =>
@@ -148,17 +175,17 @@ function roll4it()
         */
         create: async () =>
         {
-            let character = {};
+            let character = {...this.character.emptyCards[this.getRandomInt(0, this.character.emptyCards.length - 1)]};
             let settings = await this.settings.get("main");
 
             character.machineID = settings.machineID;
             character.id = await this.character.uuid();
 
-            //save to db
+            //write locally
             await this.character.put(character.id, {...character});
 
             //display that shit
-            this.character.createCard({...this.character.emptyCards[0], id: character.id});
+            this.character.createCard({...character});
 
             return character;
         },
@@ -175,26 +202,53 @@ function roll4it()
 
             card.addEventListener("click", (event) =>
             {
-                this.character.edit(character);
+                this.character.editor.open(character);
             });
 
             card.appendChild(background);
             card.appendChild(name);
-            document.querySelector("characters editor").appendChild(card);
-        },
 
-        edit: async (character) =>
+            document.querySelector("characters fabric").appendChild(card);
+        }
+
+    };
+
+
+    this.character.editor =
+    {
+        element: null,
+        init: () =>
+        {
+            this.character.editor.element = document.querySelector("body editor");
+            document.querySelector("editor button[type='close']").addEventListener("click", (event) =>
+            {
+                this.character.editor.hide();
+            });
+        },
+        display: () =>
+        {
+            this.character.editor.element.setAttribute("display", "flex");
+        },
+        hide: () =>
+        {
+            this.character.editor.element.setAttribute("display", "hidden");
+        },
+        open: async (character) =>
         {
             let char = await this.character.get(character.id);
-            console.log(char);
 
-            // open system selector
+            this.character.editor.display();
 
-            // open edition selector
+            // 0 sheets mean character is freshly created and user needs to select charsheet
+            if (char.sheets.length == 0)
+            {
 
+            }
 
+            //open charsheet
         }
     };
+
     this.game =
     {
         put: new this.base.PutFunction("game"),
@@ -211,31 +265,32 @@ function roll4it()
     this.boot = async () =>
     {
         // if user get true > init(), else generate user(first time boot)
-        console.log(await this.user.init());
-        console.log(this.character.init());
+        await this.user.init();
+        await this.character.init();
 
         //add events
-
-        let characters = document.querySelector("characters editor"),
-        games = document.querySelector("games editor"),
-        assets = document.querySelector("assets editor");
+        let characters = document.querySelector("characters fabric"),
+        games = document.querySelector("games fabric"),
+        assets = document.querySelector("assets fabric");
 
         characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")));
         games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")));
         assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")));
         this.status = "Assumed ON.";
+
+
     };
 
     this.user = {...this.user,
         //write minimum user data for this to work
         init: async () =>
         {
-            /*
-                FRESH START
-            */
             let user = await this.user.get("info");
             let settings = await this.settings.get("main");
 
+            /*
+            WHEN FRESH USER START
+            */
             if (!user) //when no userid
             {
                 user = await this.user.put("info", {id: uuidv4()});

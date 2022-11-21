@@ -59,15 +59,21 @@
                 height: 100vh;
                 overflow: hidden;
             }
-            loading
+            body loading
             {
-                display: none;
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 overflow: hidden;
+                background-color: var(--background-color);
+                display: none;
+            }
+
+            screen > *:last-child tooltip
+            {
+                top: -9vh;
             }
             tooltip
             {
@@ -90,6 +96,7 @@
                 border-radius: var(--border-radius);
                 overflow: hidden;
             }
+
 
             tooltip content
             {
@@ -121,30 +128,30 @@
         		background-position: 0 0;
             }
 
-            @-moz-keyframes shimmer
+            @-moz-keyfabrics shimmer
             {
             		0% { background-position: top left;}
             		100% { background-position: top right; }
             }
 
-            @-webkit-keyframes shimmer
+            @-webkit-keyfabrics shimmer
             {
             		0% { background-position: top left; }
             		100% { background-position: top right; }
             }
 
-            @-o-keyframes shimmer
+            @-o-keyfabrics shimmer
             {
             		0% { background-position: top left; }
             		100% { background-position: top right; }
             }
 
-            @keyframes shimmer
+            @keyfabrics shimmer
             {
             		0% { background-position: top left; }
             		100% {background-position: top right; }
             }
-            screen
+            body screen
             {
                 display: block;
                 position: absolute;
@@ -241,7 +248,7 @@
                 text-align: center;
             }
             screen > * buttons > *:not(scroll):before,
-            editor > *:before
+            fabric > *:before
             {
                 content: "";
                 display: block;
@@ -257,7 +264,7 @@
             }
 
             screen > * buttons > *:not(scroll):active:before,
-            editor > *:active:before
+            display > *:active:before
             {
                   box-shadow: 0 0 0 0 var(--ploink-base-color);
                   position: absolute;
@@ -331,6 +338,10 @@
             {
                 width: 88vw;
             }
+            screen worlds
+            {
+                width: 88vw;
+            }
             screen characters
             {
                 width: 88vw;
@@ -364,14 +375,14 @@
             {
                 opacity: 0;
             }
-            * > editor > *
+            * > fabric > *
             {
                 flex-shrink: 0;
             }
-            screen > * > editor
+            fabric
             {
-                height: calc(100%);
-                width: calc(100%);
+                height: 100%;
+                width: 100%;
                 vertical-align: middle;
                 position: absolute;
                 top: 0;
@@ -380,19 +391,13 @@
                 padding: 0;
                 overflow: hidden;
                 transition: all 0.2s ease-in;
-            }
-            editor
-            {
-                height: calc(100% + 24px);
-                overflow: scroll;
-                position: absolute;
                 display: flex;
                 flex-direction: row;
                 flex-wrap: nowrap;
                 justify-content: flex-start;
                 align-items: center;
             }
-            characters editor character
+            characters fabric character
             {
                 display: inline-flex;
                 position: relative;
@@ -402,11 +407,11 @@
                 cursor: pointer;
                 min-width: var(--character-card-width);
             }
-            characters editor character:hover background
+            characters fabric character:hover background
             {
                 filter: sepia(40%) saturate(1) opacity(1);
             }
-            editor > * > name
+            fabric > * > name
             {
                 display: block;
                 position: absolute;
@@ -422,7 +427,7 @@
                 filter: drop-shadow(2px 2px 5px #000);
                 transition: text-shadow 0.3s ease-in;
             }
-            editor > *:hover > name
+            fabric > *:hover > name
             {
                 text-shadow: -1px -1px 0.25vw var(--font-hover-shadow),
                               -1vw -1.2vh 0.25vw var(--font-hover-shadow),
@@ -430,7 +435,7 @@
                               0.35vw 0.25vw 0.25vw var(--font-hover-shadow);
 
             }
-            editor character name.horizontal
+            fabric character name.horizontal
             {
                 display: block;
                 position: absolute;
@@ -447,7 +452,7 @@
                 text-orientation: mixed;
                 right: 0;
             }
-            editor > * > background
+            fabric > * > background
             {
                 display: block;
                 background-image: url(./nothing_here/assets/img/character.card.backgrounds/0.webp);
@@ -459,12 +464,12 @@
                 height: 100%;
                 pointer-events: none;
             }
-            editor character:before
+            fabric character:before
             {
                 box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--character-button-color);
             }
 
-            games editor game
+            games fabric game
             {
                 display: inline-flex;
                 position: relative;
@@ -475,15 +480,15 @@
                 flex-direction: row;
                 filter: drop-shadow(2px 2px 5px #000);
             }
-            games editor game:hover background
+            games fabric game:hover background
             {
                 filter: sepia(40%) saturate(1) opacity(1);
             }
-            editor > game > background
+            fabric > game > background
             {
                 background-image: url(./nothing_here/assets/img/game.card.backgrounds/0.jpg);
             }
-            editor game:before
+            fabric game:before
             {
                 box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--game-button-color);
             }
@@ -515,23 +520,104 @@
                 border-width: 0 5vw 3vh 0 ;
                 border-color: transparent transparent var(--background-color) transparent;
             }
-            .block
+
+            editor
+            {
+                vertical-align: middle;
+                transition: all 0.2s ease-in;
+                display: none;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                align-items: center;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                top: 0;
+                left: 0;
+                margin: 0;
+                padding: 0;
+                background-color: var(--background-color);
+                z-index: 2;
+            }
+            editor button[type="close"]
+            {
+                width: 8vw;
+                height: 5vh;
+                box-shadow: 0px 10px 10px 10px rgb(0 0 0 / 25%);
+                border-radius: 10px;
+                background: #000;
+                left: 46vw;
+                bottom: 1vh;
+                position: absolute;
+                display: block;
+                z-index: 3;
+                cursor: pointer;
+            }
+            editor button[type="close"]:before,
+            editor button[type="close"]:after
+            {
+                content: '';
+                width: 55%;
+                height: 2px;
+                background: var(--font-color);
+                position: absolute;
+                top: 48%;
+                left: 22%;
+                -webkit-transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                -ms-transform: rotate(-45deg);
+                -o-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                -webkit-transition: all 0.3s ease-out;
+                -moz-transition: all 0.3s ease-out;
+                -ms-transition: all 0.3s ease-out;
+                -o-transition: all 0.3s ease-out;
+                transition: all 0.3s ease-out;
+            }
+            editor button[type="close"]:after
+            {
+                -webkit-transform: rotate(45deg);
+                -moz-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+                -webkit-transition: all 0.3s ease-out;
+                -moz-transition: all 0.3s ease-out;
+                -ms-transition: all 0.3s ease-out;
+                -o-transition: all 0.3s ease-out;
+                transition: all 0.3s ease-out;
+            }
+            editor button[type="close"]:hover:before,
+            editor button[type="close"]:hover:after
+            {
+                -webkit-transform: rotate(180deg);
+                -moz-transform: rotate(180deg);
+                -ms-transform: rotate(180deg);
+                -o-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
+
+            [display="block"]
             {
                 display: block;
             }
-            .hidden
+            [display="flex"]
+            {
+                display: flex;
+            }
+            [display="none"]
             {
                 display: none;
             }
         </style>
     </head>
     <body>
-    <loading>
-    </loading>
     <screen>
         <characters>
             <label>Characters</label>
-            <editor>
+            <fabric>
                 <character>
                     <background></background>
                     <name>Austin Powers</name>
@@ -544,7 +630,7 @@
                     <background></background>
                     <name>more Austin Powers</name>
                 </character>
-            </editor>
+            </fabric>
             <buttons>
                 <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open characters in full view.</content></tooltip></expand>
@@ -556,7 +642,7 @@
         </characters>
         <games>
             <label>Games</label>
-            <editor>
+            <fabric>
                 <game>
                     <background></background>
                     <name>Slurp-playing Gamz</name>
@@ -577,36 +663,58 @@
                     <background></background>
                     <name>and ass</name>
                 </game>
-            </editor>
+            </fabric>
             <buttons>
                 <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open games in full view.</content></tooltip></expand>
                 <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import games from file.</content></tooltip></import>
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export games game data to file.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.to file.</content></tooltip></personalize>
+                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create a game.</content></tooltip></create>
             </buttons>
         </games>
+        <worlds>
+            <label>Worlds</label>
+            <fabric>
+            </fabric>
+            <buttons>
+                <scroll><bar></bar></scroll>
+                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open Worlds in full view.</content></tooltip></expand>
+                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import Worlds from local filesystem.</content></tooltip></import>
+                <export><i class="fa-solid fa-download"></i><tooltip><content>Export Worlds to local filesystem.</content></tooltip></export>
+                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
+                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create folder.</content></tooltip></create>
+            </buttons>
+        </worlds>
         <assets>
             <label>Assets</label>
-            <editor>
-            </editor>
+            <fabric>
+            </fabric>
             <buttons>
                 <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open Assets in full view.</content></tooltip></expand>
                 <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import Assets from local filesystem.</content></tooltip></import>
                 <export><i class="fa-solid fa-download"></i><tooltip><content>Export Assets to local filesystem.</content></tooltip></export>
                 <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
+                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create folder.</content></tooltip></create>
             </buttons>
         </assets>
     </screen>
+    <editor display="none">
+        <fabric></fabric>
+        <button type="close"></button>
+    </editor>
+    <loading></loading>
     </body>
+    <!-- dependencies -->
     <script src="./nothing_here/lib/uuidv4.min.js"></script>
     <script src="./nothing_here/lib/pouchdb-7.2.1.min.js"></script>
     <script src="./nothing_here/lib/pouchdb.upsert.min.js"></script>
-
+    <!-- declares -->
     <!-- <script src="./service.worker.register.js"></script> -->
+    <!-- <script src="./nothing_here/js/debug.js"></script> -->
     <script src="./nothing_here/js/system.js"></script>
     <script src="./nothing_here/js/charsheet.js"></script>
-    <script src="./nothing_here/js/ploink.js"></script>
+    <script src="./nothing_here/js/ploink.js"></script><!-- the thing here -->
 
 </html>
