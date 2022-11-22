@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" manifest="./nothing_here/cache.appcache">
+<html lang="en" dir="ltr" manifest="./cache.appcache">
     <head>
         <meta charset="utf-8">
         <title></title>
         <link rel="manifest" href="./app.webmanifest" crossorigin="use-credentials" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="icon" type="image/png" href="nothing_here/assets/icon@192.png"/>
+        <link rel="icon" type="image/png" href="assets/icon@192.png"/>
         <style media="screen">
             :root {
                 --background-color: #171717;
@@ -455,7 +455,7 @@
             fabric > * > background
             {
                 display: block;
-                background-image: url(./nothing_here/assets/img/character.card.backgrounds/0.webp);
+                background-image: url(./assets/img/character.card.backgrounds/0.webp);
                 background-size: cover;
                 background-repeat: no-repeat;
                 filter: sepia(75%) saturate(0) opacity(0.5);
@@ -486,7 +486,7 @@
             }
             fabric > game > background
             {
-                background-image: url(./nothing_here/assets/img/game.card.backgrounds/0.jpg);
+                background-image: url(./assets/img/game.card.backgrounds/0.jpg);
             }
             fabric game:before
             {
@@ -559,12 +559,12 @@
             editor button[type="close"]:after
             {
                 content: '';
-                width: 55%;
+                width: 40%;
                 height: 2px;
                 background: var(--font-color);
                 position: absolute;
                 top: 48%;
-                left: 22%;
+                left: 30%;
                 -webkit-transform: rotate(-45deg);
                 -moz-transform: rotate(-45deg);
                 -ms-transform: rotate(-45deg);
@@ -617,20 +617,7 @@
     <screen>
         <characters>
             <label>Characters</label>
-            <fabric>
-                <character>
-                    <background></background>
-                    <name>Austin Powers</name>
-                </character>
-                <character>
-                    <background></background>
-                    <name>Austin Powers</name>
-                </character>
-                <character>
-                    <background></background>
-                    <name>more Austin Powers</name>
-                </character>
-            </fabric>
+            <fabric></fabric>
             <buttons>
                 <scroll><bar></bar></scroll>
                 <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open characters in full view.</content></tooltip></expand>
@@ -707,14 +694,14 @@
     <loading></loading>
     </body>
     <!-- dependencies -->
-    <script src="./nothing_here/lib/uuidv4.min.js"></script>
-    <script src="./nothing_here/lib/pouchdb-7.2.1.min.js"></script>
-    <script src="./nothing_here/lib/pouchdb.upsert.min.js"></script>
+    <script src="lib/uuidv4.min.js"></script>
+    <script src="lib/pouchdb-7.2.1.min.js"></script>
+    <script src="lib/pouchdb.upsert.min.js"></script>
     <!-- declares -->
     <!-- <script src="./service.worker.register.js"></script> -->
-    <!-- <script src="./nothing_here/js/debug.js"></script> -->
-    <script src="./nothing_here/js/system.js"></script>
-    <script src="./nothing_here/js/charsheet.js"></script>
-    <script src="./nothing_here/js/ploink.js"></script><!-- the thing here -->
+    <!-- <script src="./js/debug.js"></script> -->
+    <script src="js/system.js"></script>
+    <script src="js/charsheet.js"></script>
+    <script src="js/ploink.js"></script><!-- the thing here -->
 
 </html>

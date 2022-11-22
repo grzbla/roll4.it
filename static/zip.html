@@ -1,0 +1,75 @@
+<script src="jszip.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+
+function Da()
+{
+    this.fetch = function(location, progress, responseType)
+    {
+        return new Promise( resolve =>
+        {
+            const req = new XMLHttpRequest();
+            req.onprogress = (event) =>
+            {
+                progress(new Progress(event.loaded, event.total));
+            };
+            req.onreadystatechange = () =>
+            {
+                if (req.readyState === XMLHttpRequest.DONE)
+                {
+                    const status = req.status;
+                    if (status === 0 || (status >= 200 && status < 400))
+                        resolve(req.response);
+                    else
+                        resolve(undefined);
+                }
+            };
+            if (responseType)
+                req.responseType = responseType;
+            req.open("GET", location);
+            req.send();
+        });
+    }
+    return this;
+}
+
+const da = new Da();
+
+function Progress(loaded, total)
+{
+    this.loaded = loaded;
+    this.total = total;
+
+    this.getFraction = () =>
+    {
+        return +((this.loaded/this.total).toFixed(4));
+    };
+
+    this.getPercentage = () =>
+    {
+		return +( ( this.getFraction() * 100 ).toFixed(2) );
+    };
+
+    return this;
+}
+
+function printProgress(progress)
+{
+    console.log(progress);
+}
+async function boop()
+{
+    const zipped = await da.fetch("nothing_here/assets/charsheets/classic.zip", printProgress, "arraybuffer");
+
+    console.log(zipped);
+
+    var unpakd = await (new JSZip()).loadAsync(zipped, {type : "uint8array"});
+
+    console.log(Object.keys(unpakd.files));
+    // console.log(await (unpakd.file(Object.keys(unpakd.files)[0])));
+    // console.log(await (unpakd.file(Object.keys(unpakd.files)[0]).async("string")));
+    // const ass2 = await zip.
+
+}
+
+boop();
+</script>

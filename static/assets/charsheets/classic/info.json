@@ -1,0 +1,8 @@
+{
+    "name": "Classic DnD5 Roll4.it Charsheet",
+    "system": "dnd5e",
+    "fonts": [{"font-family" : "Enchanted Lands", "url" : "assets/fonts/enchanted-land.regular.otf"},
+              {"font-family" : "Fantiasie Artistique", "url" : "assets/fonts/fantaisie-artistique.otf"}],
+    "css": ["lib/croppie.css"],
+    "scripts": ["lib/croppie.min.js", "lib/leaflet.js", "assets/charsheets/classic/js/common.js", "assets/charsheets/classic/charsheet.js"]
+}
