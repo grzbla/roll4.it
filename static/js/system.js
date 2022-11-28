@@ -121,27 +121,35 @@ function De()
 
 function Progress(loaded, total)
 {
+    /*
+        progress object to count percentages and fractions for progress bars
+    */
     this.loaded = loaded;
     this.total = total;
 
     this.getFraction = () =>
     {
+        //fraction is rounded to 4 decimal places
         return +((this.loaded/this.total).toFixed(4));
     };
 
     this.getPercentage = () =>
     {
+        //percentage is rounded to 2 decimal places
 		return +( ( this.getFraction() * 100 ).toFixed(2) );
     };
 
     return this;
 }
 
-var de = new De();
+var de = new De(); //de for that short .bug occasional use
 
 function roll4it()
 {
-    let t = this;
+    /*
+        main thing
+    */
+    let t = this; //reference roundabout
 
     /*
         BASE FUNCTIONS
@@ -149,27 +157,33 @@ function roll4it()
 
     this.put = function(db, key, append)
     {
+        /*
+            database "db" puts "append" at key
+            only objects to append
+            usable in cases when default gets and shits don't apply
+        */
         return new Promise( resolve => //promise to be able to call it sync with await
         {
-            let response; //output modified object just in case
+            let response; //to output modified object just in case
             t.db.upsert(key, (data) => //key bound at time of new *Function constructor call
             {
-                data = {...data, ...append}; //append to db object
-                // console.log(response);
+                data = {...data, ...append}; //append to object in db
                 return data; //saves modified object to db
             }).then(() =>
             {
-                resolve(response); //output modified object just in case
+                resolve(response); //output modified object
             });
         });
     };
-    this.get = function(db, key) //no param because key already provided during construction
+    this.get = function(db, key)
     {
+        /*
+            gets "key" from "db"
+        */
         return new Promise((resolve) => //promise to be able to call it sync with await
         {
             t.db.get(key).then((response) => //key bound at time of new *Function constructor call
             {
-                // console.log(response);
                 resolve(response); //output that object
             }).catch((e) =>
             {
@@ -180,6 +194,9 @@ function roll4it()
 
     this.getRandomInt = function(min, max)
     {
+        /*
+            gets int between minimum and maximum
+        */
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -193,12 +210,19 @@ function roll4it()
         */
         PutFunction: function(dbName) //put to object in db
         {
+            /*
+                puts object to db at path determined by "key"
+            */
             return (key, append) =>
             {
+                /*
+                    return functions to cut on defining same functionality to different modules
+                    data base name "dbName" is determined when constructed by modules
+                */
                 return new Promise( resolve => //promise to be able to call it sync with await
                 {
                     let response; //output modified object just in case
-                    t[dbName].db.upsert(key, (data) => //key bound at time of new *Function constructor call
+                    t[dbName].db.upsert(key, (data) => //key bound at constructor for redis-y use
                     {
                         data = {...data, ...append}; //modify db object
                         return data; //saves modified object to db
@@ -209,31 +233,36 @@ function roll4it()
                 });
             }
         },
-        GetFunction: function(dbName) //need that key for upsert
+        GetFunction: function(dbName)
         {
+            /*
+                get object from db from path determined by "key"
+            */
             return (key) =>
             {
-                return new Promise((resolve) => //promise to be able to call it sync with await
+                return new Promise((resolve) =>
                 {
-                    t[dbName].db.get(key).then((response) => //key bound at time of new *Function constructor call
+                    t[dbName].db.get(key).then((response) =>
                     {
-                        // console.log(response);
                         resolve(response); //output that object
                     }).catch((e) =>
                     {
-                        resolve(null); //want those short ifs
+                        resolve(null); //want those short ifs when finds nothing
                     });
                 })
             };
         },
-        PushFunction: function(dbName) //put to object in db
+        PushFunction: function(dbName)
         {
+            /*
+                push array to array at path determined by "key"
+            */
             return (key, append) =>
             {
-                return new Promise( resolve => //promise to be able to call it sync with await
+                return new Promise( resolve =>
                 {
-                    let response; //output modified object just in case
-                    t[dbName].db.upsert(key, (data) => //key bound at time of new *Function constructor call
+                    let response;
+                    t[dbName].db.upsert(key, (data) =>
                     {
                         try //because try does not cost untill it catches
                         {
@@ -251,16 +280,21 @@ function roll4it()
                 });
             }
         },
-        SpliceFunction: function(dbName) //put to object in db
+        SpliceFunction: function(dbName)
         {
-            return (key, append) =>
+            /*
+                removes matching "object" from array at "key"
+
+            */
+            return (key, object) =>
             {
-                return new Promise( resolve => //promise to be able to call it sync with await
+                return new Promise( resolve =>
                 {
-                    let response; //output modified object just in case
-                    t[dbName].db.upsert(key, (data) => //key bound at time of new *Function constructor call
+                    let response;
+                    t[dbName].db.upsert(key, (data) =>
                     {
-                        data.list = data.list.splice(data.list.indexOf(key)); //modify db object
+                        const index = data.list.indexOf(object); //get that element index
+                        data.list = data.list.splice(index); //remove element at index
                         return data; //saves modified object to db
                     }).then(() =>
                     {
@@ -269,19 +303,44 @@ function roll4it()
                 });
             }
         },
-        DeleteFunction: function(dbName) //need that key for upsert
+        DeleteFunction: function(dbName)
         {
+            /*
+                deletes "key" from object
+            */
             return (key) =>
             {
-                return new Promise((resolve) => //promise to be able to call it sync with await
+                return new Promise((resolve) =>
                 {
-                    t[dbName].db.get(key).then((response) => //key bound at time of new *Function constructor call
+                    t[dbName].db.get(key).then((response) =>
                     {
                         return t[dbName].db.remove(response);
                     }).then((response) =>
                     {
-                        console.log(response);
                         resolve(response); //output that object
+                    }).catch((e) =>
+                    {
+                        resolve(null); //want those short ifs
+                    });
+                })
+            };
+        },
+        ModifyFunction: function(dbName)
+        {
+            /*
+                deletes "key" from object
+            */
+            return (key, modifyFunction) =>
+            {
+                return new Promise((resolve) =>
+                {
+                    t[dbName].db.get(key).then((response) =>
+                    {
+                        modifyFunction(response)
+                        return response
+                    }).then((response) =>
+                    {
+                        resolve(response); //output modified object
                     }).catch((e) =>
                     {
                         resolve(null); //want those short ifs
@@ -291,22 +350,27 @@ function roll4it()
         },
         HorizontalScrollFunction: function(element, bar)
         {
+            /*
+                to use mouse scroll button to scroll horizontally on divs with overvlow: hidden
+            */
             return function (event)
             {
-                this.scroll(
+                this.scroll( //define smooth scroll behavior if compatible
                 {
                     left: 0,
                     top: 0,
                     behavior: 'smooth'
-                });
-                event.preventDefault();
-                element.scrollLeft += (event.deltaY * 0.75);
+                })
+                event.preventDefault() //prevent vertical scroll
+                const modifier = 0.75 //event.deltaY returns (+/-)100 so we might want to modify that fixed value
+                element.scrollLeft += (event.deltaY * modifier) //aply scroll
 
-                const percentage = Math.floor((element.scrollLeft / (element.scrollWidth - element.offsetWidth)) * 100);
-                if (!isNaN(percentage))
-                    bar.style.width = percentage + "%";
+                //calculate percentage
+                const percentage = Math.floor((element.scrollLeft / (element.scrollWidth - element.offsetWidth)) * 100)
+                if (!isNaN(percentage)) //if divided by zero by any chance
+                    bar.style.width = percentage + "%"
                 else
-                    bar.style.width = "0%";
+                    bar.style.width = "0%"
             }
         }
     };
@@ -316,13 +380,15 @@ function roll4it()
     */
     this.user =
     {
-        //init db parts
+        //init db for user info
         db: new PouchDB("user"),
         put: new this.base.PutFunction("user"),
         get: new this.base.GetFunction("user")
     };
     this.user = {...this.user,
-        //write minimum user data for this to work
+        /*
+            append to user the lazy way
+        */
         init: async () =>
         {
             let user = await this.user.get("info");
@@ -365,8 +431,13 @@ function roll4it()
         splice: new this.base.SpliceFunction("character"),
         emptyCards: [{name: "Austin Powers", background: "assets/img/character.card.backgrounds/0.webp"}],
 
-        init: async () => //this needs to start early
+        init: async () =>
         {
+            /*
+                initializes stuff needed for character related stuff to work
+            */
+
+            //attach character creation click event
             let addButton = document.querySelector("characters buttons create");
             addButton.addEventListener("click", (event) =>
             {
@@ -374,7 +445,7 @@ function roll4it()
             });
 
             /*
-            LOAD CHARACTERS if exist
+                LOAD CHARACTERS if exist
             */
             const chars = await this.character.get("characters");
             if (chars)
@@ -383,31 +454,36 @@ function roll4it()
             this.character.editor.init();
 
             /*
-            LOAD GAMES
+                LOAD GAMES
             */
 
             /*
-            LOAD ASSETS
+                LOAD ASSETS
             */
 
             return true;
         },
-        uuid: async () => //make sure no such uuid already exist
+        uuid: async () =>
         {
-            let charID = uuidv4().slice(0, 8);
-            let potentialChar = await t.character.get(charID); //get char to check if exists
+            /*
+                 //make sure no such uuid already exist in character db
+            */
+            let charID = uuidv4().slice(0, 4); //we dont need full length uuid at the moment
+            let potentialChar = await t.character.get(charID); //get char to check if char exists
             if (potentialChar)
                 return t.character.uuid();
             return charID;
         },
-        /*
-            CREATE EMPTY CHARACTER
-        */
         create: async () =>
         {
+            /*
+                CREATE EMPTY CHARACTER
+            */
+            //get random premade character card
             let character = {...this.character.emptyCards[this.getRandomInt(0, this.character.emptyCards.length - 1)]};
-            let settings = await this.settings.get("main");
 
+            //create blank character
+            let settings = await this.settings.get("main");
             character.clientID = settings.clientID;
             character.id = await this.character.uuid();
             character.sheets = [];
@@ -421,30 +497,37 @@ function roll4it()
 
             return character;
         },
-        /*
-            CREATING CHARACTER CARD FOR DISPLAY AND INTERACTION
-        */
         createCard:  (character) =>
         {
+            /*
+                CREATING CHARACTER CARD FOR DISPLAY AND INTERACTION
+            */
+            //create html elements
             let card = document.createElement("character");
             let name = document.createElement("name");
+
+            //set html elements
             name.textContent = character.name;
             let background = document.createElement("background");
             background.style.backgroundImage = `url(${character.background})`;
 
+            //on click editor opening event
             card.addEventListener("click", (event) =>
             {
                 this.character.editor.open(character);
             });
 
+            //slap that shit together
             card.appendChild(background);
             card.appendChild(name);
-
             document.querySelector("characters fabric").appendChild(card);
         },
-        load: (chars) => //load characters to screen
+        load: (chars) =>
         {
-            const keys = (chars).list;
+            /*
+                loads characters from database
+            */
+            const keys = chars.list; //TODO
 
             keys.forEach(async key =>
             {
@@ -456,8 +539,14 @@ function roll4it()
 
     this.network =
     {
+        /*
+            p2p communication and tracker registration
+        */
         init: async () =>
         {
+            /*
+                TODO
+            */
             const shortPlatformName = "roll4it";
             const userInfo = await this.user.get("info");
             console.log(userInfo);
@@ -469,6 +558,10 @@ function roll4it()
 
     this.character.editor =
     {
+        /*
+            charachter sheet editor
+            TODO
+        */
         element: null,
         init: () =>
         {
@@ -492,12 +585,11 @@ function roll4it()
         open: async (character) =>
         {
             let char = await this.character.get(character.id);
-
             this.character.editor.display();
 
             //open charsheet
             //TODO: different charsheets
-            const info = await this.fetch("assets/charsheets/classic/info.json");
+            const info = await this.fetch({location: "assets/charsheets/classic/info.json"});
         }
     };
 
@@ -516,7 +608,9 @@ function roll4it()
     */
     this.init = async () =>
     {
-
+        /*
+            start initialization procedure
+        */
         await this.user.init();
         await this.character.init();
         this.network.init();
@@ -539,70 +633,70 @@ function roll4it()
              this.path.load();
         });
 
-        this.path.load();
+        this.path.load(); //parse current path string
 
-        this.status = "Assumed ON.";
+        this.status = "Assumed ON."; //we're guessing
     };
-
-
-
 
     this.path =
     {
         keys:
         {
+            /*
+                url keys predefinition for easy item/source identification
+            */
             user: "user", char: "char",
             game: "game", junk: "junk",
             spot: "spot", beat: "beat",
             club: "club", page: "page",
             wire: "wire", post: "post"
-        }
-    };
-
-    this.path = {...this.path,
-    ...{
-        sources: [this.path.keys.user, this.path.keys.game, this.path.keys.club], //some keys represent sources to get items from
-        items: [this.path.keys.char, this.path.keys.junk, this.path.keys.spot, this.path.keys.wire, this.path.keys.post], //some represent types of items to be obtained from a source
+        },
+        //url source key strings
+        sources: [this.path.keys.user, this.path.keys.game, this.path.keys.club],
+        //url item key strings to be obtained from paired sources
+        items: [this.path.keys.char, this.path.keys.junk, this.path.keys.spot, this.path.keys.wire, this.path.keys.post],
         read: () => //reads windows.location.hash string into servicable chunks of information
         {
             let request = [];  //will be assembled during this function
-            let chunk = { from: [], what: [] }; //will be shoved into request during this function
+            let chunk = { from: [], what: [] }; //will be shoved into request object during this function
 
+            //parse
             const hashArray = window.location.hash.split("/");
-
             for (let i = 1, l = hashArray.length; i < l; i++)
             {
+                // assign key value pair
                 const key = hashArray[i];
                 const value = hashArray[++i];
+
+                //assign next key value pair
                 const nextKey = hashArray[i+1];
                 const nextValue = hashArray[i+2];
 
                 if (this.path.isSource(key)) //append to sources if key is source
-                {
                     chunk.from.push({key: key, value: value});
-                }
                 else //append to items if item
                 {
                     chunk.what.push({key: key, value: value});
 
-                    if (this.path.isSource(nextKey)) //source after item ends the chunk
+                    if (this.path.isSource(nextKey)) //if source is found after item
                     {
+                        //end the chunk and start new one
                         request.push(chunk);
                         chunk = { from: [], what: []};
                     }
                 }
 
-                if (!nextKey) //end of array ends the chunk
+                if (!nextKey) //end of hash array ends the chunk
                     request.push(chunk);
             }
 
             return request;
         },
-        /*
-
-        */
         load: () =>
         {
+            /*
+                TODO
+            */
             const path = this.path.read();
             /*
                 path parameter determines source of data/target of request
@@ -642,50 +736,50 @@ function roll4it()
         get: new this.base.GetFunction("cache")
     };
 
-    /*
-        fetches asset from cache
-        if not in cache, fetches from location
-    */
     this.fetch = function(args)
     {
+        /*
+        fetches asset from cache
+        if not in cache, fetches from location
+        */
         return new Promise( async (resolve) =>
         {
-            if (!args)
-                resolve(false);
+            if (!args) // if no args, nothing to do
+                resolve("ERROR: No arguments passed to fetch.");
 
-            const cached = await this.cache.get(args.location);
-            if (cached && !args.skipCache && !args.forceUpdate)
+            const cached = await this.cache.get(args.location); //checks cache presence
+            if (cached && !args.skipCache && !args.update) //cached, not skipping, not forcing update
             {
-                if (args.progress)
+                if (args.progress) //if progress function present, set 100%
                     args.progress(new Progress(1, 1));
                 resolve(cached);
             }
             else
             {
                 const req = new XMLHttpRequest();
-                if (args.progress)
-                req.onprogress = (event) =>
-                {
-                    args.progress(new Progress(event.loaded, event.total));
-                };
+                if (args.progress) //use progress function if present
+                    req.onprogress = (event) =>
+                    {
+                        args.progress(new Progress(event.loaded, event.total));
+                    };
 
-                req.onreadystatechange = async () =>
+                req.onreadystatechange = async () => //process response
                 {
                     if (req.readyState === XMLHttpRequest.DONE)
                     {
                         const status = req.status;
                         if (status === 0 || (status >= 200 && status < 400))
                         {
-                            if (!args.skipCache || args.forceUpdate)
+                            if (!args.skipCache || args.update) //not skipping cache, updating
                                 await this.cache.put(args.location, { location: args.location, file: req.response });
 
                             resolve(req.response);
                         }
                         else
-                            resolve(undefined);
+                            resolve(undefined); //TODO error handling
                     }
                 };
-                if (args.type)
+                if (args.type) //if response type present
                     req.responseType = args.type;
 
                 req.open("GET", args.location);
@@ -693,7 +787,6 @@ function roll4it()
             }
         });
     }
-
 
     this.init();
 };
