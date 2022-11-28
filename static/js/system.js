@@ -1,23 +1,43 @@
 function Hash(string)
 {
+    /*
+        constructor for an object containing both hash and string
+        gets passed by reference so its likely faster than string
+        same speed as passing hash alone, but at the cost of couple bytes
+    */
+    this.string = string;
+
     this.set = (string) =>
     {
         this.string = string;
         this.hash = new MurmurHash3("string").result();
     }
 
-    this.set(string);
     return this;
 };
 
 function HashMap()
 {
+    /*
+        it's a hash map. thats it
+    */
+
+    /*
+        token maps in addition to base values map for ease of access
+        in rare situations
+    */
     this.strings = new Map(); //strings mapped by hash, hash-string pair
     this.keys = new Map(); //hashes mapped by string, string-hash pair
     this.values = new Map(); // values mapped by hash, hash-value pair
 
-    this.get = (token) => //gets value
+    this.get = (token)
     {
+        /*
+            switch which variable is used as key
+            sacrificed minimal performance for convenience of use
+            three getters depending on key type seemed like
+            solution for edge cases
+        */
         const type = typeof(token);
     	switch(type)
         {
@@ -26,25 +46,31 @@ function HashMap()
             case "string": { return valuesMap.get(stringsMap.get(token)); }
     	}
     }
+    this.getByString = (string) => { return this.values.get(this.keys.get(string)); }
+    this.getByHash = (key) => { return this.values.get(key); }
     this.getHash = (token) =>
     {
-        const type = typeof(token);
-        if (type == "object")
-            return this.keys.get(token.string);
-        else
-            return this.keys.get(token);
+        /*
+            gets hash value for provided string token
+        */
+        return this.keys.get(token);
     }
     this.getString = (token) =>
     {
+        /*
+            gets string for provided hash token
+        */
         const type = typeof(token);
-        if (type == "object")
-            return this.strings.get(token.hash);
-        else
+        if (type != "object") //number is more likely
             return this.strings.get(token);
+        else
+            return this.strings.get(token.hash);
     }
-    this.getByString = (string) => { return this.values.get(this.keys.get(string)); }
     this.set = (string, value) =>
     {
+        /*
+            generates hash, writes keys to maps for ease of access
+        */
         if (!this.keys.has(string))
         {
             const key = MurmurHash3(string).result();
@@ -60,6 +86,9 @@ function HashMap()
     }
     this.del = (token) =>
     {
+        /*
+            entrius deletus
+        */
         let key;
         let string;
         const type = typeof(token);
@@ -78,40 +107,14 @@ function HashMap()
 
 function De()
 {
+    /*
+        it's short for the
+        short console log. use if line number in console is not needed
+        it messes with your line number in console. what, surprised?
+    */
     this.bug = function()
     {
         console.log(...arguments);
-    }
-    return this;
-}
-
-function Da()
-{
-    this.fetch = function(location, progress)
-    {
-        return new Promise( resolve =>
-        {
-            const req = new XMLHttpRequest();
-            if (progress)
-                req.onprogress = (event) =>
-                {
-                    progress(new Progress(event.loaded, event.total));
-                };
-
-            req.onreadystatechange = () =>
-            {
-                if (req.readyState === XMLHttpRequest.DONE)
-                {
-                    const status = req.status;
-                    if (status === 0 || (status >= 200 && status < 400))
-                        resolve(req.response);
-                    else
-                        resolve(undefined);
-                }
-            };
-            req.open("GET", location);
-            req.send();
-        });
     }
     return this;
 }
@@ -135,7 +138,6 @@ function Progress(loaded, total)
 }
 
 var de = new De();
-var da = new Da();
 
 function roll4it()
 {
@@ -183,12 +185,12 @@ function roll4it()
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
-    /*
-        function constructors, need to be used with new prefix
-        for example: put and get function constructors are used in "declares"
-    */
     this.base =
     {
+        /*
+        function constructors, need to be used with new prefix
+        for example: put and get function constructors are used in "declares"
+        */
         PutFunction: function(dbName) //put to object in db
         {
             return (key, append) =>
@@ -314,6 +316,7 @@ function roll4it()
     */
     this.user =
     {
+        //init db parts
         db: new PouchDB("user"),
         put: new this.base.PutFunction("user"),
         get: new this.base.GetFunction("user")
@@ -494,7 +497,7 @@ function roll4it()
 
             //open charsheet
             //TODO: different charsheets
-            const info = await da.fetch("assets/charsheets/classic/info.json");
+            const info = await this.fetch("assets/charsheets/classic/info.json");
         }
     };
 
@@ -526,7 +529,6 @@ function roll4it()
         characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")));
         games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")));
         assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")));
-
 
         /*
             window.location.hash handler
@@ -622,8 +624,6 @@ function roll4it()
             {
                 console.log(request);
             });
-
-
         },
         isSource: (key) =>
         {
@@ -634,6 +634,66 @@ function roll4it()
             return this.path.items.includes(key);
         }
     }};
+
+    this.cache =
+    {
+        db: new PouchDB("cache"),
+        put: new this.base.PutFunction("cache"),
+        get: new this.base.GetFunction("cache")
+    };
+
+    /*
+        fetches asset from cache
+        if not in cache, fetches from location
+    */
+    this.fetch = function(args)
+    {
+        return new Promise( async (resolve) =>
+        {
+            if (!args)
+                resolve(false);
+
+            const cached = await this.cache.get(args.location);
+            if (cached && !args.skipCache && !args.forceUpdate)
+            {
+                if (args.progress)
+                    args.progress(new Progress(1, 1));
+                resolve(cached);
+            }
+            else
+            {
+                const req = new XMLHttpRequest();
+                if (args.progress)
+                req.onprogress = (event) =>
+                {
+                    args.progress(new Progress(event.loaded, event.total));
+                };
+
+                req.onreadystatechange = async () =>
+                {
+                    if (req.readyState === XMLHttpRequest.DONE)
+                    {
+                        const status = req.status;
+                        if (status === 0 || (status >= 200 && status < 400))
+                        {
+                            if (!args.skipCache || args.forceUpdate)
+                                await this.cache.put(args.location, { location: args.location, file: req.response });
+
+                            resolve(req.response);
+                        }
+                        else
+                            resolve(undefined);
+                    }
+                };
+                if (args.type)
+                    req.responseType = args.type;
+
+                req.open("GET", args.location);
+                req.send();
+            }
+        });
+    }
+
 
     this.init();
 };

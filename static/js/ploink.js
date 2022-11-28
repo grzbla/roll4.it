@@ -2,7 +2,7 @@ function starto()
 {
     var system = new roll4it();
 
-    system.test = async function()
+    system.test = async () =>
     {
         let classes = {};
         let file = await (await fetch("data/5e.tools/class/index.json")).json();
@@ -13,13 +13,14 @@ function starto()
             classes = Object.assign({}, classes, classFile)
         }
 
-        const ass = await da.fetch("assets/kaylo_raps.mp4", (progress) =>
+        const ass = await system.fetch({location: "assets/kaylo_raps.mp4", progress: (progress) =>
         {
             de.bug(progress);
-        }, "arraybuffer");
+        }, type: "blob"});
         de.bug(ass ? true : false);
 
-        await da.fetch("ass.fuck");
+        console.log(ass);
+        await system.fetch({location: "ass.fuck"});
     };
 
     system.test();
