@@ -5,16 +5,16 @@ function Hash(string)
         gets passed by reference so its likely faster than string
         same speed as passing hash alone, but at the cost of couple bytes
     */
-    this.string = string;
+    this.string = string
 
     this.set = (string) =>
     {
-        this.string = string;
-        this.hash = new MurmurHash3("string").result();
+        this.string = string
+        this.hash = new MurmurHash3("string").result()
     }
 
-    return this;
-};
+    return this
+}
 
 function HashMap()
 {
@@ -26,11 +26,11 @@ function HashMap()
         token maps in addition to base values map for ease of access
         in rare situations
     */
-    this.strings = new Map(); //strings mapped by hash, hash-string pair
-    this.keys = new Map(); //hashes mapped by string, string-hash pair
-    this.values = new Map(); // values mapped by hash, hash-value pair
+    this.strings = new Map() //strings mapped by hash, hash-string pair
+    this.keys = new Map() //hashes mapped by string, string-hash pair
+    this.values = new Map() // values mapped by hash, hash-value pair
 
-    this.get = (token)
+    this.get = (token) =>
     {
         /*
             switch which variable is used as key
@@ -38,33 +38,33 @@ function HashMap()
             three getters depending on key type seemed like
             solution for edge cases
         */
-        const type = typeof(token);
+        const type = typeof(token)
     	switch(type)
         {
-            case "number": { return valuesMap.get(token); }
-            case "object": { return valuesMap.get(token.hash); }
-            case "string": { return valuesMap.get(stringsMap.get(token)); }
+            case "number": { return valuesMap.get(token) }
+            case "object": { return valuesMap.get(token.hash) }
+            case "string": { return valuesMap.get(stringsMap.get(token)) }
     	}
     }
-    this.getByString = (string) => { return this.values.get(this.keys.get(string)); }
-    this.getByHash = (key) => { return this.values.get(key); }
+    this.getByString = (string) => { return this.values.get(this.keys.get(string)) }
+    this.getByHash = (key) => { return this.values.get(key) }
     this.getHash = (token) =>
     {
         /*
             gets hash value for provided string token
         */
-        return this.keys.get(token);
+        return this.keys.get(token)
     }
     this.getString = (token) =>
     {
         /*
             gets string for provided hash token
         */
-        const type = typeof(token);
+        const type = typeof(token)
         if (type != "object") //number is more likely
-            return this.strings.get(token);
+            return this.strings.get(token)
         else
-            return this.strings.get(token.hash);
+            return this.strings.get(token.hash)
     }
     this.set = (string, value) =>
     {
@@ -73,15 +73,15 @@ function HashMap()
         */
         if (!this.keys.has(string))
         {
-            const key = MurmurHash3(string).result();
-            this.strings.set(key, string);
-            this.keys.set(string, key);
-            this.values.set(key, value);
-            return key;
+            const key = MurmurHash3(string).result()
+            this.strings.set(key, string)
+            this.keys.set(string, key)
+            this.values.set(key, value)
+            return key
         }
         else
         {
-            return false;
+            return false
         }
     }
     this.del = (token) =>
@@ -89,19 +89,19 @@ function HashMap()
         /*
             entrius deletus
         */
-        let key;
-        let string;
-        const type = typeof(token);
+        let key
+        let string
+        const type = typeof(token)
         switch(type)
         {
             case "number": { key = token, string = stringsMap.get(token); break; }
-            case "object": { key = token.hash; string = token.string; break; }
-            case "string": { key = stringsMap.get(token); string = token; break; }
+            case "object": { key = token.hash, string = token.string; break; }
+            case "string": { key = stringsMap.get(token), string = token; break; }
         }
 
-        this.values.delete(key);
-        this.strings.delete(key);
-        this.keys.delete(string);
+        this.values.delete(key)
+        this.strings.delete(key)
+        this.keys.delete(string)
     }
 }
 
@@ -114,9 +114,13 @@ function De()
     */
     this.bug = function()
     {
-        console.log(...arguments);
+        console.log(...arguments)
     }
-    return this;
+    this.style =
+    {
+        error: "background: #222 color: #ba5555"
+    }
+    return this
 }
 
 function Progress(loaded, total)
@@ -124,32 +128,32 @@ function Progress(loaded, total)
     /*
         progress object to count percentages and fractions for progress bars
     */
-    this.loaded = loaded;
-    this.total = total;
+    this.loaded = loaded
+    this.total = total
 
     this.getFraction = () =>
     {
         //fraction is rounded to 4 decimal places
-        return +((this.loaded/this.total).toFixed(4));
-    };
+        return +((this.loaded/this.total).toFixed(4))
+    }
 
     this.getPercentage = () =>
     {
         //percentage is rounded to 2 decimal places
-		return +( ( this.getFraction() * 100 ).toFixed(2) );
-    };
+		return +( ( this.getFraction() * 100 ).toFixed(2) )
+    }
 
-    return this;
+    return this
 }
 
-var de = new De(); //de for that short .bug occasional use
+var de = new De() //de for that short .bug occasional use
 
 function roll4it()
 {
     /*
         main thing
     */
-    let t = this; //reference roundabout
+    let t = this //reference roundabout
 
     /*
         BASE FUNCTIONS
@@ -164,17 +168,17 @@ function roll4it()
         */
         return new Promise( resolve => //promise to be able to call it sync with await
         {
-            let response; //to output modified object just in case
+            let response //to output modified object just in case
             t.db.upsert(key, (data) => //key bound at time of new *Function constructor call
             {
-                data = {...data, ...append}; //append to object in db
-                return data; //saves modified object to db
+                data = {...data, ...append} //append to object in db
+                return data //saves modified object to db
             }).then(() =>
             {
-                resolve(response); //output modified object
-            });
-        });
-    };
+                resolve(response) //output modified object
+            })
+        })
+    }
     this.get = function(db, key)
     {
         /*
@@ -184,23 +188,23 @@ function roll4it()
         {
             t.db.get(key).then((response) => //key bound at time of new *Function constructor call
             {
-                resolve(response); //output that object
+                resolve(response) //output that object
             }).catch((e) =>
             {
-                resolve(null); //want those short ifs
-            });
+                resolve(null) //want those short ifs
+            })
         })
-    };
+    }
 
     this.getRandomInt = function(min, max)
     {
         /*
             gets int between minimum and maximum
         */
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
 
     this.base =
     {
@@ -221,16 +225,16 @@ function roll4it()
                 */
                 return new Promise( resolve => //promise to be able to call it sync with await
                 {
-                    let response; //output modified object just in case
+                    let response //output modified object just in case
                     t[dbName].db.upsert(key, (data) => //key bound at constructor for redis-y use
                     {
-                        data = {...data, ...append}; //modify db object
-                        return data; //saves modified object to db
+                        data = {...data, ...append} //modify db object
+                        return data //saves modified object to db
                     }).then(() =>
                     {
-                        resolve(response); //output modified object just in case
-                    });
-                });
+                        resolve(response) //output modified object just in case
+                    })
+                })
             }
         },
         GetFunction: function(dbName)
@@ -244,13 +248,13 @@ function roll4it()
                 {
                     t[dbName].db.get(key).then((response) =>
                     {
-                        resolve(response); //output that object
+                        resolve(response) //output that object
                     }).catch((e) =>
                     {
-                        resolve(null); //want those short ifs when finds nothing
-                    });
+                        resolve(null) //want those short ifs when finds nothing
+                    })
                 })
-            };
+            }
         },
         PushFunction: function(dbName)
         {
@@ -261,23 +265,23 @@ function roll4it()
             {
                 return new Promise( resolve =>
                 {
-                    let response;
+                    let response
                     t[dbName].db.upsert(key, (data) =>
                     {
                         try //because try does not cost untill it catches
                         {
-                            data.list = [...data.list, ...append]; //modify db object
+                            data.list = [...data.list, ...append] //modify db object
                         }
                         catch(error) //dont care, it will catch only when char is empty
                         {
-                            data.list = [...append]; //modify db object
+                            data.list = [...append] //modify db object
                         }
-                        return data; //saves modified object to db
+                        return data //saves modified object to db
                     }).then(() =>
                     {
-                        resolve(response); //output modified object just in case
-                    });
-                });
+                        resolve(response) //output modified object just in case
+                    })
+                })
             }
         },
         SpliceFunction: function(dbName)
@@ -290,17 +294,17 @@ function roll4it()
             {
                 return new Promise( resolve =>
                 {
-                    let response;
+                    let response
                     t[dbName].db.upsert(key, (data) =>
                     {
-                        const index = data.list.indexOf(object); //get that element index
-                        data.list = data.list.splice(index); //remove element at index
-                        return data; //saves modified object to db
+                        const index = data.list.indexOf(object) //get that element index
+                        data.list = data.list.splice(index) //remove element at index
+                        return data //saves modified object to db
                     }).then(() =>
                     {
-                        resolve(response); //output modified object just in case
-                    });
-                });
+                        resolve(response) //output modified object just in case
+                    })
+                })
             }
         },
         DeleteFunction: function(dbName)
@@ -314,16 +318,16 @@ function roll4it()
                 {
                     t[dbName].db.get(key).then((response) =>
                     {
-                        return t[dbName].db.remove(response);
+                        return t[dbName].db.remove(response)
                     }).then((response) =>
                     {
-                        resolve(response); //output that object
+                        resolve(response) //output that object
                     }).catch((e) =>
                     {
-                        resolve(null); //want those short ifs
-                    });
+                        resolve(null) //want those short ifs
+                    })
                 })
-            };
+            }
         },
         ModifyFunction: function(dbName)
         {
@@ -340,13 +344,13 @@ function roll4it()
                         return response
                     }).then((response) =>
                     {
-                        resolve(response); //output modified object
+                        resolve(response) //output modified object
                     }).catch((e) =>
                     {
-                        resolve(null); //want those short ifs
-                    });
+                        resolve(null) //want those short ifs
+                    })
                 })
-            };
+            }
         },
         HorizontalScrollFunction: function(element, bar)
         {
@@ -373,7 +377,7 @@ function roll4it()
                     bar.style.width = "0%"
             }
         }
-    };
+    }
 
     /*
         DECLARES
@@ -384,38 +388,44 @@ function roll4it()
         db: new PouchDB("user"),
         put: new this.base.PutFunction("user"),
         get: new this.base.GetFunction("user")
-    };
+    }
     this.user = {...this.user,
         /*
             append to user the lazy way
         */
         init: async () =>
         {
-            let user = await this.user.get("info");
-            let settings = await this.settings.get("main");
+            let user = await this.user.get("info")
+            let settings = await this.settings.get("main")
 
             /*
             WHEN FRESH USER START
             */
             if (!user) //when no userid
             {
-                user = await this.user.put("info", {id: uuidv4()});
-                settings = await this.settings.put("main", {clientID: uuidv4()});
+                user = await this.user.put("info", {id: uuidv4()})
+                const browser = browserDetect()
+
+                settings = await this.settings.put("main",
+                        { clientID: uuidv4(), browser: { platform: browser.mobile ? "mobile" : "embedded",
+                        name: browser.name, system: browser.os, version: browser.version,
+                        versionNumber: browser.versionNumber} })
+                console.log(settings)
             }
 
             /*
                 LOADING USER
             */
-            return true;
+            return true
         }
-    };
+    }
 
     this.settings =
     {
         db: new PouchDB("settings"),
         put: new this.base.PutFunction("settings"),
         get: new this.base.GetFunction("settings")
-    };
+    }
 
     /*
         CHARACTER MODULE
@@ -438,20 +448,20 @@ function roll4it()
             */
 
             //attach character creation click event
-            let addButton = document.querySelector("characters buttons create");
+            let addButton = document.querySelector("characters buttons create")
             addButton.addEventListener("click", (event) =>
             {
-                this.character.create();
-            });
+                this.character.create()
+            })
 
             /*
                 LOAD CHARACTERS if exist
             */
-            const chars = await this.character.get("characters");
+            const chars = await this.character.get("characters")
             if (chars)
-                this.character.load(chars);
+                this.character.load(chars)
 
-            this.character.editor.init();
+            this.character.editor.init()
 
             /*
                 LOAD GAMES
@@ -461,18 +471,18 @@ function roll4it()
                 LOAD ASSETS
             */
 
-            return true;
+            return true
         },
         uuid: async () =>
         {
             /*
                  //make sure no such uuid already exist in character db
             */
-            let charID = uuidv4().slice(0, 4); //we dont need full length uuid at the moment
-            let potentialChar = await t.character.get(charID); //get char to check if char exists
+            let charID = uuidv4().slice(0, 4) //we dont need full length uuid at the moment
+            let potentialChar = await t.character.get(charID) //get char to check if char exists
             if (potentialChar)
-                return t.character.uuid();
-            return charID;
+                return t.character.uuid()
+            return charID
         },
         create: async () =>
         {
@@ -480,22 +490,22 @@ function roll4it()
                 CREATE EMPTY CHARACTER
             */
             //get random premade character card
-            let character = {...this.character.emptyCards[this.getRandomInt(0, this.character.emptyCards.length - 1)]};
+            let character = {...this.character.emptyCards[this.getRandomInt(0, this.character.emptyCards.length - 1)]}
 
             //create blank character
-            let settings = await this.settings.get("main");
-            character.clientID = settings.clientID;
-            character.id = await this.character.uuid();
-            character.sheets = [];
+            let settings = await this.settings.get("main")
+            character.clientID = settings.clientID
+            character.id = await this.character.uuid()
+            character.sheets = []
 
             //write locally
-            await this.character.put(character.id, {...character});
-            await this.character.push("characters", [character.id]);
+            await this.character.put(character.id, {...character})
+            await this.character.push("characters", [character.id])
 
             //display that shit
-            this.character.createCard({...character});
+            this.character.createCard({...character})
 
-            return character;
+            return character
         },
         createCard:  (character) =>
         {
@@ -503,106 +513,146 @@ function roll4it()
                 CREATING CHARACTER CARD FOR DISPLAY AND INTERACTION
             */
             //create html elements
-            let card = document.createElement("character");
-            let name = document.createElement("name");
+            let card = document.createElement("character")
+            let name = document.createElement("name")
 
             //set html elements
-            name.textContent = character.name;
-            let background = document.createElement("background");
-            background.style.backgroundImage = `url(${character.background})`;
+            name.textContent = character.name
+            let background = document.createElement("background")
+            background.style.backgroundImage = `url(${character.background})`
 
             //on click editor opening event
             card.addEventListener("click", (event) =>
             {
-                this.character.editor.open(character);
-            });
+                this.character.editor.open(character)
+            })
 
             //slap that shit together
-            card.appendChild(background);
-            card.appendChild(name);
-            document.querySelector("characters fabric").appendChild(card);
+            card.appendChild(background)
+            card.appendChild(name)
+            document.querySelector("characters fabric").appendChild(card)
         },
         load: (chars) =>
         {
             /*
                 loads characters from database
             */
-            const keys = chars.list; //TODO
+            const keys = chars.list //TODO later
 
             keys.forEach(async key =>
             {
-                const character = await this.character.get(key);
-                this.character.createCard(character);
+                const character = await this.character.get(key)
+                this.character.createCard(character)
             })
         }
-    };
+    }
 
     this.network =
     {
         /*
             p2p communication and tracker registration
         */
-        init: async () =>
+        responder: new HashMap(),
+        connections: new HashMap(),
+        on:
+        {
+            open: (id) => { console.log('confirming peer ID: ' + id) }
+        },
+        connect: async (peerid) =>
         {
             /*
-                TODO
+                connect to peer
             */
-            const shortPlatformName = "roll4it";
-            const userInfo = await this.user.get("info");
-            console.log(userInfo);
-            // this.network.peeri = new Peeri(, );
-            // console.log(this.network.peeri);
+            let connection = peer.connect(peerid)
+            return this.network.connections.set(peerid, connection)
+        },
+        receive: async (connection) =>
+        {
+            /*
+                receive connection
+            */
+            connection.on('data', (message) => { responder.get(message.typehash)(); });
+            return this.network.connections.set(peerid, peer.connect(peerid))
+        },
+        disconnect: async (peerid) =>
+        {
+            /*
+                disconnect from peer
+            */
+            this.network.connections.get(peerid).disconnect()
+            return this.network.connections.del(peerid)
+        },
+        send: (peerid, message) =>
+        {
+            /*
+                send message
+            */
+            this.network.connection.get(peerid).send(message)
         }
-    };
+    }
 
+    this.network.init = async () =>
+    {
+        /*
+            TODO now
+        */
+        const shortPlatformName = "roll4it"
+        const userInfo = await this.user.get("info")
+        const settings = await this.settings.get("main")
+        this.network.peeri = new Peeri(userInfo.id + "|" + settings.clientID + "|" +
+                            settings.browser.name + "-" + settings.browser.system,
+                            {"open": this.network.on.open})
+
+        this.network.responder.set("", () =>{});
+    },
 
     this.character.editor =
     {
         /*
             charachter sheet editor
-            TODO
+            TODO later
         */
         element: null,
         init: () =>
         {
             //for reuse
-            this.character.editor.element = document.querySelector("body editor");
+            this.character.editor.element = document.querySelector("body editor")
 
             //attach click event
             document.querySelector("editor button[type='close']").addEventListener("click", (event) =>
             {
-                this.character.editor.hide();
-            });
+                this.character.editor.hide()
+            })
         },
         display: () =>
         {
-            this.character.editor.element.setAttribute("display", "flex");
+            this.character.editor.element.setAttribute("display", "flex")
         },
         hide: () =>
         {
-            this.character.editor.element.setAttribute("display", "hidden");
+            this.character.editor.element.setAttribute("display", "hidden")
         },
         open: async (character) =>
         {
-            let char = await this.character.get(character.id);
-            this.character.editor.display();
+            let char = await this.character.get(character.id)
+            this.character.editor.display()
 
             //open charsheet
-            //TODO: different charsheets
-            const info = await this.fetch({location: "assets/charsheets/classic/info.json"});
+            //TODO later: different charsheets
+            const info = await this.fetch({location: "assets/charsheets/classic/info.json"})
         }
-    };
+    }
 
     this.game =
     {
         put: new this.base.PutFunction("game"),
         get: new this.base.GetFunction("game")
-    };
+    }
     this.contact =
     {
         put: new this.base.PutFunction("contact"),
         get: new this.base.GetFunction("contact")
-    };
+    }
     /*
         FUNCTIONS
     */
@@ -611,18 +661,18 @@ function roll4it()
         /*
             start initialization procedure
         */
-        await this.user.init();
-        await this.character.init();
-        this.network.init();
+        await this.user.init()
+        await this.character.init()
+        this.network.init()
 
         //mouse scroll events
         let characters = document.querySelector("characters fabric"),
         games = document.querySelector("games fabric"),
-        assets = document.querySelector("assets fabric");
+        assets = document.querySelector("assets fabric")
 
-        characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")));
-        games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")));
-        assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")));
+        characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")))
+        games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")))
+        assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")))
 
         /*
             window.location.hash handler
@@ -630,13 +680,13 @@ function roll4it()
         //listen for hashchange event
         window.addEventListener("hashchange", (event) =>
         {
-             this.path.load();
-        });
+             this.path.load()
+        })
 
-        this.path.load(); //parse current path string
+        this.path.load() //parse current path string
 
-        this.status = "Assumed ON."; //we're guessing
-    };
+        this.status = "Assumed ON." //we're guessing
+    }
 
     this.path =
     {
@@ -651,53 +701,56 @@ function roll4it()
             club: "club", page: "page",
             wire: "wire", post: "post"
         },
+    }
+
+    this.path = {...this.path, ...{
         //url source key strings
         sources: [this.path.keys.user, this.path.keys.game, this.path.keys.club],
         //url item key strings to be obtained from paired sources
         items: [this.path.keys.char, this.path.keys.junk, this.path.keys.spot, this.path.keys.wire, this.path.keys.post],
         read: () => //reads windows.location.hash string into servicable chunks of information
         {
-            let request = [];  //will be assembled during this function
-            let chunk = { from: [], what: [] }; //will be shoved into request object during this function
+            let request = []  //will be assembled during this function
+            let chunk = { from: [], what: [] } //will be shoved into request object during this function
 
             //parse
-            const hashArray = window.location.hash.split("/");
+            const hashArray = window.location.hash.split("/")
             for (let i = 1, l = hashArray.length; i < l; i++)
             {
                 // assign key value pair
-                const key = hashArray[i];
-                const value = hashArray[++i];
+                const key = hashArray[i]
+                const value = hashArray[++i]
 
                 //assign next key value pair
-                const nextKey = hashArray[i+1];
-                const nextValue = hashArray[i+2];
+                const nextKey = hashArray[i+1]
+                const nextValue = hashArray[i+2]
 
                 if (this.path.isSource(key)) //append to sources if key is source
-                    chunk.from.push({key: key, value: value});
+                    chunk.from.push({key: key, value: value})
                 else //append to items if item
                 {
-                    chunk.what.push({key: key, value: value});
+                    chunk.what.push({key: key, value: value})
 
                     if (this.path.isSource(nextKey)) //if source is found after item
                     {
                         //end the chunk and start new one
-                        request.push(chunk);
-                        chunk = { from: [], what: []};
+                        request.push(chunk)
+                        chunk = { from: [], what: []}
                     }
                 }
 
                 if (!nextKey) //end of hash array ends the chunk
-                    request.push(chunk);
+                    request.push(chunk)
             }
 
-            return request;
+            return request
         },
         load: () =>
         {
             /*
-                TODO
+                TODO later
             */
-            const path = this.path.read();
+            const path = this.path.read()
             /*
                 path parameter determines source of data/target of request
                 likely sources:
@@ -716,25 +769,25 @@ function roll4it()
 
             path.forEach(request =>
             {
-                console.log(request);
-            });
+                console.log(request)
+            })
         },
         isSource: (key) =>
         {
-            return this.path.sources.includes(key);
+            return this.path.sources.includes(key)
         },
         isItem: (key) =>
         {
-            return this.path.items.includes(key);
+            return this.path.items.includes(key)
         }
-    }};
+    }}
 
-    this.cache =
+    this.cache = //caching assets locally
     {
         db: new PouchDB("cache"),
         put: new this.base.PutFunction("cache"),
         get: new this.base.GetFunction("cache")
-    };
+    }
 
     this.fetch = function(args)
     {
@@ -745,48 +798,52 @@ function roll4it()
         return new Promise( async (resolve) =>
         {
             if (!args) // if no args, nothing to do
-                resolve("ERROR: No arguments passed to fetch.");
+                resolve("ERROR: No arguments passed to fetch.")
 
-            const cached = await this.cache.get(args.location); //checks cache presence
+            const cached = await this.cache.get(args.location) //checks cache presence
             if (cached && !args.skipCache && !args.update) //cached, not skipping, not forcing update
             {
                 if (args.progress) //if progress function present, set 100%
-                    args.progress(new Progress(1, 1));
-                resolve(cached);
+                    args.progress(new Progress(1, 1))
+                resolve(cached)
             }
             else
             {
-                const req = new XMLHttpRequest();
+                const req = new XMLHttpRequest()
                 if (args.progress) //use progress function if present
                     req.onprogress = (event) =>
                     {
-                        args.progress(new Progress(event.loaded, event.total));
-                    };
+                        args.progress(new Progress(event.loaded, event.total))
+                    }
 
                 req.onreadystatechange = async () => //process response
                 {
                     if (req.readyState === XMLHttpRequest.DONE)
                     {
-                        const status = req.status;
+                        const status = req.status
                         if (status === 0 || (status >= 200 && status < 400))
                         {
                             if (!args.skipCache || args.update) //not skipping cache, updating
-                                await this.cache.put(args.location, { location: args.location, file: req.response });
+                                await this.cache.put(args.location, { location: args.location, file: req.response })
 
-                            resolve(req.response);
+                            resolve(req.response)
                         }
                         else
-                            resolve(undefined); //TODO error handling
+                        {
+                            console.log('%c fetch() connection error.  ', de.style.error)
+                            console.log(req)
+                            resolve(undefined) //TODO much later error handling
+                        }
                     }
-                };
+                }
                 if (args.type) //if response type present
-                    req.responseType = args.type;
+                    req.responseType = args.type
 
-                req.open("GET", args.location);
-                req.send();
+                req.open("GET", args.location)
+                req.send()
             }
-        });
+        })
     }
 
-    this.init();
-};
+    this.init()
+}

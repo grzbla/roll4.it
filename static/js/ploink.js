@@ -18,7 +18,6 @@ function starto()
             de.bug(progress);
         }, type: "blob"});
         de.bug(ass ? true : false);
-        console.log('%c hello world ', 'background: #222; color: #bada55');
         console.log(ass);
         await system.fetch({location: "ass.fuck"});
     };
