@@ -693,14 +693,20 @@
     </editor>
     <loading></loading>
     </body>
-    <!-- dependencies -->
-    <script src="lib/uuidv4.min.js"></script>
-    <script src="lib/pouchdb-7.2.1.min.js"></script>
-    <script src="lib/pouchdb.upsert.min.js"></script>
+    <!-- libraries -->
+    <script type="text/javascript" src="lib/uuidv4.min.js"></script>
+    <script type="text/javascript" src="lib/pouchdb-7.2.1.min.js"></script>
+    <script type="text/javascript" src="lib/pouchdb.upsert.min.js"></script>
+    <script type="text/javascript" src="lib/peerjs.min.js"></script>
+    <script type="text/javascript" src="lib/imurmurhash.min.js"></script>
     <!-- declares -->
+    <!--  service worker source caching -->
     <!-- <script src="./service.worker.register.js"></script> -->
-    <!-- <script src="./js/debug.js"></script> -->
+    <!-- base code -->
+    <script src="js/language.js"></script>
     <script src="js/system.js"></script>
+    <script src="js/network.js"></script>
+    <!-- modules -->
     <script src="js/charsheet.js"></script>
     <script src="js/ploink.js"></script><!-- the thing here -->
 

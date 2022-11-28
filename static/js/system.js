@@ -1,3 +1,81 @@
+function Hash(string)
+{
+    this.set = (string) =>
+    {
+        this.string = string;
+        this.hash = new MurmurHash3("string").result();
+    }
+
+    this.set(string);
+    return this;
+};
+
+function HashMap()
+{
+    this.strings = new Map(); //strings mapped by hash, hash-string pair
+    this.keys = new Map(); //hashes mapped by string, string-hash pair
+    this.values = new Map(); // values mapped by hash, hash-value pair
+
+    this.get = (token) => //gets value
+    {
+        const type = typeof(token);
+    	switch(type)
+        {
+            case "number": { return valuesMap.get(token); }
+            case "object": { return valuesMap.get(token.hash); }
+            case "string": { return valuesMap.get(stringsMap.get(token)); }
+    	}
+    }
+    this.getHash = (token) =>
+    {
+        const type = typeof(token);
+        if (type == "object")
+            return this.keys.get(token.string);
+        else
+            return this.keys.get(token);
+    }
+    this.getString = (token) =>
+    {
+        const type = typeof(token);
+        if (type == "object")
+            return this.strings.get(token.hash);
+        else
+            return this.strings.get(token);
+    }
+    this.getByString = (string) => { return this.values.get(this.keys.get(string)); }
+    this.set = (string, value) =>
+    {
+        if (!this.keys.has(string))
+        {
+            const key = MurmurHash3(string).result();
+            this.strings.set(key, string);
+            this.keys.set(string, key);
+            this.values.set(key, value);
+            return key;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    this.del = (token) =>
+    {
+        let key;
+        let string;
+        const type = typeof(token);
+        switch(type)
+        {
+            case "number": { key = token, string = stringsMap.get(token); break; }
+            case "object": { key = token.hash; string = token.string; break; }
+            case "string": { key = stringsMap.get(token); string = token; break; }
+        }
+
+        this.values.delete(key);
+        this.strings.delete(key);
+        this.keys.delete(string);
+    }
+}
+
 function De()
 {
     this.bug = function()
@@ -59,10 +137,10 @@ function Progress(loaded, total)
 var de = new De();
 var da = new Da();
 
-
 function roll4it()
 {
     let t = this;
+
     /*
         BASE FUNCTIONS
     */
@@ -240,6 +318,28 @@ function roll4it()
         put: new this.base.PutFunction("user"),
         get: new this.base.GetFunction("user")
     };
+    this.user = {...this.user,
+        //write minimum user data for this to work
+        init: async () =>
+        {
+            let user = await this.user.get("info");
+            let settings = await this.settings.get("main");
+
+            /*
+            WHEN FRESH USER START
+            */
+            if (!user) //when no userid
+            {
+                user = await this.user.put("info", {id: uuidv4()});
+                settings = await this.settings.put("main", {clientID: uuidv4()});
+            }
+
+            /*
+                LOADING USER
+            */
+            return true;
+        }
+    };
 
     this.settings =
     {
@@ -262,7 +362,7 @@ function roll4it()
         splice: new this.base.SpliceFunction("character"),
         emptyCards: [{name: "Austin Powers", background: "assets/img/character.card.backgrounds/0.webp"}],
 
-        init: async () =>
+        init: async () => //this needs to start early
         {
             let addButton = document.querySelector("characters buttons create");
             addButton.addEventListener("click", (event) =>
@@ -277,12 +377,19 @@ function roll4it()
             if (chars)
                 this.character.load(chars);
 
-
-
             this.character.editor.init();
+
+            /*
+            LOAD GAMES
+            */
+
+            /*
+            LOAD ASSETS
+            */
+
             return true;
         },
-        uuid: async () =>
+        uuid: async () => //make sure no such uuid already exist
         {
             let charID = uuidv4().slice(0, 8);
             let potentialChar = await t.character.get(charID); //get char to check if exists
@@ -298,7 +405,7 @@ function roll4it()
             let character = {...this.character.emptyCards[this.getRandomInt(0, this.character.emptyCards.length - 1)]};
             let settings = await this.settings.get("main");
 
-            character.machineID = settings.machineID;
+            character.clientID = settings.clientID;
             character.id = await this.character.uuid();
             character.sheets = [];
 
@@ -324,7 +431,6 @@ function roll4it()
 
             card.addEventListener("click", (event) =>
             {
-                console.log(character);
                 this.character.editor.open(character);
             });
 
@@ -335,17 +441,26 @@ function roll4it()
         },
         load: (chars) => //load characters to screen
         {
-            de.bug(chars);
             const keys = (chars).list;
 
             keys.forEach(async key =>
             {
                 const character = await this.character.get(key);
                 this.character.createCard(character);
-                de.bug(key);
             })
         }
+    };
 
+    this.network =
+    {
+        init: async () =>
+        {
+            const shortPlatformName = "roll4it";
+            const userInfo = await this.user.get("info");
+            console.log(userInfo);
+            // this.network.peeri = new Peeri(, );
+            // console.log(this.network.peeri);
+        }
     };
 
 
@@ -377,15 +492,9 @@ function roll4it()
 
             this.character.editor.display();
 
-            // 0 sheets mean character is freshly created and user needs to select charsheet
-            // if (char.sheets.length == 0)
-
             //open charsheet
             //TODO: different charsheets
-            const charsheet = await da.fetch("assets/charsheets/classic/index.html");
-            document.querySelector("body editor fabric").innerHTML = charsheet;
-            const info = JSON.parse(await da.fetch("assets/charsheets/classic/info.json"));
-            de.bug(info);
+            const info = await da.fetch("assets/charsheets/classic/info.json");
         }
     };
 
@@ -402,13 +511,14 @@ function roll4it()
     /*
         FUNCTIONS
     */
-    this.boot = async () =>
+    this.init = async () =>
     {
-        // if user get true > init(), else generate user(first time boot)
+
         await this.user.init();
         await this.character.init();
+        this.network.init();
 
-        //add events
+        //mouse scroll events
         let characters = document.querySelector("characters fabric"),
         games = document.querySelector("games fabric"),
         assets = document.querySelector("assets fabric");
@@ -416,33 +526,114 @@ function roll4it()
         characters.addEventListener("wheel", new this.base.HorizontalScrollFunction(characters, characters.parentNode.querySelector("scroll bar")));
         games.addEventListener("wheel", new this.base.HorizontalScrollFunction(games, games.parentNode.querySelector("scroll bar")));
         assets.addEventListener("wheel", new this.base.HorizontalScrollFunction(assets, assets.parentNode.querySelector("scroll bar")));
+
+
+        /*
+            window.location.hash handler
+        */
+        //listen for hashchange event
+        window.addEventListener("hashchange", (event) =>
+        {
+             this.path.load();
+        });
+
+        this.path.load();
+
         this.status = "Assumed ON.";
-
-
     };
 
-    this.user = {...this.user,
-        //write minimum user data for this to work
-        init: async () =>
+
+
+
+    this.path =
+    {
+        keys:
         {
-            let user = await this.user.get("info");
-            let settings = await this.settings.get("main");
-
-            /*
-            WHEN FRESH USER START
-            */
-            if (!user) //when no userid
-            {
-                user = await this.user.put("info", {id: uuidv4()});
-                settings = await this.settings.put("main", {machineID: uuidv4()});
-            }
-
-            /*
-                LOADING USER
-            */
-            return true;
+            user: "user", char: "char",
+            game: "game", junk: "junk",
+            spot: "spot", beat: "beat",
+            club: "club", page: "page",
+            wire: "wire", post: "post"
         }
     };
 
-    this.boot();
+    this.path = {...this.path,
+    ...{
+        sources: [this.path.keys.user, this.path.keys.game, this.path.keys.club], //some keys represent sources to get items from
+        items: [this.path.keys.char, this.path.keys.junk, this.path.keys.spot, this.path.keys.wire, this.path.keys.post], //some represent types of items to be obtained from a source
+        read: () => //reads windows.location.hash string into servicable chunks of information
+        {
+            let request = [];  //will be assembled during this function
+            let chunk = { from: [], what: [] }; //will be shoved into request during this function
+
+            const hashArray = window.location.hash.split("/");
+
+            for (let i = 1, l = hashArray.length; i < l; i++)
+            {
+                const key = hashArray[i];
+                const value = hashArray[++i];
+                const nextKey = hashArray[i+1];
+                const nextValue = hashArray[i+2];
+
+                if (this.path.isSource(key)) //append to sources if key is source
+                {
+                    chunk.from.push({key: key, value: value});
+                }
+                else //append to items if item
+                {
+                    chunk.what.push({key: key, value: value});
+
+                    if (this.path.isSource(nextKey)) //source after item ends the chunk
+                    {
+                        request.push(chunk);
+                        chunk = { from: [], what: []};
+                    }
+                }
+
+                if (!nextKey) //end of array ends the chunk
+                    request.push(chunk);
+            }
+
+            return request;
+        },
+        /*
+
+        */
+        load: () =>
+        {
+            const path = this.path.read();
+            /*
+                path parameter determines source of data/target of request
+                likely sources:
+                    other user
+                    game node
+                    club node
+
+                parameter determines type of data requested
+                likely data:
+                    char
+                    junk
+                    spot
+                    wire
+                    post
+            */
+
+            path.forEach(request =>
+            {
+                console.log(request);
+            });
+
+
+        },
+        isSource: (key) =>
+        {
+            return this.path.sources.includes(key);
+        },
+        isItem: (key) =>
+        {
+            return this.path.items.includes(key);
+        }
+    }};
+
+    this.init();
 };
