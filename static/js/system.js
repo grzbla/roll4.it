@@ -596,20 +596,25 @@ function roll4it()
                 send message
             */
             this.network.connection.get(peerid).send(message)
+        },
+        getPeerID: async () =>
+        {
+            const userInfo = await this.user.get("info")
+            const settings = await this.settings.get("main")
+            return userInfo.id + "|" + settings.clientID + "|" +
+                settings.browser.name + "-" + settings.browser.system
         }
     }
 
-    this.network.init = async () =>
+
+    this.network.init = () =>
     {
         /*
             TODO now
         */
         const shortPlatformName = "roll4it"
-        const userInfo = await this.user.get("info")
-        const settings = await this.settings.get("main")
-        this.network.peeri = new Peeri(userInfo.id + "|" + settings.clientID + "|" +
-                            settings.browser.name + "-" + settings.browser.system,
-                            {"open": this.network.on.open})
+
+        this.network.peeri = new Peeri(this.network.getPeerID, {"open": this.network.on.open})
 
         this.network.messages.set("add me bro", () =>
         {

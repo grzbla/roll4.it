@@ -1,6 +1,5 @@
 function Peeri(peerid, callbacks)
 {
-    console.log(peerid, callbacks)
     this.peerid = peerid
     this.peer = new Peer(peerid)
 
