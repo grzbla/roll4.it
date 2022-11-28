@@ -232,7 +232,7 @@ function roll4it()
                         return data //saves modified object to db
                     }).then(() =>
                     {
-                        resolve(response) //output modified object just in case
+                        resolve(true) //output modified object just in case
                     })
                 })
             }
@@ -406,11 +406,18 @@ function roll4it()
                 user = await this.user.put("info", {id: uuidv4()})
                 const browser = browserDetect()
 
-                settings = await this.settings.put("main",
-                        { clientID: uuidv4(), browser: { platform: browser.mobile ? "mobile" : "embedded",
-                        name: browser.name, system: browser.os, version: browser.version,
-                        versionNumber: browser.versionNumber} })
-                console.log(settings)
+                await this.settings.put("main",
+                {
+                    clientID: uuidv4(),
+                    browser:
+                    {
+                        platform: browser.mobile ? "mobile" : "embedded",
+                        name: browser.name,
+                        system: browser.os,
+                        version: browser.version,
+                        versionNumber: browser.versionNumber
+                    }
+                })
             }
 
             /*
@@ -553,6 +560,7 @@ function roll4it()
             p2p communication and tracker registration
         */
         responder: new HashMap(),
+        messages: new HashMap(),
         connections: new HashMap(),
         on:
         {
@@ -603,7 +611,14 @@ function roll4it()
                             settings.browser.name + "-" + settings.browser.system,
                             {"open": this.network.on.open})
 
-        this.network.responder.set("", () =>{});
+        this.network.messages.set("add me bro", () =>
+        {
+            //add me bro
+        });
+        this.network.responder.set("add me bro", () =>
+        {
+            //adding bro
+        });
     },
 
     this.character.editor =
