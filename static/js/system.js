@@ -579,7 +579,7 @@ function roll4it()
             /*
                 receive connection
             */
-            connection.on('data', (message) => { responder.get(message.typehash)(); });
+            connection.on('data', (message) => { responder.get(message.hash)(message); });
             return this.network.connections.set(peerid, peer.connect(peerid))
         },
         disconnect: async (peerid) =>
@@ -616,11 +616,11 @@ function roll4it()
 
         this.network.peeri = new Peeri(this.network.getPeerID, {"open": this.network.on.open})
 
-        this.network.messages.set("add me bro", () =>
+        this.network.messages.set("add me bro", (message) =>
         {
             //add me bro
         });
-        this.network.responder.set("add me bro", () =>
+        this.network.responder.set("add me bro", (message) =>
         {
             //adding bro
         });
