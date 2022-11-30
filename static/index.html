@@ -5,52 +5,14 @@
         <title></title>
         <link rel="manifest" href="./app.webmanifest" crossorigin="use-credentials" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="overridable.css">
         <link rel="icon" type="image/png" href="assets/icon@192.png"/>
         <style media="screen">
-            :root {
-                --background-color: #171717;
-                --background-color-h: 0;
-                --background-color-s: 0%;
-                --background-color-l: 14%;
 
-                --font-color: hsl(0deg 0% 100% / 56%);
-                --font-color-h: 0deg;
-                --font-color-s: 0%;
-                --font-color-l: 100%;
-                --font-color-a: 56%;
-
-                --change1p: 1%;
-                --change2p: 2%;
-                --change5p: 5%;
-
-                --border-radius: 0.2vw;
-                --character-card-width: 28vh;
-                --game-card-width: 34vh;
-
-                --ploink-size: 1.5vw;
-                --ploink-blur: 3vw;
-                --ploink-base-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l)), calc(var(--font-color-a) * 0.25));
-
-                --font-hover-shadow: #000;
-
-                --character-button-color: hsla(var(--font-color-h), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
-                --game-button-color: hsla(calc(var(--font-color-h) + 180deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
-                --expand-button-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), var(--font-color-a));
-                --import-button-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-                --export-button-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-                --personalize-button-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a));
-                --create-button-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-
-                --expand-click-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), calc(var(--font-color-a) * 0.25));
-                --import-click-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
-                --export-click-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
-                --personalize-click-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), calc(var(--font-color-a) * 0.25));
-                --create-click-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
-            }
             body
             {
                 user-select: none;
-                background-color: var(--background-color);
+                background-color: var(--color-0);
                 margin: 0;
                 padding: 0;
                 top: 0;
@@ -64,11 +26,98 @@
                 position: fixed;
                 top: 0;
                 left: 0;
+                width: 200px;
+                height: 200px;
+                overflow: hidden;
+                background-color: var(--color-0);
+                display: block;
+                border-radius: 50%;
+            }
+            body loading bar
+            {
                 width: 100%;
                 height: 100%;
-                overflow: hidden;
-                background-color: var(--background-color);
-                display: none;
+            }
+            loading bar svg
+            {
+                width: inherit;
+                height: inherit;
+            }
+            loading bar svg circle
+            {
+                stroke-dashoffset: 435;
+                stroke: #191919;
+                stroke-dasharray: 435;
+                transform: rotate(-90deg);
+                transform-origin: center;
+                stroke-width: 0.6vh;
+                fill: none;
+                transition: 0.5s;
+            }
+            bar svg circle[role="background"]
+            {
+            }
+            bar svg circle[role="segment"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 10) / 100);
+                stroke: var(--color-1c);
+            }
+            bar svg circle[role="bar"]
+            {
+                stroke-linecap: round;
+                stroke-dashoffset: calc(435 - (435 * 6) / 100);
+                stroke: var(--color-1e);
+            }
+
+            bar svg circle[role="segment"][number="1"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 20) / 100);
+                stroke: var(--color-2c);
+            }
+            bar svg circle[role="bar"][number="1"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 16) / 100);
+                stroke: var(--color-2e);
+            }
+            bar svg circle[role="segment"][number="2"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 30) / 100);
+                stroke: var(--color-3c);
+            }
+            bar svg circle[role="bar"][number="2"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 26) / 100);
+                stroke: var(--color-3e);
+            }
+            bar svg circle[role="segment"][number="3"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 40) / 100);
+                stroke: var(--color-4c);
+            }
+            bar svg circle[role="bar"][number="3"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 36) / 100);
+                stroke: var(--color-4e);
+            }
+            bar svg circle[role="segment"][number="4"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 50) / 100);
+                stroke: var(--color-5c);
+            }
+            bar svg circle[role="bar"][number="4"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 46) / 100);
+                stroke: var(--color-5e);
+            }
+            bar svg circle[role="segment"][number="5"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 60) / 100);
+                stroke: var(--color-6c);
+            }
+            bar svg circle[role="bar"][number="5"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 56) / 100);
+                stroke: var(--color-6e);
             }
 
             screen > *:last-child tooltip
@@ -85,7 +134,7 @@
                 height: auto;
                 min-width: 20vw;
                 min-height: 3vh;
-                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + var(--change5p)));
+                background-color: hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) + var(--change5p)));
                 padding: 1vh 1vw 1vh 1vw;
                 pointer-events: none;
                 top: 9vh;
@@ -170,7 +219,7 @@
                 display: inline-block;
                 height: 40%;
                 border-radius: var(--border-radius);
-                background-color: hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) - var(--change2p)));
+                background-color: hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) - var(--change3p)));
                 z-index: 0;
                 padding-bottom: 2vh;
             }
@@ -214,7 +263,7 @@
                 top: 2.25vh;
                 background-color: transparent;
                 transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out, opacity 0.25s ease-out;
-                border-bottom: 0.2vw solid hsl(var(--background-color-h), var(--background-color-s), calc(var(--background-color-l) + 10%));
+                border-bottom: 0.2vw solid hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) + 10%));
                 opacity: 1;
                 box-sizing: border-box;
             }
@@ -284,7 +333,7 @@
             }
             screen * buttons expand:hover
             {
-                 color: var(--expand-button-color);
+                 color: var(--color-5d);
             }
             screen > * buttons expand:before
             {
@@ -292,7 +341,7 @@
             }
             screen * buttons import:hover
             {
-                color: var(--import-button-color);
+                color: var(--color-4d);
             }
             screen > * buttons import:before
             {
@@ -300,7 +349,7 @@
             }
             screen * buttons export:hover
             {
-                 color: var(--export-button-color);
+                 color: var(--color-3d);
             }
             screen > * buttons export:before
             {
@@ -308,7 +357,7 @@
             }
             screen * buttons personalize:hover
             {
-                 color: var(--personalize-button-color);
+                 color: var(--color-1d);
             }
             screen > * buttons personalize:before
             {
@@ -316,7 +365,7 @@
             }
             screen > * buttons create:hover
             {
-                 color: var(--create-button-color);
+                 color: var(--color-2d);
             }
             screen > * buttons create:before
             {
@@ -355,7 +404,7 @@
                 left: 0;
                 border-style: solid;
                 border-width: 3vh 5vw 0 0;
-                border-color: var(--background-color) transparent transparent transparent;
+                border-color: var(--color-0) transparent transparent transparent;
             }
             screen characters:after
             {
@@ -365,7 +414,7 @@
                 right: 0;
                 border-style: solid;
                 border-width: 0 5vw 2vh 0;
-                border-color: transparent var(--background-color) transparent  transparent;
+                border-color: transparent var(--color-0) transparent  transparent;
             }
             screen > *:hover scroll bar
             {
@@ -440,7 +489,7 @@
                 display: block;
                 position: absolute;
                 background-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) - 35%), calc(var(--font-color-a) + 35%));
-                color: var(--background-color);
+                color: var(--color-0);
                 width: 2vw;
                 height: 100%;
                 top: 0;
@@ -508,7 +557,7 @@
                 right: 0;
                 border-style: solid;
                 border-width: 0 0 2vh 5vw;
-                border-color: transparent transparent var(--background-color) transparent;
+                border-color: transparent transparent var(--color-0) transparent;
             }
             screen assets:after
             {
@@ -518,7 +567,7 @@
                 left: 0;
                 border-style: solid;
                 border-width: 0 5vw 3vh 0 ;
-                border-color: transparent transparent var(--background-color) transparent;
+                border-color: transparent transparent var(--color-0) transparent;
             }
 
             editor
@@ -538,7 +587,7 @@
                 left: 0;
                 margin: 0;
                 padding: 0;
-                background-color: var(--background-color);
+                background-color: var(--color-0);
                 z-index: 2;
             }
             editor button[type="close"]
@@ -691,7 +740,26 @@
         <fabric></fabric>
         <button type="close"></button>
     </editor>
-    <loading></loading>
+    <loading>
+        <bar>
+            <svg>
+                <circle role="background" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="5" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="5" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="4" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="4" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="3" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="3" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="2" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="2" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="1" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="1" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="0" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="0" cx="50%" cy="50%" r="35%"></circle>
+            </svg>
+            <progress></progress>
+        </bar>
+    </loading>
     </body>
     <!-- libraries -->
     <script type="text/javascript" src="lib/uuidv4.min.js"></script>

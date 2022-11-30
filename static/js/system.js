@@ -382,6 +382,14 @@ function roll4it()
     /*
         DECLARES
     */
+    this.loading = () =>
+    {
+
+    }
+
+    /*
+        SUBMODULES
+    */
     this.user =
     {
         //init db for user info
@@ -559,6 +567,12 @@ function roll4it()
         /*
             p2p communication and tracker registration
         */
+        db: new PouchDB("network"),
+        put: new this.base.PutFunction("network"),
+        get: new this.base.GetFunction("network"),
+        del: new this.base.DeleteFunction("network"),
+        push: new this.base.PushFunction("network"),
+        splice: new this.base.SpliceFunction("network"),
         responder: new HashMap(),
         messages: new HashMap(),
         connections: new HashMap(),
@@ -746,10 +760,10 @@ function roll4it()
                 const nextValue = hashArray[i+2]
 
                 if (this.path.isSource(key)) //append to sources if key is source
-                    chunk.from.push({key: key, value: value})
+                    chunk.from.push({from: key, value: value})
                 else //append to items if item
                 {
-                    chunk.what.push({key: key, value: value})
+                    chunk.what.push({what: key, value: value})
 
                     if (this.path.isSource(nextKey)) //if source is found after item
                     {
@@ -765,7 +779,7 @@ function roll4it()
 
             return request
         },
-        load: () =>
+        load: async () =>
         {
             /*
                 TODO later
@@ -787,10 +801,45 @@ function roll4it()
                     post
             */
 
-            path.forEach(request =>
+            //set global keys
+            let globals = []
+            const last = path[path.length-1]
+            if (last.what.length < 1)
+                last.from.forEach(source =>
+                {
+                    globals.push(source)
+                })
+
+            //iterate request chunks
+            for (let i = 0, l = path.length; i < l; i++)
             {
+                const request = path[i];
+                if (request.from.length < 1) // if request is missing sources
+                {
+                    if (globals.length == 0) // load from local if no globals
+                    {
+                        return
+                    }
+                    else //load from globals if present
+                    {
+
+                    }
+
+
+                }
+
+                //iterate sources
+                request.from.forEach(source =>
+                {
+                    console.log(source)
+                    request.what.forEach(item =>
+                    {
+                        console.log(item)
+                    })
+                })
+
                 console.log(request)
-            })
+            }
         },
         isSource: (key) =>
         {
@@ -865,5 +914,8 @@ function roll4it()
         })
     }
 
+    /*
+        EXECUTION
+    */
     this.init()
 }
