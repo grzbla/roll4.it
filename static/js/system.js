@@ -909,13 +909,6 @@ function roll4it()
                 //generate unique id, add to active connections
                 open: async (connection) => //connection.on(open)
                 {
-                    const userInfo = await this.user.get("info")
-                    const settings = await this.settings.get("main")
-                    console.log(userInfo, settings)
-
-                    connection.send({message: "hellothere", userID: userInfo.id, client:
-                                {id: settings.clientID, name: settings.browser.name,
-                                platform: settings.browser.platform, system: settings.browser.system}})
                     // things are coming in
                     connection.on("data", (data) =>
                     {
@@ -976,26 +969,25 @@ function roll4it()
 
                 const userInfo = await this.user.get("info")
                 const settings = await this.settings.get("main")
-                connection.send({message: "generalkenobi", userID: userInfo.id, client:
-                {id: settings.clientID, name: settings.browser.name,
-                    platform: settings.browser.platform, system: settings.browser.system}})
+                connection.send({message: "generalkenobi", user: {id: userInfo.id, client:
+                                {id: settings.clientID, name: settings.browser.name,
+                                platform: settings.browser.platform, system: settings.browser.system}}})
             },
-            generalkenobi: (connection, data) =>
+            generalkenobi: async (connection, data) =>
             {
                 console.log("general kenobi")
                 let user = data
                 delete user.message //clean message out of data
-
                 let c = this.network.connections.get(connection.peer)
                 if (c)
                 {
                     c.user = user
-                    c.connected = true;
+                    c.connected = false;
                 }
                 else
-                    c = {user: user, connected: true, connection: connection}
+                    c = {user: user, connected: false, connection: connection}
 
-                this.network.connections.set(connections.peer, c)
+                this.network.connections.set(connection.peer, c)
             },
             user: () =>
             {
@@ -1030,7 +1022,7 @@ function roll4it()
                     const settings = await this.settings.get("main")
                     this.network.connections.set(peerid, {connected: false, connection: connection})
 
-                    connection.send({message: "hello there!", user: {id: userInfo.id, client:
+                    connection.send({message: "hellothere", user: {id: userInfo.id, client:
                                     {id: settings.clientID, name: settings.browser.name,
                                     platform: settings.browser.platform, system: settings.browser.system}}})
                     resolve(connection)
