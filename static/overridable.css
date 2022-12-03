@@ -43,6 +43,7 @@
     --font-color-a: 56%;
 
     --change3p: 3%;
+    --change30p: 30%;
 
     --border-radius: 0.2vw;
     --character-card-width: 28vh;
@@ -53,18 +54,4 @@
     --ploink-base-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l)), calc(var(--font-color-a) * 0.25));
 
     --font-hover-shadow: #000;
-
-    --character-button-color: hsla(var(--font-color-h), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
-    --game-button-color: hsla(calc(var(--font-color-h) + 180deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 50%), calc(var(--font-color-a) * 0.25));
-    --expand-button-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), var(--font-color-a));
-    --import-button-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-    --export-button-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-    --personalize-button-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), var(--font-color-a));
-    --create-button-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), var(--font-color-a));
-
-    --expand-click-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) + 20%), calc(var(--font-color-a) * 0.25));
-    --import-click-color: hsla(calc(var(--font-color-h) + 200deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
-    --export-click-color: hsla(calc(var(--font-color-h) + 83deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
-    --personalize-click-color: hsla(calc(var(--font-color-h) + 60deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 25%), calc(var(--font-color-a) * 0.25));
-    --create-click-color: hsla(calc(var(--font-color-h) + 0deg), calc(var(--font-color-s) + 100%), calc(var(--font-color-l) - 27%), calc(var(--font-color-a) * 0.25));
 }

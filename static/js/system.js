@@ -46,8 +46,17 @@ function HashMap()
     	switch(type)
         {
             case "number": { return this.values.get(token) } //hash number directly
-            case "object": { return this.values.get(token.hash()) } //hash
-            case "string": { return this.values.get(stringsMap.get(token)) } //unhashed string
+            case "object": { console.log(token); return this.values.get(token.hash()) } //hash
+            case "string":
+            {
+                console.log(token)
+                console.log(new Hash(token).hash())
+                if (this.keys.has(token))
+                    return this.values.get(this.keys.get(token))
+                else
+                    return this.values.get(new Hash(token))
+
+            } //unhashed string
     	}
     }
     this.getByString = (string) => { return this.values.get(this.keys.get(string)) }
@@ -74,6 +83,7 @@ function HashMap()
     {
         /*
             generates hash, writes keys to maps for ease of access
+            and in case only one type of token exists
         */
         const keyType = typeof(key)
         switch(keyType)
@@ -83,6 +93,8 @@ function HashMap()
                 if (this.values.has(key)) //if already presumably in the map
                     return false;
 
+                //assigning only values because
+                //there's no way to calculate string from hash number
                 this.values.set(key, value)
                 return key
                 break
@@ -854,7 +866,7 @@ function roll4it()
         del: new this.base.DeleteFunction("network"),
         push: new this.base.PushFunction("network"),
         splice: new this.base.SpliceFunction("network"),
-        relations: new HashMap(),
+        connections: new HashMap(),
         chunks: new PouchDB("chunks"),
         shortPlatformName: "roll4it",
         peerID: undefined,
@@ -862,17 +874,6 @@ function roll4it()
         peer: undefined,
         uuidLength: 3,
         initRetryInterval: 150,
-        uuid: async () =>
-        {
-            /*
-                 //make sure no such uuid already exist in conenctions db
-            */
-            const id = uuidv4().slice(0, this.network.uuidLength) //we dont need full length uuid at the moment
-            if (this.network.relations.has(id)) //call it again if id exists
-                return t.network.uuid()
-
-            return id
-        },
         handlers: //event handlers for peer
         {
             peer: // for peerjs object
@@ -887,25 +888,34 @@ function roll4it()
                 close: (event) => { }, //set status n shit on closed peer
                 disconnected: (event) => //reconnect on lost
                 {
-                    setTimeout(() => { this.network.peer.reconnect() }, 5000)
+                    this.network.isRunning = false
+                    console.log(event)
+                    setTimeout(() => { try { this.network.peer.reconnect()} catch(e){} }, 5000)
                 },
                 connection: (connection) =>
                 {
-                    //generate unique id, add to active relations
+                    //generate unique id, add to active connections
                     connection.on("open", () => { this.network.handlers.connection.open(connection) } )
 
                     //remove connection, update contact status
                     connection.on("close", this.network.handlers.connection.close)
                     connection.on("error", this.network.handlers.connection.error)
                 },
-                call: (event) => { console.log(event) }, //TODO
-                error: (event) => { console.log(event) }
+                call: (event) => { }, //TODO
+                error: (event) => { this.network.handlers.peer.disconnected(event) }
             },
             connection: // for connection object
             {
-                //generate unique id, add to active relations
-                open: (connection) => //connection.on(open)
+                //generate unique id, add to active connections
+                open: async (connection) => //connection.on(open)
                 {
+                    const userInfo = await this.user.get("info")
+                    const settings = await this.settings.get("main")
+                    console.log(userInfo, settings)
+
+                    connection.send({message: "hellothere", userID: userInfo.id, client:
+                                {id: settings.clientID, name: settings.browser.name,
+                                platform: settings.browser.platform, system: settings.browser.system}})
                     // things are coming in
                     connection.on("data", (data) =>
                     {
@@ -922,13 +932,14 @@ function roll4it()
                         this.network.handlers.connection.error(connection)
                     })
                 },
-                data: (connection, data) => //connection.on(data)
+                data: async (connection, data) => //connection.on(data)
                 {
                     console.log(connection)
+                    console.log(data.message)
                     console.log(data)
                     try //minimally faster than iffing when most requests are valid
                     {
-                        this.network.on[data.type](data)
+                        this.network.on[data.message](connection, data)
                     }
                     catch(erur) {} //drop invalid chunks
                 },
@@ -938,12 +949,54 @@ function roll4it()
                  { console.log(error) },
                 cleanup: (connection) => //remove leftovers
                 {
-                    this.network.relations.del(connection.metadata.relationID)
+                    console.log("ERUR")
+                    console.log(connection)
+                    this.network.connections.del(connection.connectionID)
                 }
             }
         },
-        on: //request data type differentiation fto keep things simple
+        on: //request data type differentiation to keep things simple
         {
+            //handshaking
+            hellothere: async (connection, data) =>
+            {
+                console.log("hello there")
+                let user = data
+                delete user.message //clean message out of data
+                let c = this.network.connections.get(connection.peer)
+                if (c)
+                {
+                    c.user = user
+                    c.connected = false;
+                }
+                else
+                    c = {user: user, connected: false, connection: connection}
+
+                this.network.connections.set(connection.peer, c)
+
+                const userInfo = await this.user.get("info")
+                const settings = await this.settings.get("main")
+                connection.send({message: "generalkenobi", userID: userInfo.id, client:
+                {id: settings.clientID, name: settings.browser.name,
+                    platform: settings.browser.platform, system: settings.browser.system}})
+            },
+            generalkenobi: (connection, data) =>
+            {
+                console.log("general kenobi")
+                let user = data
+                delete user.message //clean message out of data
+
+                let c = this.network.connections.get(connection.peer)
+                if (c)
+                {
+                    c.user = user
+                    c.connected = true;
+                }
+                else
+                    c = {user: user, connected: true, connection: connection}
+
+                this.network.connections.set(connections.peer, c)
+            },
             user: () =>
             {
 
@@ -961,36 +1014,43 @@ function roll4it()
 
             }
         },
-        getMetadata: async () => //TODO figure something out with it
-        {
-            const userInfo = await this.user.get("info")
-            const settings = await this.settings.get("main")
-            return { relationID: new Hash(await this.network.uuid()).hash(),
-                         userID: new Hash(userInfo.id).hash(),
-                         clientID: new Hash(settings.clientID).hash() }
-        },
         connect: (peerid) => //connect to peer id
         {
             return new Promise(async resolve =>
             {
-                const relationID = new Hash(await this.network.uuid()).hash()
-                let connection = this.network.peer.connect(peerid, {metadata: {relationID: relationID}})
-                this.network.relations.set(relationID, {id: relationID, connected: false, connection: connection} )
+                if (!this.network.isRunning)
+                    resolve(false)
+                let connection = this.network.peer.connect(peerid)
 
-                connection.on("open", () =>
+                connection.on("open", async () =>
                 {
                     this.network.handlers.connection.open(connection)
-                    let relation = this.network.relations.get(relationID)
-                    relation.connected = true
-                    this.network.relations.set(relationID, relation)
+
+                    const userInfo = await this.user.get("info")
+                    const settings = await this.settings.get("main")
+                    this.network.connections.set(peerid, {connected: false, connection: connection})
+
+                    connection.send({message: "hello there!", user: {id: userInfo.id, client:
+                                    {id: settings.clientID, name: settings.browser.name,
+                                    platform: settings.browser.platform, system: settings.browser.system}}})
                     resolve(connection)
+                })
+
+                connection.on("error", (error) => //TODO something with double connection
+                {
+                    this.network.handlers.connection.error(connection)
+                    console.log(error)
+                    resolve(false)
                 })
 
             })
         },
-        send: (peerid) =>
+        send: (peerid, data) =>
         {
-
+            console.log(peerid, data)
+            const connection = this.network.connections.get(peerid);
+            if (connection.connected)
+                connection.connection.send(data)
         }
     }
 
@@ -1010,23 +1070,17 @@ function roll4it()
     }
     this.network.online = async () =>
     {
-        this.network.peer = new Peer(this.network.peerID)
-
+        this.network.peer = new Peer(this.network.peerID) //register me my preferred peerid
         //when server actually responds with registered peer id
         this.network.peer.on("open", this.network.handlers.peer.open)
-
         //connection event handler
         this.network.peer.on("connection", this.network.handlers.peer.connection)
-
         //call event handler
         this.network.peer.on("call", this.network.handlers.peer.call)
-
         //close event handler
         this.network.peer.on("close", this.network.handlers.peer.close)
-
         //disconnect event handler
         this.network.peer.on("disconnected", this.network.handlers.peer.disconnected)
-
         //error event handler
         this.network.peer.on("error", this.network.handlers.peer.error)
     }
