@@ -26,12 +26,13 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 200px;
-                height: 200px;
+                width: 198px;
+                height: 198px;
                 overflow: hidden;
                 background-color: var(--color-0);
                 display: block;
                 border-radius: 50%;
+                transform: scale(0.6);
             }
             body loading bar
             {
@@ -50,25 +51,23 @@
                 stroke-dasharray: 435;
                 transform: rotate(-90deg);
                 transform-origin: center;
-                stroke-width: 0.6vh;
+                stroke-width: 70%;
                 fill: none;
                 transition: 0.5s;
             }
             bar svg circle[role="background"]
             {
             }
-            bar svg circle[role="segment"]
+            bar svg circle[role="segment"][number="0"]
             {
                 stroke-dashoffset: calc(435 - (435 * 10) / 100);
                 stroke: var(--color-1c);
             }
-            bar svg circle[role="bar"]
+            bar svg circle[role="bar"][number="0"]
             {
-                stroke-linecap: round;
                 stroke-dashoffset: calc(435 - (435 * 6) / 100);
                 stroke: var(--color-1e);
             }
-
             bar svg circle[role="segment"][number="1"]
             {
                 stroke-dashoffset: calc(435 - (435 * 20) / 100);
@@ -112,12 +111,52 @@
             bar svg circle[role="segment"][number="5"]
             {
                 stroke-dashoffset: calc(435 - (435 * 60) / 100);
-                stroke: var(--color-6c);
+                stroke: var(--color-1c);
             }
             bar svg circle[role="bar"][number="5"]
             {
                 stroke-dashoffset: calc(435 - (435 * 56) / 100);
-                stroke: var(--color-6e);
+                stroke: var(--color-1e);
+            }
+            bar svg circle[role="segment"][number="6"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 70) / 100);
+                stroke: var(--color-2c);
+            }
+            bar svg circle[role="bar"][number="6"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 66) / 100);
+                stroke: var(--color-2e);
+            }
+            bar svg circle[role="segment"][number="7"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 80) / 100);
+                stroke: var(--color-3c);
+            }
+            bar svg circle[role="bar"][number="7"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 76) / 100);
+                stroke: var(--color-3e);
+            }
+            bar svg circle[role="segment"][number="8"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 90) / 100);
+                stroke: var(--color-4c);
+            }
+            bar svg circle[role="bar"][number="8"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 86) / 100);
+                stroke: var(--color-4e);
+            }
+            bar svg circle[role="segment"][number="9"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 100) / 100);
+                stroke: var(--color-5c);
+            }
+            bar svg circle[role="bar"][number="9"]
+            {
+                stroke-dashoffset: calc(435 - (435 * 96) / 100);
+                stroke: var(--color-5e);
             }
 
             screen > *:last-child tooltip
@@ -744,6 +783,14 @@
         <bar>
             <svg>
                 <circle role="background" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="9" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="9" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="8" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="8" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="7" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="7" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="segment" number="6" cx="50%" cy="50%" r="35%"></circle>
+                <circle role="bar" number="6" cx="50%" cy="50%" r="35%"></circle>
                 <circle role="segment" number="5" cx="50%" cy="50%" r="35%"></circle>
                 <circle role="bar" number="5" cx="50%" cy="50%" r="35%"></circle>
                 <circle role="segment" number="4" cx="50%" cy="50%" r="35%"></circle>
@@ -774,7 +821,6 @@
     <!-- base code -->
     <script src="js/language.js"></script>
     <script src="js/system.js"></script>
-    <script src="js/network.js"></script>
     <!-- modules -->
     <script src="js/charsheet.js"></script>
     <script src="js/ploink.js"></script><!-- the thing here -->

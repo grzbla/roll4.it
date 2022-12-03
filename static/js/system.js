@@ -1,17 +1,20 @@
-function Hash(string)
+function Hash(str)
 {
     /*
         constructor for an object containing both hash and string
         gets passed by reference so its likely faster than string
         same speed as passing hash alone, but at the cost of couple bytes
     */
-    this.string = string
+    s = str
+    h = new MurmurHash3(s).result()
 
-    this.set = (string) =>
+    this.set = (str) =>
     {
-        this.string = string
-        this.hash = new MurmurHash3("string").result()
+        s = str
+        h = new MurmurHash3(s).result()
     }
+    this.hash = () => { return h }
+    this.string = () => { return s }
 
     return this
 }
@@ -20,6 +23,7 @@ function HashMap()
 {
     /*
         it's a hash map. thats it
+        it works. i think
     */
 
     /*
@@ -41,9 +45,9 @@ function HashMap()
         const type = typeof(token)
     	switch(type)
         {
-            case "number": { return valuesMap.get(token) }
-            case "object": { return valuesMap.get(token.hash) }
-            case "string": { return valuesMap.get(stringsMap.get(token)) }
+            case "number": { return this.values.get(token) } //hash number directly
+            case "object": { return this.values.get(token.hash()) } //hash
+            case "string": { return this.values.get(stringsMap.get(token)) } //unhashed string
     	}
     }
     this.getByString = (string) => { return this.values.get(this.keys.get(string)) }
@@ -64,24 +68,48 @@ function HashMap()
         if (type != "object") //number is more likely
             return this.strings.get(token)
         else
-            return this.strings.get(token.hash)
+            return this.strings.get(token.hash())
     }
-    this.set = (string, value) =>
+    this.set = (key, value) =>
     {
         /*
             generates hash, writes keys to maps for ease of access
         */
-        if (!this.keys.has(string))
+        const keyType = typeof(key)
+        switch(keyType)
         {
-            const key = MurmurHash3(string).result()
-            this.strings.set(key, string)
-            this.keys.set(string, key)
-            this.values.set(key, value)
-            return key
-        }
-        else
-        {
-            return false
+            case "number": // key is int
+            {
+                if (this.values.has(key)) //if already presumably in the map
+                    return false;
+
+                this.values.set(key, value)
+                return key
+                break
+            }
+            case "object": //key is hash
+            {
+                if (this.values.has(key.hash()))
+                    return false
+
+                this.strings.set(key.hash(), key.string())
+                this.keys.set(key.string(), key.hash())
+                this.values.set(key.hash(), value)
+                return key.hash()
+                break
+            }
+            case "string":
+            {
+                if (this.strings.has(key))
+                    return false;
+
+                const hash = new Hash(key)
+                this.strings.set(hash.hash(), hash.string())
+                this.keys.set(hash.string(), hash.hash())
+                this.values.set(hash.hash(), value)
+
+                return hash.hash()
+            }
         }
     }
     this.del = (token) =>
@@ -94,15 +122,34 @@ function HashMap()
         const type = typeof(token)
         switch(type)
         {
-            case "number": { key = token, string = stringsMap.get(token); break; }
-            case "object": { key = token.hash, string = token.string; break; }
-            case "string": { key = stringsMap.get(token), string = token; break; }
+            case "number": { key = token, string = this.strings.get(token); break; }
+            case "object": { key = token.hash(), string = token.string(); break; }
+            case "string": { key = this.keys.get(token), string = token; break; }
         }
 
-        this.values.delete(key)
-        this.strings.delete(key)
-        this.keys.delete(string)
+        console.log(key, string)
+
+        if (string && this.keys.has(string))
+            this.keys.delete(string)
+        if (key && this.strings.has(key))
+            this.strings.delete(key)
+        if (key && this.values.has(key))
+            this.values.delete(key)
     }
+    this.has = (token) =>
+    {
+        let key
+        let string
+        const type = typeof(token)
+        switch(type)
+        {
+            case "number": { return this.keys.has(token); break; }
+            case "object": { return this.keys.has(token.get()); break; }
+            case "string": { return this.strings.has(token); break; }
+        }
+    }
+
+
 }
 
 function De()
@@ -144,6 +191,20 @@ function Progress(loaded, total)
     }
 
     return this
+}
+
+function Connection(c)
+{
+    this.c = c
+
+    this.send = (data) =>
+    {
+        this.c.send(data)
+    }
+    this.close = () =>
+    {
+        this.c.close()
+    }
 }
 
 var de = new De() //de for that short .bug occasional use
@@ -395,7 +456,8 @@ function roll4it()
         //init db for user info
         db: new PouchDB("user"),
         put: new this.base.PutFunction("user"),
-        get: new this.base.GetFunction("user")
+        get: new this.base.GetFunction("user"),
+        uuidLength: 3
     }
     this.user = {...this.user,
         /*
@@ -403,28 +465,29 @@ function roll4it()
         */
         init: async () =>
         {
-            let user = await this.user.get("info")
+            let userInfo = await this.user.get("info")
             let settings = await this.settings.get("main")
 
             /*
             WHEN FRESH USER START
             */
-            if (!user) //when no userid
+            if (!userInfo) //when no userid
             {
-                user = await this.user.put("info", {id: uuidv4()})
-                const browser = browserDetect()
-
+                userInfo = await this.user.put("info", {id: uuidv4().slice(0, this.user.uuidLength)})
+                const b = browserDetect()
+                let bro =
+                {
+                    platform: b.mobile ? "mobile" : "embedded",
+                    name: b.name,
+                    system: b.os,
+                    version: b.version,
+                    versionNumber: b.versionNumber,
+                }
+                bro.hash = new Hash(bro.platform + "-" + bro.system + "-" + bro.name).hash()
                 await this.settings.put("main",
                 {
-                    clientID: uuidv4(),
-                    browser:
-                    {
-                        platform: browser.mobile ? "mobile" : "embedded",
-                        name: browser.name,
-                        system: browser.os,
-                        version: browser.version,
-                        versionNumber: browser.versionNumber
-                    }
+                    clientID: uuidv4().slice(0, this.user.uuidLength),
+                    browser: bro
                 })
             }
 
@@ -455,7 +518,7 @@ function roll4it()
         push: new this.base.PushFunction("character"),
         splice: new this.base.SpliceFunction("character"),
         emptyCards: [{name: "Austin Powers", background: "assets/img/character.card.backgrounds/0.webp"}],
-
+        uuidLength: 3,
         init: async () =>
         {
             /*
@@ -493,7 +556,7 @@ function roll4it()
             /*
                  //make sure no such uuid already exist in character db
             */
-            let charID = uuidv4().slice(0, 4) //we dont need full length uuid at the moment
+            let charID = uuidv4().slice(0, this.character.uuidLength) //we dont need full length uuid at the moment
             let potentialChar = await t.character.get(charID) //get char to check if char exists
             if (potentialChar)
                 return t.character.uuid()
@@ -562,84 +625,6 @@ function roll4it()
         }
     }
 
-    this.network =
-    {
-        /*
-            p2p communication and tracker registration
-        */
-        db: new PouchDB("network"),
-        put: new this.base.PutFunction("network"),
-        get: new this.base.GetFunction("network"),
-        del: new this.base.DeleteFunction("network"),
-        push: new this.base.PushFunction("network"),
-        splice: new this.base.SpliceFunction("network"),
-        responder: new HashMap(),
-        messages: new HashMap(),
-        connections: new HashMap(),
-        on:
-        {
-            open: (id) => { console.log('confirming peer ID: ' + id) }
-        },
-        connect: async (peerid) =>
-        {
-            /*
-                connect to peer
-            */
-            let connection = peer.connect(peerid)
-            return this.network.connections.set(peerid, connection)
-        },
-        receive: async (connection) =>
-        {
-            /*
-                receive connection
-            */
-            connection.on('data', (message) => { responder.get(message.hash)(message); });
-            return this.network.connections.set(peerid, peer.connect(peerid))
-        },
-        disconnect: async (peerid) =>
-        {
-            /*
-                disconnect from peer
-            */
-            this.network.connections.get(peerid).disconnect()
-            return this.network.connections.del(peerid)
-        },
-        send: (peerid, message) =>
-        {
-            /*
-                send message
-            */
-            this.network.connection.get(peerid).send(message)
-        },
-        getPeerID: async () =>
-        {
-            const userInfo = await this.user.get("info")
-            const settings = await this.settings.get("main")
-            return userInfo.id + "|" + settings.clientID + "|" +
-                settings.browser.name + "-" + settings.browser.system
-        }
-    }
-
-
-    this.network.init = () =>
-    {
-        /*
-            TODO now
-        */
-        const shortPlatformName = "roll4it"
-
-        this.network.peeri = new Peeri(this.network.getPeerID, {"open": this.network.on.open})
-
-        this.network.messages.set("add me bro", (message) =>
-        {
-            //add me bro
-        });
-        this.network.responder.set("add me bro", (message) =>
-        {
-            //adding bro
-        });
-    },
-
     this.character.editor =
     {
         /*
@@ -697,7 +682,7 @@ function roll4it()
         */
         await this.user.init()
         await this.character.init()
-        this.network.init()
+        await this.network.init() //TODO: sometimes network init fires before user init finishes, no idea why
 
         //mouse scroll events
         let characters = document.querySelector("characters fabric"),
@@ -719,7 +704,7 @@ function roll4it()
 
         this.path.load() //parse current path string
 
-        this.status = "Assumed ON." //we're guessing
+        this.isRunning = true //we're guessing
     }
 
     this.path =
@@ -804,7 +789,7 @@ function roll4it()
             //set global keys
             let globals = []
             const last = path[path.length-1]
-            if (last.what.length < 1)
+            if (last && last.what.length < 1)
                 last.from.forEach(source =>
                 {
                     globals.push(source)
@@ -813,7 +798,7 @@ function roll4it()
             //iterate request chunks
             for (let i = 0, l = path.length; i < l; i++)
             {
-                const request = path[i];
+                const request = path[i]
                 if (request.from.length < 1) // if request is missing sources
                 {
                     if (globals.length == 0) // load from local if no globals
@@ -856,6 +841,194 @@ function roll4it()
         db: new PouchDB("cache"),
         put: new this.base.PutFunction("cache"),
         get: new this.base.GetFunction("cache")
+    }
+
+    this.network =
+    {
+        /*
+            p2p communication and tracker registration
+        */
+        db: new PouchDB("network"),
+        put: new this.base.PutFunction("network"),
+        get: new this.base.GetFunction("network"),
+        del: new this.base.DeleteFunction("network"),
+        push: new this.base.PushFunction("network"),
+        splice: new this.base.SpliceFunction("network"),
+        relations: new HashMap(),
+        chunks: new PouchDB("chunks"),
+        shortPlatformName: "roll4it",
+        peerID: undefined,
+        isRunning: false,
+        peer: undefined,
+        uuidLength: 3,
+        initRetryInterval: 150,
+        uuid: async () =>
+        {
+            /*
+                 //make sure no such uuid already exist in conenctions db
+            */
+            const id = uuidv4().slice(0, this.network.uuidLength) //we dont need full length uuid at the moment
+            if (this.network.relations.has(id)) //call it again if id exists
+                return t.network.uuid()
+
+            return id
+        },
+        handlers: //event handlers for peer
+        {
+            peer: // for peerjs object
+            {
+                open: (id) => // peer.on(open)
+                {
+                     //actual peerjs id granted by server might be different from preferred
+                     //TODO notify contacts when peerid changes
+                    this.network.peerID = id
+                    this.network.isRunning = true
+                },
+                close: (event) => { }, //set status n shit on closed peer
+                disconnected: (event) => //reconnect on lost
+                {
+                    setTimeout(() => { this.network.peer.reconnect() }, 5000)
+                },
+                connection: (connection) =>
+                {
+                    //generate unique id, add to active relations
+                    connection.on("open", () => { this.network.handlers.connection.open(connection) } )
+
+                    //remove connection, update contact status
+                    connection.on("close", this.network.handlers.connection.close)
+                    connection.on("error", this.network.handlers.connection.error)
+                },
+                call: (event) => { console.log(event) }, //TODO
+                error: (event) => { console.log(event) }
+            },
+            connection: // for connection object
+            {
+                //generate unique id, add to active relations
+                open: (connection) => //connection.on(open)
+                {
+                    // things are coming in
+                    connection.on("data", (data) =>
+                    {
+                        this.network.handlers.connection.data(connection, data)
+                    })
+                    connection.on("close", () =>
+                    {
+                        this.network.handlers.connection.cleanup(connection)
+                        this.network.handlers.connection.close(connection)
+                    })
+                    connection.on("error", () =>
+                    {
+                        this.network.handlers.connection.cleanup(connection)
+                        this.network.handlers.connection.error(connection)
+                    })
+                },
+                data: (connection, data) => //connection.on(data)
+                {
+                    console.log(connection)
+                    console.log(data)
+                    try //minimally faster than iffing when most requests are valid
+                    {
+                        this.network.on[data.type](data)
+                    }
+                    catch(erur) {} //drop invalid chunks
+                },
+                close: (event) => //connection.on(close)
+                 { console.log(event) },
+                error: (error) => //connection.on(error)
+                 { console.log(error) },
+                cleanup: (connection) => //remove leftovers
+                {
+                    this.network.relations.del(connection.metadata.relationID)
+                }
+            }
+        },
+        on: //request data type differentiation fto keep things simple
+        {
+            user: () =>
+            {
+
+            },
+            charsheet: () =>
+            {
+
+            },
+            image: () =>
+            {
+
+            },
+            chunk: () =>
+            {
+
+            }
+        },
+        getMetadata: async () => //TODO figure something out with it
+        {
+            const userInfo = await this.user.get("info")
+            const settings = await this.settings.get("main")
+            return { relationID: new Hash(await this.network.uuid()).hash(),
+                         userID: new Hash(userInfo.id).hash(),
+                         clientID: new Hash(settings.clientID).hash() }
+        },
+        connect: (peerid) => //connect to peer id
+        {
+            return new Promise(async resolve =>
+            {
+                const relationID = new Hash(await this.network.uuid()).hash()
+                let connection = this.network.peer.connect(peerid, {metadata: {relationID: relationID}})
+                this.network.relations.set(relationID, {id: relationID, connected: false, connection: connection} )
+
+                connection.on("open", () =>
+                {
+                    this.network.handlers.connection.open(connection)
+                    let relation = this.network.relations.get(relationID)
+                    relation.connected = true
+                    this.network.relations.set(relationID, relation)
+                    resolve(connection)
+                })
+
+            })
+        },
+        send: (peerid) =>
+        {
+
+        }
+    }
+
+
+    this.network.init = async () =>
+    {
+        //create peer id
+        const userInfo = await this.user.get("info")
+        const settings = await this.settings.get("main")
+
+        //connect to tracker, obtain peer id. same as preferred if available
+        this.network.peerID = this.network.shortPlatformName + "-" +
+                            userInfo.id + settings.clientID
+        console.log(this.network.peerID)
+
+        this.network.online()
+    }
+    this.network.online = async () =>
+    {
+        this.network.peer = new Peer(this.network.peerID)
+
+        //when server actually responds with registered peer id
+        this.network.peer.on("open", this.network.handlers.peer.open)
+
+        //connection event handler
+        this.network.peer.on("connection", this.network.handlers.peer.connection)
+
+        //call event handler
+        this.network.peer.on("call", this.network.handlers.peer.call)
+
+        //close event handler
+        this.network.peer.on("close", this.network.handlers.peer.close)
+
+        //disconnect event handler
+        this.network.peer.on("disconnected", this.network.handlers.peer.disconnected)
+
+        //error event handler
+        this.network.peer.on("error", this.network.handlers.peer.error)
     }
 
     this.fetch = function(args)
@@ -912,6 +1085,11 @@ function roll4it()
                 req.send()
             }
         })
+    }
+
+    this.snag = function(args)
+    {
+
     }
 
     /*

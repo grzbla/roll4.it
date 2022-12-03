@@ -1,28 +1,29 @@
+let $ = undefined
 function starto()
 {
-    var system = new roll4it();
+    $ = new roll4it()
 
-    system.test = async () =>
+    $.test = async () =>
     {
-        let classes = {};
-        let file = await (await fetch("data/5e.tools/class/index.json")).json();
+        let classes = {}
+        let file = await (await fetch("data/5e.tools/class/index.json")).json()
 
         for (name in file)
         {
-            let classFile = await (await fetch("data/5e.tools/class/" + file[name])).json();
+            let classFile = await (await fetch("data/5e.tools/class/" + file[name])).json()
             classes = Object.assign({}, classes, classFile)
         }
 
-        const ass = await system.fetch({location: "assets/kaylo_raps.mp4", progress: (progress) =>
+        const ass = await $.fetch({location: "assets/kaylo_raps.mp4", progress: (progress) =>
         {
-            de.bug(progress);
-        }, type: "blob"});
-        de.bug(ass ? true : false);
-        console.log(ass);
-        await system.fetch({location: "ass.fuck"});
-    };
+            de.bug(progress)
+        }, type: "blob"})
+        de.bug(ass ? true : false)
+        console.log(ass)
+        await $.fetch({location: "ass.fuck"})
+    }
 
-    system.test();
-};
+    $.test()
+}
 
-starto();
+starto()

@@ -1,19 +1,24 @@
-function Peeri(peerid, callbacks)
+function Peeri(preferredPeerID)
 {
-    this.peerid = peerid
-    this.peer = new Peer(peerid)
-
-    if (callbacks)
+    this.init = async () =>
     {
-        if (callbacks.open)
-            this.peer.on("open", callbacks.open)
-        if (callbacks.error)
-            this.peer.on("error", callbacks.error)
-        if (callbacks.connection)
-            this.peer.on('connection', callbacks.connection);
+        this.peer = new Peer(preferredPeerID)
+        this.peerID = await this.open();
+        console.log(preferredPeerID, this.peerID);
+    }
+    this.open = () =>
+    {
+        return new Promise(resolve =>
+        {
+            this.peer.on("open", (id) =>
+            {
+                resolve(id)
+            })
+        })
     }
 
-    return this;
+    this.init();
+
 }
 
 //user, club, game
