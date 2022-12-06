@@ -485,7 +485,7 @@ function roll4it()
             */
             if (!userInfo) //when no userid
             {
-                userInfo = await this.user.put("info", {id: uuidv4().slice(0, this.user.uuidLength)})
+                userInfo = await this.user.put("info", {id: uuidv4().slice(0, this.network.uuidLength)})
                 const b = browserDetect()
                 let bro =
                 {
@@ -495,11 +495,12 @@ function roll4it()
                     version: b.version,
                     versionNumber: b.versionNumber,
                 }
-                bro.hash = new Hash(bro.platform + "-" + bro.system + "-" + bro.name).hash()
+                // bro.hash = new Hash(bro.platform + "-" + bro.system + "-" + bro.name).hash()
                 await this.settings.put("main",
                 {
-                    clientID: uuidv4().slice(0, this.user.uuidLength),
-                    browser: bro
+                    client: { id: uuidv4().slice(0, this.user.uuidLength),
+                        client: {id: settings.client.id, name: browser.name,
+                            platform: browser.platform, system: browser.system}}
                 })
             }
 
@@ -732,9 +733,26 @@ function roll4it()
             club: "club", page: "page",
             wire: "wire", post: "post"
         },
+        base:
+        {
+            getSource:
+            {
+                user: async (user) =>
+                {
+                    console.log("%con user", 'color: #ffffff8f;', user)
+                    //create new transaction
+                    const transactionID = await this.network.uuid(this.network.transactions)
+                    const transaction = {id: transactionID, userid: user,
+                        clientid: await this.settings.get("main").clientID, message: "gimme", what: "your info"}
+                    console.log(transaction);
+                    //add transaction to transactions
+                    //
+                }
+            }
+        }
     }
 
-    this.path = {...this.path, ...{
+    this.path = {...this.path,
         //url source key strings
         sources: [this.path.keys.user, this.path.keys.game, this.path.keys.club],
         //url item key strings to be obtained from paired sources
@@ -752,12 +770,15 @@ function roll4it()
                 const key = hashArray[i]
                 const value = hashArray[++i]
 
+                if (!value)
+                    continue;
+
                 //assign next key value pair
                 const nextKey = hashArray[i+1]
                 const nextValue = hashArray[i+2]
 
                 if (this.path.isSource(key)) //append to sources if key is source
-                    chunk.from.push({from: key, value: value})
+                    chunk.from.push({name: key, value: value})
                 else //append to items if item
                 {
                     chunk.what.push({what: key, value: value})
@@ -807,6 +828,14 @@ function roll4it()
                     globals.push(source)
                 })
 
+            /*
+                there are 5 things to consider
+                1. theres only an item - read from globals if present and from local
+                2. source only - fetch source info
+                3. source paired with item - fetch item from source
+                4. multiple sources/items - repeat stuff
+                5. globals read - if source read fails
+            */
             //iterate request chunks
             for (let i = 0, l = path.length; i < l; i++)
             {
@@ -826,14 +855,38 @@ function roll4it()
                 }
 
                 //iterate sources
-                request.from.forEach(source =>
+                request.from.forEach(async source =>
                 {
                     console.log(source)
-                    request.what.forEach(item =>
+                    if (request.what.length > 0)
+
+                        request.what.forEach(item => //item paired to source
+                        {
+                            console.log("item paired with source", {item, source})
+                        })
+                    else //only source is present, get source information
                     {
-                        console.log(item)
-                    })
+                        console.log("only source", source)
+
+                        try //faster than if when doesnt fail
+                        {
+                            this.path.base.getSource[source.name](source.value)
+                        } catch (e) {console.warn(e)}
+                    }
                 })
+
+                // if no source is present but items exist
+                if (request.from.length == 0 && request.what.length > 0)
+                {
+                    if (globals.length > 0) //read from globals
+                    {
+
+                    }
+                    else //read local
+                    {
+
+                    }
+                }
 
                 console.log(request)
             }
@@ -846,7 +899,7 @@ function roll4it()
         {
             return this.path.items.includes(key)
         }
-    }}
+    }
 
     this.cache = //caching assets locally
     {
@@ -867,6 +920,8 @@ function roll4it()
         push: new this.base.PushFunction("network"),
         splice: new this.base.SpliceFunction("network"),
         connections: new HashMap(),
+        transactions: new HashMap(),
+        relations: new HashMap(),
         chunks: new PouchDB("chunks"),
         shortPlatformName: "roll4it",
         peerID: undefined,
@@ -874,6 +929,16 @@ function roll4it()
         peer: undefined,
         uuidLength: 3,
         initRetryInterval: 150,
+        uuid: async (target) =>
+        {
+            /*
+                 //make sure no such uuid already exist in target container
+            */
+            let id = uuidv4().slice(0, this.network.uuidLength) //we dont need full length uuid at the moment
+            if (target.has(id))
+                return t.network.uuid(target)
+            return id
+        },
         handlers: //event handlers for peer
         {
             peer: // for peerjs object
@@ -970,8 +1035,9 @@ function roll4it()
                 const userInfo = await this.user.get("info")
                 const settings = await this.settings.get("main")
                 connection.send({message: "generalkenobi", user: {id: userInfo.id, client:
-                                {id: settings.clientID, name: settings.browser.name,
-                                platform: settings.browser.platform, system: settings.browser.system}}})
+                                {id: settings.client.id, name: settings.client.browser.name,
+                                platform: settings.client.browser.platform,
+                                system: settings.client.browser.system}}})
             },
             generalkenobi: async (connection, data) =>
             {
@@ -1023,8 +1089,8 @@ function roll4it()
                     this.network.connections.set(peerid, {connected: false, connection: connection})
 
                     connection.send({message: "hellothere", user: {id: userInfo.id, client:
-                                    {id: settings.clientID, name: settings.browser.name,
-                                    platform: settings.browser.platform, system: settings.browser.system}}})
+                                    {id: settings.client.id, name: settings.client.browser.name,
+                                    platform: settings.client.browser.platform, system: settings.client.browser.system}}})
                     resolve(connection)
                 })
 
