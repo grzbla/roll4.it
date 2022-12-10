@@ -1,224 +1,3 @@
-function Hash(str)
-{
-    /*
-        constructor for an object containing both hash and string
-        gets passed by reference so its likely faster than string
-        same speed as passing hash alone, but at the cost of couple bytes
-    */
-    s = str
-    h = new MurmurHash3(s).result()
-
-    this.set = (str) =>
-    {
-        s = str
-        h = new MurmurHash3(s).result()
-    }
-    this.hash = () => { return h }
-    this.string = () => { return s }
-
-    return this
-}
-
-function HashMap()
-{
-    /*
-        it's a hash map. thats it
-        it works. i think
-    */
-
-    /*
-        token maps in addition to base values map for ease of access
-        in rare situations
-    */
-    this.strings = new Map() //strings mapped by hash, hash-string pair
-    this.keys = new Map() //hashes mapped by string, string-hash pair
-    this.values = new Map() // values mapped by hash, hash-value pair
-
-    this.get = (token) =>
-    {
-        /*
-            switch which variable is used as key
-            sacrificed minimal performance for convenience of use
-            three getters depending on key type seemed like
-            solution for edge cases
-        */
-        const type = typeof(token)
-    	switch(type)
-        {
-            case "number": { return this.values.get(token) } //hash number directly
-            case "object": { console.log(token); return this.values.get(token.hash()) } //hash
-            case "string":
-            {
-                console.log(token)
-                console.log(new Hash(token).hash())
-                if (this.keys.has(token))
-                    return this.values.get(this.keys.get(token))
-                else
-                    return this.values.get(new Hash(token))
-
-            } //unhashed string
-    	}
-    }
-    this.getByString = (string) => { return this.values.get(this.keys.get(string)) }
-    this.getByHash = (key) => { return this.values.get(key) }
-    this.getHash = (token) =>
-    {
-        /*
-            gets hash value for provided string token
-        */
-        return this.keys.get(token)
-    }
-    this.getString = (token) =>
-    {
-        /*
-            gets string for provided hash token
-        */
-        const type = typeof(token)
-        if (type != "object") //number is more likely
-            return this.strings.get(token)
-        else
-            return this.strings.get(token.hash())
-    }
-    this.set = (key, value) =>
-    {
-        /*
-            generates hash, writes keys to maps for ease of access
-            and in case only one type of token exists
-        */
-        const keyType = typeof(key)
-        switch(keyType)
-        {
-            case "number": // key is int
-            {
-                if (this.values.has(key)) //if already presumably in the map
-                    return false;
-
-                //assigning only values because
-                //there's no way to calculate string from hash number
-                this.values.set(key, value)
-                return key
-                break
-            }
-            case "object": //key is hash
-            {
-                if (this.values.has(key.hash()))
-                    return false
-
-                this.strings.set(key.hash(), key.string())
-                this.keys.set(key.string(), key.hash())
-                this.values.set(key.hash(), value)
-                return key.hash()
-                break
-            }
-            case "string":
-            {
-                if (this.strings.has(key))
-                    return false;
-
-                const hash = new Hash(key)
-                this.strings.set(hash.hash(), hash.string())
-                this.keys.set(hash.string(), hash.hash())
-                this.values.set(hash.hash(), value)
-
-                return hash.hash()
-            }
-        }
-    }
-    this.del = (token) =>
-    {
-        /*
-            entrius deletus
-        */
-        let key
-        let string
-        const type = typeof(token)
-        switch(type)
-        {
-            case "number": { key = token, string = this.strings.get(token); break; }
-            case "object": { key = token.hash(), string = token.string(); break; }
-            case "string": { key = this.keys.get(token), string = token; break; }
-        }
-
-        console.log(key, string)
-
-        if (string && this.keys.has(string))
-            this.keys.delete(string)
-        if (key && this.strings.has(key))
-            this.strings.delete(key)
-        if (key && this.values.has(key))
-            this.values.delete(key)
-    }
-    this.has = (token) =>
-    {
-        let key
-        let string
-        const type = typeof(token)
-        switch(type)
-        {
-            case "number": { return this.keys.has(token); break; }
-            case "object": { return this.keys.has(token.get()); break; }
-            case "string": { return this.strings.has(token); break; }
-        }
-    }
-
-
-}
-
-function De()
-{
-    /*
-        it's short for the
-        short console log. use if line number in console is not needed
-        it messes with your line number in console. what, surprised?
-    */
-    this.bug = function()
-    {
-        console.log(...arguments)
-    }
-    this.style =
-    {
-        error: "background: #222 color: #ba5555"
-    }
-    return this
-}
-
-function Progress(loaded, total)
-{
-    /*
-        progress object to count percentages and fractions for progress bars
-    */
-    this.loaded = loaded
-    this.total = total
-
-    this.getFraction = () =>
-    {
-        //fraction is rounded to 4 decimal places
-        return +((this.loaded/this.total).toFixed(4))
-    }
-
-    this.getPercentage = () =>
-    {
-        //percentage is rounded to 2 decimal places
-		return +( ( this.getFraction() * 100 ).toFixed(2) )
-    }
-
-    return this
-}
-
-function Connection(c)
-{
-    this.c = c
-
-    this.send = (data) =>
-    {
-        this.c.send(data)
-    }
-    this.close = () =>
-    {
-        this.c.close()
-    }
-}
-
 var de = new De() //de for that short .bug occasional use
 
 function roll4it()
@@ -495,6 +274,7 @@ function roll4it()
                     version: b.version,
                     versionNumber: b.versionNumber,
                 }
+                console.log(bro)
                 // bro.hash = new Hash(bro.platform + "-" + bro.system + "-" + bro.name).hash()
                 await this.settings.put("main",
                 {
@@ -737,16 +517,29 @@ function roll4it()
         {
             getSource:
             {
-                user: async (user) =>
+                user: async (source) =>
                 {
-                    console.log("%con user", 'color: #ffffff8f;', user)
+                    this.snag({doodoo: "ass"})
+                    const splat = source.id.split("+")
+                    const user = splat[0]
+                    const client = splat[1]
+
                     //create new transaction
                     const transactionID = await this.network.uuid(this.network.transactions)
                     const transaction = {id: transactionID, userid: user,
                         clientid: await this.settings.get("main").clientID, message: "gimme", what: "your info"}
-                    console.log(transaction);
+
                     //add transaction to transactions
-                    //
+                    this.network.push("transactions", transactionID)
+                    this.network.put(transactionID, transaction)
+
+                    console.log(transaction)
+                    console.log("ass", user)
+
+                    //if no user in storage, ask contacts
+                    //if not connected to user, do it nao
+                    //send transaction object to connected user
+                    //TODO
                 }
             }
         }
@@ -787,7 +580,7 @@ function roll4it()
                     {
                         //end the chunk and start new one
                         request.push(chunk)
-                        chunk = { from: [], what: []}
+                        chunk = { from: [], what: [] }
                     }
                 }
 
@@ -870,7 +663,13 @@ function roll4it()
 
                         try //faster than if when doesnt fail
                         {
-                            this.path.base.getSource[source.name](source.value)
+                            //TODO
+                            switch (source.name)
+                            {
+                                case "user":
+                                    this.path.base.getSource[source.name]({type: source.name, id: source.value})
+                                    break;
+                            }
                         } catch (e) {console.warn(e)}
                     }
                 })
@@ -945,19 +744,26 @@ function roll4it()
             {
                 open: (id) => // peer.on(open)
                 {
-                     //actual peerjs id granted by server might be different from preferred
-                     //TODO notify contacts when peerid changes
+                    //actual peerjs id granted by server might be different from preferred
                     this.network.peerID = id
                     this.network.isRunning = true
+                    
+                    //TODO notify contacts when peerid changes
+                    if (this.network.peerID != this.network.preferredPeerID)
+                    {
+                        console.log("peer id changed")
+                        console.log("%c%s", style.pop, id + "!=" + this.network.preferredPeerID)
+                    }
                 },
                 close: (event) => { }, //set status n shit on closed peer
                 disconnected: (event) => //reconnect on lost
                 {
+                    //TODO handle this properly
                     this.network.isRunning = false
                     console.log(event)
                     setTimeout(() => { try { this.network.peer.reconnect()} catch(e){} }, 5000)
                 },
-                connection: (connection) =>
+                connection: (connection) => //peerjs.on connection
                 {
                     //generate unique id, add to active connections
                     connection.on("open", () => { this.network.handlers.connection.open(connection) } )
@@ -1112,38 +918,50 @@ function roll4it()
         }
     }
 
-
-    this.network.init = async () =>
+    this.network.createPeerID = async () =>
     {
         //create peer id
         const userInfo = await this.user.get("info")
         const settings = await this.settings.get("main")
 
-        //connect to tracker, obtain peer id. same as preferred if available
-        this.network.peerID = this.network.shortPlatformName + "-" +
-                            userInfo.id + settings.clientID
-        console.log(this.network.peerID)
-
-        this.network.online()
+        console.log(userInfo, settings)
+        const peerID = this.network.shortPlatformName + "-"
+                + userInfo.id + settings.clientID
+        this.network.preferredPeerID = peerID
+        return peerID
     }
-    this.network.online = async () =>
+
+
+    this.network.init = async () =>
     {
-        this.network.peer = new Peer(this.network.peerID) //register me my preferred peerid
-        //when server actually responds with registered peer id
-        this.network.peer.on("open", this.network.handlers.peer.open)
-        //connection event handler
-        this.network.peer.on("connection", this.network.handlers.peer.connection)
-        //call event handler
-        this.network.peer.on("call", this.network.handlers.peer.call)
-        //close event handler
-        this.network.peer.on("close", this.network.handlers.peer.close)
-        //disconnect event handler
-        this.network.peer.on("disconnected", this.network.handlers.peer.disconnected)
-        //error event handler
-        this.network.peer.on("error", this.network.handlers.peer.error)
+        //TODO promisify if this takes too long
+        await this.network.connectTracker()
+        console.log("%c%s", style.pop, this.network.peerID)
     }
 
-    this.fetch = function(args)
+    //connect to tracker, obtain peer id. same as preferred if available
+    this.network.connectTracker = (options) =>
+    {
+        return new Promise(async resolve =>
+        {
+            const peerid = await this.network.createPeerID()
+            this.network.peer = new Peer(peerid, options ? options : null) //register me my preferred peerid
+            //when server actually responds with registered peer id
+            this.network.peer.on("open", id => { this.network.handlers.peer.open(id); resolve(id) })
+            //connection event handler
+            this.network.peer.on("connection", this.network.handlers.peer.connection)
+            //call event handler
+            this.network.peer.on("call", this.network.handlers.peer.call)
+            //close event handler
+            this.network.peer.on("close", this.network.handlers.peer.close)
+            //disconnect event handler
+            this.network.peer.on("disconnected", this.network.handlers.peer.disconnected)
+            //error event handler
+            this.network.peer.on("error", (event) => { this.network.handlers.peer.error(event); if (resolve) resolve(false); })
+        })
+    }
+
+    this.fetch = (args) =>
     {
         /*
         fetches asset from cache
@@ -1199,9 +1017,9 @@ function roll4it()
         })
     }
 
-    this.snag = function(args)
+    this.snag = ({doodoo}) =>
     {
-
+        console.log(doodoo);
     }
 
     /*
