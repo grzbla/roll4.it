@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<style>
+  @keyframes spinner {
+    0% {
+      transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    }
+  }
+  .spin::before {
+    animation: 1.5s linear infinite spinner;
+    animation-play-state: inherit;
+    border: solid 5px #cfd0d1;
+    border-bottom-color: #1c87c9;
+    border-radius: 50%;
+    content: "";
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform;
+  }
+  video
+  {
+    width: 1280px;
+    height: 720px;
+  }
+</style>
+
+<script type="module" charset="utf-8">
+    import WebTorrent from './webtorrent.min.js'
+
+async function boing()
+{
+    const client = new WebTorrent()
+    console.log(client)
+
+    navigator.serviceWorker.register('sw.min.js')
+    const controller = await navigator.serviceWorker.ready
+    client.createServer({ controller })
+
+
+    const magnetURI = "magnet:?xt=urn:btih:46e1950653578d4a9e0a4364b0feab9ff3ec2d99&dn=Stargate.SG-1.S04E10.1080p.BluRay.x264-BORDURE.mkv&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com"
+    console.log(magnetURI)
+
+    client.add(magnetURI, torrent =>
+    {
+        // Got torrent metadata!
+        console.log('Client is downloading:', torrent.infoHash)
+
+        console.log("downloading: " + torrent.downloadSpeed)
+
+        for (const file of torrent.files)
+        {
+            console.log("Files:")
+            console.log(torrent.files)
+            console.log(file)
+        }
+
+        torrent.on("done", function()
+        {
+            console.log('torrent finished downloading')
+            console.log(torrent.files)
+            document.querySelector('video').play()
+        })
+
+        torrent.on('download', function (bytes) {
+          console.log('just downloaded: ' + bytes)
+          console.log('total downloaded: ' + torrent.downloaded)
+          console.log('download speed: ' + torrent.downloadSpeed)
+          console.log('progress: ' + torrent.progress)
+        })
+
+        torrent.on('wire', function (wire, addr) {
+          console.log('connected to peer with address ' + addr)
+          console.log(wire)
+        })
+
+        // Torrents can contain many files. Let's use the .mp4 file
+        // const file = torrent.files.find(file => {
+        // return file.name.endsWith('.mp4')
+        // })
+
+        // Display the file by adding it to the DOM. Supports video, audio, image, etc. files
+        // file.streamTo(document.querySelector('video'))
+
+        let video = document.createElement("video")
+        video.setAttribute("autoplay", "true")
+        video.setAttribute("controls", "true")
+        video.setAttribute("volume", "0")
+        let source = document.createElement("source")
+        source.setAttribute("type", "video/mp4")
+        video.appendChild(source)
+        document.body.appendChild(video)
+        torrent.files[0].streamTo(video)
+    })
+}
+
+boing()
+</script>

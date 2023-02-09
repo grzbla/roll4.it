@@ -1,0 +1,127 @@
+:root
+{
+    --color-1a: rgba(255,137,134,1);
+    --color-1b: rgba(242, 79, 79,1);
+    --color-1c: rgba(206, 37, 27,1);	/* Main Primary color */
+    --color-1d: rgba(155,  6,  2,1);
+    --color-1e: rgba( 91,  2,  0,1);
+
+    --color-2a: rgba(255,204,134,1);
+    --color-2b: rgba(239,169, 73,1);
+    --color-2c: rgba(206,129, 22,1);	/* Main Secondary color (1) */
+    --color-2d: rgba(155, 91,  2,1);
+    --color-2e: rgba( 91, 53,  0,1);
+
+    --color-3a: rgba(106,151,189,1);
+    --color-3b: rgba( 54,109,154,1);
+    --color-3c: rgba( 23, 83,133,1);	/* Main Secondary color (2) */
+    --color-3d: rgba(  8, 58,100,1);
+    --color-3e: rgba(  2, 33, 59,1);
+
+    --color-4a: rgba(118,216,125,1);
+    --color-4b: rgba( 70,195, 66,1);
+    --color-4c: rgba( 18,162, 27,1);	/* Main Complement color */
+    --color-4d: rgba(  1,122,  9,1);
+    --color-4e: rgba(  0, 72,  5,1);
+
+    --color-5a: rgba( 105,181,181,1);
+    --color-5b: rgba( 44,148,143,1);
+    --color-5c: rgba( 13,124,124,1);	/* Main Primary color */
+    --color-5d: rgba(  1, 93, 93,1);
+    --color-5e: rgba(  0, 55, 55,1);
+
+    --color-6a: rgba(245,250,131,1);
+    --color-6b: rgba(212,232, 71,1);
+    --color-6c: rgba(178,201, 22,1);	/* Main Secondary color (1) */
+    --color-6d: rgba(132,151,  2,1);
+    --color-6e: rgba( 78, 89,  0,1);
+
+    --color-7a: rgba(152,109,195,1);
+    --color-7b: rgba(109, 58,161,1);
+    --color-7c: rgba( 81, 25,139,1);	/* Main Secondary color (2) */
+    --color-7d: rgba( 52,  9,100,1);
+    --color-7e: rgba( 32,  3, 62,1);
+
+    --color-file-image: var(--color-3c);
+    --color-file-video: #fb98009e;
+}
+
+body
+{
+    background-color: var(--color-1e);
+}
+
+/* METRO UI */
+.tiles-grid.size-11
+{
+    width: 1760px;
+}
+.tile-large.file .icon, .tile-wide.file .icon, .tile-medium.file .icon, .tile-small.file .icon, .tile-app.file .icon
+{
+    position: absolute;
+    -webkit-background-clip: text;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    -webkit-transform: initial;
+    transform: initial;
+    top: 0;
+    left: 0;
+}
+.tile-medium.file .icon
+{
+    font-size: 150px;
+    line-height: 150px;
+}
+.tile-medium.file .icon::after
+{
+    left: 12%;
+    opacity: 0.6;
+}
+.tile-medium.file .icon::before
+{
+    opacity: 0.4;
+    left: 13%;
+    top: -1%;
+}
+.tile-large.file .icon
+{
+    font-size: 300px;
+    line-height: 300px;
+}
+.file .icon::after, .file .icon::before
+{
+    position: absolute;
+}
+[file-type="image"] .branding-bar
+{
+    top: 0;
+    left: unset;
+}
+[file-type="image"] .icon
+{
+    top: 0;
+    left: 0;
+}
+[file-type="image"], [file-type="image"]
+{
+    background-color: var(--color-file-image);
+}
+[file-type="video"], [file-type="video"]
+{
+    background-color: var(--color-file-video);
+}
+[file-type="image"] .icon::after, [file-type="image"] .icon::before,
+[file-type="video"] .icon::after, [file-type="video"] .icon::before
+{
+    opacity: 0.2;
+    box-sizing: border-box;
+    -webkit-background-clip: inherit;
+    -webkit-text-fill-color: transparent;
+    background-size: cover;
+    background-position: center;
+    background-image: inherit;
+    width: 100%;
+    height: 100%;
+
+}

@@ -1,0 +1,57 @@
+:root {
+    --color-0:  hsl(0deg 0% 9%);
+    --color-0-h:  0deg;
+    --color-0-s:  0%;
+    --color-0-l:  9%;
+    --color-0-a:  100%;
+
+    --color-1a: rgba( 21, 30, 42,1);
+    --color-1b: rgba( 36, 48, 66,1);
+    --color-1c: rgba( 56, 74,101,1);
+    --color-1d: rgba( 80,103,137,1);
+    --color-1e: rgba(102,131,174,1);
+
+    --color-2a: rgba( 63, 28, 30,1);
+    --color-2b: rgba( 99, 49, 52,1);
+    --color-2c: rgba(151, 77, 81,1);
+    --color-2d: rgba(203,112,116,1);
+    --color-2e: rgba(251,136,142,1);
+
+
+    --color-3a: rgba( 64, 64, 29,1);
+    --color-3b: rgba( 99,100, 50,1);
+    --color-3c: rgba(152,153, 78,1);
+    --color-3d: rgba(205,206,113,1);
+    --color-3e: rgba(253,254,138,1);
+
+    --color-4a: rgba( 38, 57, 25,1);
+    --color-4b: rgba( 61, 88, 44,1);
+    --color-4c: rgba( 95,135, 69,1);
+    --color-4d: rgba(132,182,100,1);
+    --color-4e: rgba(163,226,123,1);
+
+    --color-5a: rgba( 45, 20, 41,1);
+    --color-5b: rgba( 71, 35, 65,1);
+    --color-5c: rgba(108, 55,100,1);
+    --color-5d: rgba(146, 80,136,1);
+    --color-5e: rgba(185,100,172,1);
+
+    --font-color: hsl(0deg 0% 100% / 56%);
+    --font-color-h: 0deg;
+    --font-color-s: 0%;
+    --font-color-l: 100%;
+    --font-color-a: 56%;
+
+    --change3p: 3%;
+    --change30p: 30%;
+
+    --border-radius: 0.2vw;
+    --character-card-width: 28vh;
+    --game-card-width: 34vh;
+
+    --ploink-size: 1.5vw;
+    --ploink-blur: 3vw;
+    --ploink-base-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l)), calc(var(--font-color-a) * 0.25));
+
+    --font-hover-shadow: #000;
+}

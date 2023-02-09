@@ -62,12 +62,12 @@
     /* @font-face
     {
         font-family: "Enchanted Lands";
-        src: url("assets/charsheets/classic/fonts/enchanted-land.regular.otf");
+        src: url("/assets/charsheets/classic/fonts/enchanted-land.regular.otf");
     }
     @font-face
     {
         font-family: "Fantiasie Artistique";
-        src: url("assets/charsheets/classic/fonts/fantaisie-artistique.otf");
+        src: url("/assets/charsheets/classic/fonts/fantaisie-artistique.otf");
     } */
     body
     {
@@ -308,15 +308,15 @@
     }
     .weapon .image
     {
-        background-image: url("assets/charsheets/classic/bg/weapon.png");
+        background-image: url("/assets/charsheets/classic/bg/weapon.png");
     }
     .portrait .image
     {
-        background-image: url("assets/charsheets/classic/bg/portrait.png");
+        background-image: url("/assets/charsheets/classic/bg/portrait.png");
     }
     .apparel .image
     {
-        background-image: url("assets/charsheets/classic/bg/apparel.png");
+        background-image: url("/assets/charsheets/classic/bg/apparel.png");
     }
     .portrait .image.empty,
     .weapon .image.empty,
@@ -975,18 +975,18 @@
         top: 24vw;
         cursor: pointer;
     }
-    .head .image.empty { background-image: url("assets/charsheets/classic/bg/head.png"); }
-    .ears .image.empty { background-image: url("assets/charsheets/classic/bg/ears.png"); }
-    .shoulders .image.empty { background-image: url("assets/charsheets/classic/bg/shoulders.png"); }
-    .neck .image.empty { background-image: url("assets/charsheets/classic/bg/neck.png"); }
-    .forearms .image.empty { background-image: url("assets/charsheets/classic/bg/forearms.png"); }
-    .leftWrist .image.empty { background-image: url("assets/charsheets/classic/bg/wrist.png"); }
-    .rightWrist .image.empty { background-image: url("assets/charsheets/classic/bg/wrist.png"); -webkit-transform: scaleX(-1); transform: scaleX(-1); }
-    .leftFinger .image.empty { background-image: url("assets/charsheets/classic/bg/finger.png"); }
-    .hands .image.empty { background-image: url("assets/charsheets/classic/bg/hands.png"); }
-    .rightFinger .image.empty { background-image: url("assets/charsheets/classic/bg/finger.png"); -webkit-transform: scaleX(-1); transform: scaleX(-1); }
-    .waist .image.empty { background-image: url("assets/charsheets/classic/bg/waist.png"); }
-    .feet .image.empty { background-image: url("assets/charsheets/classic/bg/feet.png"); }
+    .head .image.empty { background-image: url("/assets/charsheets/classic/bg/head.png"); }
+    .ears .image.empty { background-image: url("/assets/charsheets/classic/bg/ears.png"); }
+    .shoulders .image.empty { background-image: url("/assets/charsheets/classic/bg/shoulders.png"); }
+    .neck .image.empty { background-image: url("/assets/charsheets/classic/bg/neck.png"); }
+    .forearms .image.empty { background-image: url("/assets/charsheets/classic/bg/forearms.png"); }
+    .leftWrist .image.empty { background-image: url("/assets/charsheets/classic/bg/wrist.png"); }
+    .rightWrist .image.empty { background-image: url("/assets/charsheets/classic/bg/wrist.png"); -webkit-transform: scaleX(-1); transform: scaleX(-1); }
+    .leftFinger .image.empty { background-image: url("/assets/charsheets/classic/bg/finger.png"); }
+    .hands .image.empty { background-image: url("/assets/charsheets/classic/bg/hands.png"); }
+    .rightFinger .image.empty { background-image: url("/assets/charsheets/classic/bg/finger.png"); -webkit-transform: scaleX(-1); transform: scaleX(-1); }
+    .waist .image.empty { background-image: url("/assets/charsheets/classic/bg/waist.png"); }
+    .feet .image.empty { background-image: url("/assets/charsheets/classic/bg/feet.png"); }
 
     .head .name,
     .shoulders .name,
@@ -1519,3 +1519,13 @@
     <div class="button itemLink" title="Copy Item Link."><i class="fas fa-link"></i></div>
 </div>
 <div class="cropperContainer"></div>
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/croppie.css">
+
+<script src="/lib/uuidv4.min.js" charset="utf-8"></script>
+<script src="/lib/pouchdb-7.2.1.min.js" charset="utf-8"></script>
+<script src="/lib/pouchdb.upsert.min.js" charset="utf-8"></script>
+<script src="/lib/croppie.min.js" charset="utf-8"></script>
+<script src="/assets/charsheets/classic/common.js" charset="utf-8"></script>
+<script src="/assets/charsheets/classic/charsheet.js" charset="utf-8"></script>

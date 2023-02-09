@@ -1,829 +1,92 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" manifest="./cache.appcache">
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <link rel="manifest" href="./app.webmanifest" crossorigin="use-credentials" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="overridable.css">
-        <link rel="icon" type="image/png" href="assets/icon@192.png"/>
-        <style media="screen">
+<head>
+    <meta charset="utf-8">
+    <title>potatorpg. rpgs shud b simpl.</title>
+    <link rel="manifest" href="./app.webmanifest" crossorigin="use-credentials" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="assets/icon@192.png"/>
 
-            body
-            {
-                user-select: none;
-                background-color: var(--color-0);
-                margin: 0;
-                padding: 0;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                overflow: hidden;
-            }
-            body loading
-            {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 198px;
-                height: 198px;
-                overflow: hidden;
-                background-color: var(--color-0);
-                display: block;
-                border-radius: 50%;
-                transform: scale(0.6);
-            }
-            body loading bar
-            {
-                width: 100%;
-                height: 100%;
-            }
-            loading bar svg
-            {
-                width: inherit;
-                height: inherit;
-            }
-            loading bar svg circle
-            {
-                stroke-dashoffset: 435;
-                stroke: #191919;
-                stroke-dasharray: 435;
-                transform: rotate(-90deg);
-                transform-origin: center;
-                stroke-width: 70%;
-                fill: none;
-                transition: 0.5s;
-            }
-            bar svg circle[role="background"]
-            {
-            }
-            bar svg circle[role="segment"][number="0"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 10) / 100);
-                stroke: var(--color-1c);
-            }
-            bar svg circle[role="bar"][number="0"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 6) / 100);
-                stroke: var(--color-1e);
-            }
-            bar svg circle[role="segment"][number="1"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 20) / 100);
-                stroke: var(--color-2c);
-            }
-            bar svg circle[role="bar"][number="1"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 16) / 100);
-                stroke: var(--color-2e);
-            }
-            bar svg circle[role="segment"][number="2"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 30) / 100);
-                stroke: var(--color-3c);
-            }
-            bar svg circle[role="bar"][number="2"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 26) / 100);
-                stroke: var(--color-3e);
-            }
-            bar svg circle[role="segment"][number="3"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 40) / 100);
-                stroke: var(--color-4c);
-            }
-            bar svg circle[role="bar"][number="3"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 36) / 100);
-                stroke: var(--color-4e);
-            }
-            bar svg circle[role="segment"][number="4"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 50) / 100);
-                stroke: var(--color-5c);
-            }
-            bar svg circle[role="bar"][number="4"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 46) / 100);
-                stroke: var(--color-5e);
-            }
-            bar svg circle[role="segment"][number="5"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 60) / 100);
-                stroke: var(--color-1c);
-            }
-            bar svg circle[role="bar"][number="5"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 56) / 100);
-                stroke: var(--color-1e);
-            }
-            bar svg circle[role="segment"][number="6"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 70) / 100);
-                stroke: var(--color-2c);
-            }
-            bar svg circle[role="bar"][number="6"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 66) / 100);
-                stroke: var(--color-2e);
-            }
-            bar svg circle[role="segment"][number="7"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 80) / 100);
-                stroke: var(--color-3c);
-            }
-            bar svg circle[role="bar"][number="7"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 76) / 100);
-                stroke: var(--color-3e);
-            }
-            bar svg circle[role="segment"][number="8"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 90) / 100);
-                stroke: var(--color-4c);
-            }
-            bar svg circle[role="bar"][number="8"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 86) / 100);
-                stroke: var(--color-4e);
-            }
-            bar svg circle[role="segment"][number="9"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 100) / 100);
-                stroke: var(--color-5c);
-            }
-            bar svg circle[role="bar"][number="9"]
-            {
-                stroke-dashoffset: calc(435 - (435 * 96) / 100);
-                stroke: var(--color-5e);
-            }
+    <!-- style shiets -->
+    <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="overrides.css">
+    <link rel="stylesheet" href="main.css">
+</head>
 
-            screen > *:last-child tooltip
+<body>
+    <div id="screen">
+        <div id="home" class="tiles-grid tiles-group size-11" data-group-title="General" data-fs-path="home" ondrop="window.rpg.handlers.dnd.drop(event);" ondragover="window.rpg.handlers.dnd.drag(event);"></div>
+    </div>
+    <script src="lib/uuidv4.js"></script>
+    <script src="lib/browser-detect.umd.js"></script>
+    <script src="lib/metroui/js/metro.min.js"></script>
+    <script src="js/system.js" type="module"></script>
+</body>
+<script>
+    // TODO
+    //
+    function saveFile(item, path)
+    {
+        // Get file
+        item.file(function(file)
+        {
+            // const file = item.getAsFile();
+            file.arrayBuffer().then((arrayBuffer) =>
             {
-                top: -9vh;
-            }
-            tooltip
+                const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
+                const f = {path: path, name: file.name, extension: file.name.split('.').pop(), data: blob, type: file.type, size: file.size}
+                //TODO save file to pouchdb path
+                console.log("TODO: save file to pouch db filesystem path")
+                console.log(f)
+            });
+        });
+    }
+
+    async function readFiles(item, path)
+    {
+        path = path || "";
+        // iterate directory if directory
+        if (item.isDirectory)
+        {
+            var dirReader = item.createReader();
+            dirReader.readEntries(async function(entries)
             {
-                color: var(--font-color);
-                position: absolute;
-                font-size: 2vh;
-                line-height: 3vh;
-                width: auto;
-                height: auto;
-                min-width: 20vw;
-                min-height: 3vh;
-                background-color: hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) + var(--change5p)));
-                padding: 1vh 1vw 1vh 1vw;
-                pointer-events: none;
-                top: 9vh;
-                left: -10vw;
-                transition: opacity 0.3s ease-out;
-                opacity: 0;
-                z-index: 2;
-                border-radius: var(--border-radius);
-                overflow: hidden;
-            }
+                for (var i = 0; i < entries.length; i++)
+                {
+                    readFiles(entries[i], path + item.name + "/")
+                }
+            })
+        }
+        else if (item.isFile)//save file if file
+        {
+            saveFile(item, path)
+        }
+    }
 
 
-            tooltip content
+    async function getFiles(event)
+    {
+        const items = event.dataTransfer.items;
+        for (var i = 0; i < items.length; i++)
+        {
+            var item = items[i].webkitGetAsEntry();
+            if (item)
             {
-                display: block;
-                width: inherit;
-                height: inherit;
-                padding: 0 2vw 0 2vw;
-                margin: 0;
-        		text-align: center;
-        		background: -webkit-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
-        		background: -moz-gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
-        		background: gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
-        		-webkit-background-size: 50px 100%;
-        		-moz-background-size: 50px 100%;
-        		background-size: 50px 100%;
-        		-webkit-background-clip: text;
-        		-moz-background-clip: text;
-        		background-clip: text;
-        		-webkit-animation-name: shimmer;
-        		-moz-animation-name: shimmer;
-        		animation-name: shimmer;
-        		-webkit-animation-duration: 2s;
-        		-moz-animation-duration: 2s;
-        		animation-duration: 2s;
-        		-webkit-animation-iteration-count: infinite;
-        		-moz-animation-iteration-count: infinite;
-        		animation-iteration-count: infinite;
-        		background-repeat: no-repeat;
-        		background-position: 0 0;
+                readFiles(item)
             }
+        }
+    }
 
-            @-moz-keyfabrics shimmer
-            {
-            		0% { background-position: top left;}
-            		100% { background-position: top right; }
-            }
+    async function dropHandler(event)
+    {
+        event.preventDefault();
+        getFiles(event)
+    }
 
-            @-webkit-keyfabrics shimmer
-            {
-            		0% { background-position: top left; }
-            		100% { background-position: top right; }
-            }
-
-            @-o-keyfabrics shimmer
-            {
-            		0% { background-position: top left; }
-            		100% { background-position: top right; }
-            }
-
-            @keyfabrics shimmer
-            {
-            		0% { background-position: top left; }
-            		100% {background-position: top right; }
-            }
-            body screen
-            {
-                display: block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                overflow-y: scroll;
-                overflow-x: hidden;
-                padding-right: 24px;
-            }
-            screen > *
-            {
-                margin: 4vh 0vw 3vh 6vw;
-                position: relative;
-                display: inline-block;
-                height: 40%;
-                border-radius: var(--border-radius);
-                background-color: hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) - var(--change3p)));
-                z-index: 0;
-                padding-bottom: 2vh;
-            }
-            screen > *:hover
-            {
-                z-index: 1;
-            }
-            screen > * > label
-            {
-                color: var(--font-color);
-                position: absolute;
-                margin-top: -1.35vw;
-                margin-left: 4.5vw;
-                font-variant: small-caps;
-                font-size: 2vw;
-            }
-            screen > * buttons
-            {
-                color: transparent;
-                font-size: 3vh;
-                display: inline-block;
-                left: 10%;
-                width: 80%;
-                position: absolute;
-                bottom: -2.5vh;
-                border-radius: 4em;
-                height: 5vh;
-                font-size: 2.5vw;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1;
-            }
-            screen > * > buttons scroll
-            {
-                height: 0.2vh;
-                width: 100%;
-                position: absolute;
-                border-radius: var(--border-radius);
-                bottom: 0;
-                top: 2.25vh;
-                background-color: transparent;
-                transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out, opacity 0.25s ease-out;
-                border-bottom: 0.2vw solid hsl(var(--color-0-h), var(--color-0-s), calc(var(--color-0-l) + 10%));
-                opacity: 1;
-                box-sizing: border-box;
-            }
-            screen > * > buttons:hover scroll
-            {
-                color: var(--font-color);
-                border-bottom: 0.2vw solid transparent;
-            }
-            screen > * > buttons:hover > *:not(scroll)
-            {
-                opacity: 1;
-            }
-            screen > * > buttons > *
-            {
-                color: var(--font-color);
-                opacity: 0;
-            }
-            screen > * > buttons > *:not(scroll):hover tooltip
-            {
-                opacity: 1;
-            }
-
-            screen > * > buttons > *:not(scroll)
-            {
-                position: relative;
-                top: 0;
-                cursor: pointer;
-                margin: 0.2vw 0.5vw 0.2vw 0.5vw;
-                width: 3vw;
-                transition: background 0.25s ease-out, border 0.25s ease-out, color 0.25s ease-out;
-                text-align: center;
-            }
-            screen > * buttons > *:not(scroll):before,
-            fabric > *:before
-            {
-                content: "";
-                display: block;
-                position: absolute;
-                border-radius: 4em;
-                left: 0;
-                top: 0;
-                width: inherit;
-                height: 100%;
-                opacity: 0;
-                transition: all 0.3s;
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--ploink-base-color);
-            }
-
-            screen > * buttons > *:not(scroll):active:before,
-            display > *:active:before
-            {
-                  box-shadow: 0 0 0 0 var(--ploink-base-color);
-                  position: absolute;
-                  border-radius: 4em;
-                  left: 0;
-                  top: 0;
-                  opacity: 1;
-                  transition: 0s;
-            }
-            screen * buttons *:active
-            {
-                  top: 0.1vh;
-            }
-            screen * buttons expand
-            {
-                z-index: 1;
-            }
-            screen * buttons expand:hover
-            {
-                 color: var(--color-5d);
-            }
-            screen > * buttons expand:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--expand-click-color);
-            }
-            screen * buttons import:hover
-            {
-                color: var(--color-4d);
-            }
-            screen > * buttons import:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--import-click-color);
-            }
-            screen * buttons export:hover
-            {
-                 color: var(--color-3d);
-            }
-            screen > * buttons export:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--export-click-color);
-            }
-            screen * buttons personalize:hover
-            {
-                 color: var(--color-1d);
-            }
-            screen > * buttons personalize:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--personalize-click-color);
-            }
-            screen > * buttons create:hover
-            {
-                 color: var(--color-2d);
-            }
-            screen > * buttons create:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--create-click-color);
-            }
-
-            scroll > bar
-            {
-                width: 00%;
-                background-color: hsla(var(--font-color-h), var(--font-color-s), var(--font-color-l), calc(var(--font-color-a) - var(--change30p)));
-                height: 0.2vh;
-                display: block;
-                position: absolute;
-                transition: all 0.2s ease-in;
-                opacity: 0;
-            }
-
-            screen games
-            {
-                width: 88vw;
-            }
-            screen worlds
-            {
-                width: 88vw;
-            }
-            screen characters
-            {
-                width: 88vw;
-                margin-top: 4vw;
-            }
-            screen characters:before
-            {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                border-style: solid;
-                border-width: 3vh 5vw 0 0;
-                border-color: var(--color-0) transparent transparent transparent;
-            }
-            screen characters:after
-            {
-                content: '';
-                position: absolute;
-                top: 0;
-                right: 0;
-                border-style: solid;
-                border-width: 0 5vw 2vh 0;
-                border-color: transparent var(--color-0) transparent  transparent;
-            }
-            screen > *:hover scroll bar
-            {
-                opacity: 1;
-            }
-            screen > * > buttons:hover scroll bar
-            {
-                opacity: 0;
-            }
-            * > fabric > *
-            {
-                flex-shrink: 0;
-            }
-            fabric
-            {
-                height: 100%;
-                width: 100%;
-                vertical-align: middle;
-                position: absolute;
-                top: 0;
-                left: 0;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-                transition: all 0.2s ease-in;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                justify-content: flex-start;
-                align-items: center;
-            }
-            characters fabric character
-            {
-                display: inline-flex;
-                position: relative;
-                height: calc(var(--character-card-width) * 1.144);
-                width: var(--character-card-width);
-                margin: 4vh 1vw 4vh 1vw;
-                cursor: pointer;
-                min-width: var(--character-card-width);
-            }
-            characters fabric character:hover background
-            {
-                filter: sepia(40%) saturate(1) opacity(1);
-            }
-            fabric > * > name
-            {
-                display: block;
-                position: absolute;
-                color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) - 35%), calc(var(--font-color-a) + 35%));
-                width: 100%;
-                height: calc(var(--character-card-width) / 6);
-                bottom: -2.5vh;
-                left: 0;
-                font-size: calc(var(--character-card-width) / 9);
-                line-height: calc(var(--character-card-width) / 6);
-                pointer-events: none;
-                text-align: center;
-                filter: drop-shadow(2px 2px 5px #000);
-                transition: text-shadow 0.3s ease-in;
-            }
-            fabric > *:hover > name
-            {
-                text-shadow: -1px -1px 0.25vw var(--font-hover-shadow),
-                              -1vw -1.2vh 0.25vw var(--font-hover-shadow),
-                              0.7vw -0.4vh 0.25vw var(--font-hover-shadow),
-                              0.35vw 0.25vw 0.25vw var(--font-hover-shadow);
-
-            }
-            fabric character name.horizontal
-            {
-                display: block;
-                position: absolute;
-                background-color: hsla(var(--font-color-h), var(--font-color-s), calc(var(--font-color-l) - 35%), calc(var(--font-color-a) + 35%));
-                color: var(--color-0);
-                width: 2vw;
-                height: 100%;
-                top: 0;
-                font-size: 2vw;
-                line-height: 1.8vw;
-                pointer-events: none;
-                text-align: center;
-                writing-mode: vertical-rl;
-                text-orientation: mixed;
-                right: 0;
-            }
-            fabric > * > background
-            {
-                display: block;
-                background-image: url(./assets/img/character.card.backgrounds/0.webp);
-                background-size: cover;
-                background-repeat: no-repeat;
-                filter: sepia(75%) saturate(0) opacity(0.5);
-                transition: filter 0.3s ease-in;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-            }
-            fabric character:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--character-button-color);
-            }
-
-            games fabric game
-            {
-                display: inline-flex;
-                position: relative;
-                height: calc(var(--game-card-width) * 0.94);
-                width: var(--game-card-width);
-                margin: 4vh 1vw 4vh 1vw;
-                cursor: pointer;
-                flex-direction: row;
-                filter: drop-shadow(2px 2px 5px #000);
-            }
-            games fabric game:hover background
-            {
-                filter: sepia(40%) saturate(1) opacity(1);
-            }
-            fabric > game > background
-            {
-                background-image: url(./assets/img/game.card.backgrounds/0.jpg);
-            }
-            fabric game:before
-            {
-                box-shadow: 0 0 var(--ploink-blur) var(--ploink-size) var(--game-button-color);
-            }
-            screen contacts
-            {
-                width: 17%;
-            }
-            screen assets
-            {
-                width: 88vw;
-            }
-            screen assets:before
-            {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                border-style: solid;
-                border-width: 0 0 2vh 5vw;
-                border-color: transparent transparent var(--color-0) transparent;
-            }
-            screen assets:after
-            {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                border-style: solid;
-                border-width: 0 5vw 3vh 0 ;
-                border-color: transparent transparent var(--color-0) transparent;
-            }
-
-            editor
-            {
-                vertical-align: middle;
-                transition: all 0.2s ease-in;
-                display: none;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                justify-content: flex-start;
-                align-items: center;
-                position: fixed;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                top: 0;
-                left: 0;
-                margin: 0;
-                padding: 0;
-                background-color: var(--color-0);
-                z-index: 2;
-            }
-            editor button[type="close"]
-            {
-                width: 8vw;
-                height: 5vh;
-                box-shadow: 0px 10px 10px 10px rgb(0 0 0 / 25%);
-                border-radius: 10px;
-                background: #000;
-                left: 46vw;
-                bottom: 1vh;
-                position: absolute;
-                display: block;
-                z-index: 3;
-                cursor: pointer;
-            }
-            editor button[type="close"]:before,
-            editor button[type="close"]:after
-            {
-                content: '';
-                width: 40%;
-                height: 2px;
-                background: var(--font-color);
-                position: absolute;
-                top: 48%;
-                left: 30%;
-                -webkit-transform: rotate(-45deg);
-                -moz-transform: rotate(-45deg);
-                -ms-transform: rotate(-45deg);
-                -o-transform: rotate(-45deg);
-                transform: rotate(-45deg);
-                -webkit-transition: all 0.3s ease-out;
-                -moz-transition: all 0.3s ease-out;
-                -ms-transition: all 0.3s ease-out;
-                -o-transition: all 0.3s ease-out;
-                transition: all 0.3s ease-out;
-            }
-            editor button[type="close"]:after
-            {
-                -webkit-transform: rotate(45deg);
-                -moz-transform: rotate(45deg);
-                -ms-transform: rotate(45deg);
-                -o-transform: rotate(45deg);
-                transform: rotate(45deg);
-                -webkit-transition: all 0.3s ease-out;
-                -moz-transition: all 0.3s ease-out;
-                -ms-transition: all 0.3s ease-out;
-                -o-transition: all 0.3s ease-out;
-                transition: all 0.3s ease-out;
-            }
-            editor button[type="close"]:hover:before,
-            editor button[type="close"]:hover:after
-            {
-                -webkit-transform: rotate(180deg);
-                -moz-transform: rotate(180deg);
-                -ms-transform: rotate(180deg);
-                -o-transform: rotate(180deg);
-                transform: rotate(180deg);
-            }
-
-            [display="block"]
-            {
-                display: block;
-            }
-            [display="flex"]
-            {
-                display: flex;
-            }
-            [display="none"]
-            {
-                display: none;
-            }
-        </style>
-    </head>
-    <body>
-    <screen>
-        <characters>
-            <label>Characters</label>
-            <fabric></fabric>
-            <buttons>
-                <scroll><bar></bar></scroll>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open characters in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import characters from file.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export characters to file.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
-                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create character.</content></tooltip></create>
-            </buttons>
-        </characters>
-        <games>
-            <label>Games</label>
-            <fabric>
-                <game>
-                    <background></background>
-                    <name>Slurp-playing Gamz</name>
-                </game>
-                <game>
-                    <background></background>
-                    <name>Very cereal campaign</name>
-                </game>
-                <game>
-                    <background></background>
-                    <name>So fucking cereal i cant even cant</name>
-                </game>
-                <game>
-                    <background></background>
-                    <name>oof</name>
-                </game>
-                <game>
-                    <background></background>
-                    <name>and ass</name>
-                </game>
-            </fabric>
-            <buttons>
-                <scroll><bar></bar></scroll>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open games in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import games from file.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export games game data to file.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.to file.</content></tooltip></personalize>
-                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create a game.</content></tooltip></create>
-            </buttons>
-        </games>
-        <worlds>
-            <label>Worlds</label>
-            <fabric>
-            </fabric>
-            <buttons>
-                <scroll><bar></bar></scroll>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open Worlds in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import Worlds from local filesystem.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export Worlds to local filesystem.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
-                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create folder.</content></tooltip></create>
-            </buttons>
-        </worlds>
-        <assets>
-            <label>Assets</label>
-            <fabric>
-            </fabric>
-            <buttons>
-                <scroll><bar></bar></scroll>
-                <expand><i class="fa-solid fa-desktop"></i><tooltip><content>Open Assets in full view.</content></tooltip></expand>
-                <import><i class="fa-solid fa-file-import"></i><tooltip><content>Import Assets from local filesystem.</content></tooltip></import>
-                <export><i class="fa-solid fa-download"></i><tooltip><content>Export Assets to local filesystem.</content></tooltip></export>
-                <personalize><i class="fa-solid fa-sliders"></i><tooltip><content>Personalize your experience.</content></tooltip></personalize>
-                <create><i class="fa-regular fa-square-plus"></i><tooltip><content>Create folder.</content></tooltip></create>
-            </buttons>
-        </assets>
-    </screen>
-    <editor display="none">
-        <fabric></fabric>
-        <button type="close"></button>
-    </editor>
-    <loading>
-        <bar>
-            <svg>
-                <circle role="background" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="9" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="9" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="8" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="8" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="7" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="7" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="6" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="6" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="5" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="5" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="4" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="4" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="3" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="3" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="2" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="2" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="1" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="1" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="segment" number="0" cx="50%" cy="50%" r="35%"></circle>
-                <circle role="bar" number="0" cx="50%" cy="50%" r="35%"></circle>
-            </svg>
-            <progress></progress>
-        </bar>
-    </loading>
-    </body>
-    <!-- libraries -->
-    <script type="text/javascript" src="lib/uuidv4.min.js"></script>
-    <script type="text/javascript" src="lib/pouchdb-7.2.1.min.js"></script>
-    <script type="text/javascript" src="lib/pouchdb.upsert.min.js"></script>
-    <script type="text/javascript" src="lib/peerjs.min.js"></script>
-    <script type="text/javascript" src="lib/imurmurhash.min.js"></script>
-    <script type="text/javascript" src="lib/browser-detect.umd.js"></script>
-    <!-- declares -->
-    <!--  service worker source caching -->
-    <!-- <script src="./service.worker.register.js"></script> -->
-    <!-- base code -->
-    <script src="js/language.js"></script>
-    <script src="js/base.js"></script>
-    <script src="js/system.js"></script>
-    <!-- modules -->
-    <script src="js/charsheet.js"></script>
-    <script src="js/ploink.js"></script><!-- the thing here -->
+    function dragOverHandler(event) {
+        event.preventDefault();
+    }
+</script>
 
 </html>

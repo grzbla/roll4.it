@@ -1,0 +1,28 @@
+body
+{
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#screen
+{
+    position: absolute;
+    margin: inherit;
+    width: inherit;
+    height: inherit;
+    overflow: inherit;
+
+}
+#home
+{
+    left: 0;
+    top: 0;
+    padding: 40px 60px 40px 60px;
+    overflow: hidden;
+    position: relative;
+    margin: inherit;
+    width: calc(100%+24px);
+    height: inherit;
+    overflow-y: scroll;
+}

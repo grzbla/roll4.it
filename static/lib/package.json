@@ -1,5 +1,9 @@
 {
   "dependencies": {
-    "freedom": "^0.6.36"
+    "browser-detect": "^0.2.28",
+    "freedom": "^0.6.36",
+    "indexeddb-fs": "^1.2.5",
+    "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13"
   }
 }

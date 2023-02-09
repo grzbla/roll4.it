@@ -3,6 +3,7 @@ var c;
 //get user id
 async function init()
 {
+    console.log("init")
     let userID = await db.user.get("id");
     if (userID)
     {
@@ -16,6 +17,9 @@ async function init()
         setTimeout(() => //delay by 300ms for smoother experience
         {
             let loading = document.querySelector(".loading");
+            if (!loading)
+                return
+                
             loading.classList.add("invisible");
             setTimeout( (loading) => { loading.parentNode.removeChild(loading); }, 300, loading);
             document.querySelector(".characterSheet").classList.remove("invisible");
@@ -595,6 +599,7 @@ function valInputEvent(event, callback)
 
 function itemEditorText(event)
 {
+    console.log(event)
     let text = event.target.textContent;
     let html = event.target.innerHTML;
     let item = { field: event.target.className, type: event.target.parentNode.classList[1] };
