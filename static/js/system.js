@@ -1,8 +1,11 @@
-import fs from '../lib/indexed.filesystem.js'
-import {uuid, path, style} from './modules/base.js'
+import fs from "../lib/indexed.filesystem.js"
+import browserDetect from "../lib/browser-detect.es5.js"
 
-{
-    const b = browserDetect()
+import {uuid, path, style} from "./modules/base.js"
+
+
+{ //make b go out of scope fast
+    let b = browserDetect()
     window.browser =
     {
         platform: b.mobile ? "mobile" : "embedded",
@@ -15,10 +18,84 @@ import {uuid, path, style} from './modules/base.js'
 
 function PotatoRPG()
 {
+    this.fileReadDelay = 100;
+    /*
+        substitute disallowedChars found in string with replacement
+    */
+    this.replacer = (string, disallowedChars, replacement) =>
+    {
+        for (let i = 0, l = disallowedChars.length; i < l; i++)
+        {
+            const char = disallowedChars.charAt(i)
+
+            string = string.replaceAll(char, replacement)
+        }
+        return string
+    }
+    /*
+        remove unwanted chars from string
+    */
+    this.sanitize = (string) =>
+    {
+        string = this.replacer(string, this.handlers.dnd.disallowedChars.remove, "")
+        string = this.replacer(string, this.handlers.dnd.disallowedChars.underscore, "_")
+        return string
+    }
+
+    this.createDirectory = (p) =>
+    {
+        fs.createDirectory(p).then((result) =>
+        {
+            console.log(p)
+            const info =
+            {
+                name: p.split("/").pop(),
+                stamp: Date.now()
+            }
+
+            console.log(info)
+            fs.writeFile(p + "/info.json", info).then((nfo) =>
+            {
+                console.log(nfo)
+            })
+        }).catch((exception) =>
+        {
+            const error = new Error();
+            console.log("%c" + exception.message, style.color1b)
+            console.log("%c" + error.stack, style.color1b)
+
+            // capture directory assertion error
+            const match = (/\"(.*?)\" directory does not exist/g).exec(exception.message)
+            if (match && match[1])
+            {
+                console.log("%c" + match[1], style.color1a)
+                setTimeout((path) =>
+                {
+                    if (path.slice(-1) == "/")
+                        path.pop()
+
+                    this.createDirectory(path).then(() =>
+                    {
+                        fs.exists(path).then((result) =>
+                        {
+                            result ? console.log("%c" + path) : this.createDirectory(p)
+                        })
+                    })
+                }, this.fileDelay, match[1])
+            }
+            //TODO finish when it occurs again
+        })
+    }
+
     this.handlers =
     {
         dnd:
         {
+            disallowedChars:
+            {
+                remove: "\\*?!\"'|()[]{}<>+`",
+                underscore: ": ",
+            },
             drag: (event) =>
             {
                 event.preventDefault();
@@ -37,22 +114,35 @@ function PotatoRPG()
                     file.arrayBuffer().then((arrayBuffer) =>
                     {
                         const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
-                        const f = {path: path, name: file.name, extension: file.name.split('.').pop(), data: blob, type: file.type, size: file.size}
-                        //TODO save file to pouchdb path
-                        console.log("TODO: save file to pouch db filesystem path")
-                        console.log(f)
-                        console.log(f.path.slice(0, -1))
+
+                        const splat = file.name.split(".")
+                        const f = { name: this.sanitize(file.name), extension: ((splat.length > 1) ? splat.pop() : null), data: blob, type: file.type != "" ? file.type : null, size: file.size }
+                        console.log(path, f)
+                        this.handlers.dnd.writeFile(f, path)
                     });
                 });
             },
-            readFiles: (item, path, dropPath) =>
+            writeFile: async (f, path) =>
+            {
+                const pathSanitized = this.sanitize(path)
+                path = pathSanitized.slice(0, -1)
+
+                await fs.writeFile(pathSanitized + f.name, f)
+
+            },
+            readFiles: async (item, path, dropPath) =>
             {
                 path = path || "";
                 // iterate directory if directory
                 if (item.isDirectory)
                 {
+                    const p = dropPath + "/" + path + item.name
+
+                    if (!(await fs.exists(p)))
+                        await fs.createDirectory(p)
+
                     var dirReader = item.createReader();
-                    dirReader.readEntries(async (entries) =>
+                    dirReader.readEntries((entries) =>
                     {
                         for (var i = 0; i < entries.length; i++)
                         {
@@ -65,10 +155,10 @@ function PotatoRPG()
                     this.handlers.dnd.saveFile(item, dropPath + "/" + path)
                 }
             },
-            getFiles: async (event) =>
+            getFiles: (event) =>
             {
                 const dropPath = event.target.getAttribute("data-fs-path")
-                console.log(dropPath)
+
                 const items = event.dataTransfer.items;
                 for (var i = 0; i < items.length; i++)
                 {
@@ -130,12 +220,13 @@ function PotatoRPG()
             console.log("%cInstance ID: " + JSON.stringify(this.instance, null, 2), style.color2b)
 
 
-            /* HOME SCREEN INITIALIZATION */
+            /*
+                HOME SCREEN INITIALIZATION
+            */
             if(!(await fs.exists(path.home)))
             {
                 console.log("%cHome directory needs to be created.", style.color2a)
                 let home = await fs.createDirectory(path.home)
-                console.log(home)
             }
 
             const dir = await fs.readDirectory(path.home)
@@ -143,8 +234,8 @@ function PotatoRPG()
 
             //iterate home directory directories and files
             //for each dir/file put tile under stored coordinates
-            console.log(await fs.readFile(path.user))
-
+            console.log(await fs.readDirectory("root"))
+            console.log(await fs.readDirectory("home"))
         }
     }
 

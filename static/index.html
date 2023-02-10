@@ -18,75 +18,7 @@
     <div id="screen">
         <div id="home" class="tiles-grid tiles-group size-11" data-group-title="General" data-fs-path="home" ondrop="window.rpg.handlers.dnd.drop(event);" ondragover="window.rpg.handlers.dnd.drag(event);"></div>
     </div>
-    <script src="lib/uuidv4.js"></script>
-    <script src="lib/browser-detect.umd.js"></script>
     <script src="lib/metroui/js/metro.min.js"></script>
     <script src="js/system.js" type="module"></script>
 </body>
-<script>
-    // TODO
-    //
-    function saveFile(item, path)
-    {
-        // Get file
-        item.file(function(file)
-        {
-            // const file = item.getAsFile();
-            file.arrayBuffer().then((arrayBuffer) =>
-            {
-                const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
-                const f = {path: path, name: file.name, extension: file.name.split('.').pop(), data: blob, type: file.type, size: file.size}
-                //TODO save file to pouchdb path
-                console.log("TODO: save file to pouch db filesystem path")
-                console.log(f)
-            });
-        });
-    }
-
-    async function readFiles(item, path)
-    {
-        path = path || "";
-        // iterate directory if directory
-        if (item.isDirectory)
-        {
-            var dirReader = item.createReader();
-            dirReader.readEntries(async function(entries)
-            {
-                for (var i = 0; i < entries.length; i++)
-                {
-                    readFiles(entries[i], path + item.name + "/")
-                }
-            })
-        }
-        else if (item.isFile)//save file if file
-        {
-            saveFile(item, path)
-        }
-    }
-
-
-    async function getFiles(event)
-    {
-        const items = event.dataTransfer.items;
-        for (var i = 0; i < items.length; i++)
-        {
-            var item = items[i].webkitGetAsEntry();
-            if (item)
-            {
-                readFiles(item)
-            }
-        }
-    }
-
-    async function dropHandler(event)
-    {
-        event.preventDefault();
-        getFiles(event)
-    }
-
-    function dragOverHandler(event) {
-        event.preventDefault();
-    }
-</script>
-
 </html>
