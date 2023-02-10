@@ -1,8 +1,9 @@
-import fs from "../lib/indexed.filesystem.js"
-import browserDetect from "../lib/browser-detect.es5.js"
-
+// imports
 import {uuid, path, style} from "./modules/base.js"
 
+// third party imports
+import fs from "../lib/indexed.filesystem.js"
+import browserDetect from "../lib/browser-detect.es5.js"
 
 { //make b go out of scope fast
     let b = browserDetect()
@@ -18,7 +19,7 @@ import {uuid, path, style} from "./modules/base.js"
 
 function PotatoRPG()
 {
-    this.fileReadDelay = 100;
+    this.fileDelay = 100
     /*
         substitute disallowedChars found in string with replacement
     */
@@ -42,6 +43,7 @@ function PotatoRPG()
         return string
     }
 
+    //this is obsolete i think
     this.createDirectory = (p) =>
     {
         fs.createDirectory(p).then((result) =>
@@ -87,56 +89,71 @@ function PotatoRPG()
         })
     }
 
+    /*
+        handler functions
+    */
     this.handlers =
     {
+        // drag and drop
         dnd:
         {
+            //disallowed file name char list
             disallowedChars:
             {
                 remove: "\\*?!\"'|()[]{}<>+`",
                 underscore: ": ",
             },
-            drag: (event) =>
+            drag: (event) => // prevent default on drag
             {
                 event.preventDefault();
             },
-            drop: (event) =>
+            drop: (event) => //get files on drop
             {
+                event.preventDefault();
                 this.handlers.dnd.getFiles(event)
-                event.preventDefault();
             },
-            saveFile: (item, path) =>
+            saveFile: (item, path) => //saves item as blob to path
             {
                 // Get file
                 item.file((file) =>
                 {
-                    // const file = item.getAsFile();
                     file.arrayBuffer().then((arrayBuffer) =>
                     {
                         const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
-
                         const splat = file.name.split(".")
+
+                        //create file object
                         const f = { name: this.sanitize(file.name), extension: ((splat.length > 1) ? splat.pop() : null), data: blob, type: file.type != "" ? file.type : null, size: file.size }
-                        console.log(path, f)
                         this.handlers.dnd.writeFile(f, path)
                     });
                 });
             },
-            writeFile: async (f, path) =>
+            writeFile: async (f, path) => // writes f to path
             {
                 const pathSanitized = this.sanitize(path)
                 path = pathSanitized.slice(0, -1)
 
-                await fs.writeFile(pathSanitized + f.name, f)
+                setTimeout((path, file) =>
+                {
+                    fs.writeFile(path, file).then((result) =>
+                    {
+                        console.log("%c" + path, style.color3a)
+                        //if path is currently displayed or home
+                        //add icons to current view
+                        this.fileDelayTick++
+                    })
+                }, this.fileDelay * this.fileDelayTick , pathSanitized + f.name, f)
 
             },
-            readFiles: async (item, path, dropPath) =>
+            readDroppedFiles: async (item, path, dropPath) => // reads files at current path recursively
             {
+                this.fileDelayTick = 1
                 path = path || "";
                 // iterate directory if directory
                 if (item.isDirectory)
                 {
-                    const p = dropPath + "/" + path + item.name
+                    const name = this.sanitize(item.name)
+                    const p = dropPath + "/" + path + name
 
                     if (!(await fs.exists(p)))
                         await fs.createDirectory(p)
@@ -146,7 +163,7 @@ function PotatoRPG()
                     {
                         for (var i = 0; i < entries.length; i++)
                         {
-                            this.handlers.dnd.readFiles(entries[i], path + item.name + "/", dropPath)
+                            this.handlers.dnd.readDroppedFiles(entries[i], path + name + "/", dropPath)
                         }
                     })
                 }
@@ -155,7 +172,7 @@ function PotatoRPG()
                     this.handlers.dnd.saveFile(item, dropPath + "/" + path)
                 }
             },
-            getFiles: (event) =>
+            getFiles: (event) => // gets files from data transfer
             {
                 const dropPath = event.target.getAttribute("data-fs-path")
 
@@ -165,7 +182,7 @@ function PotatoRPG()
                     var item = items[i].webkitGetAsEntry();
                     if (item)
                     {
-                        this.handlers.dnd.readFiles(item, null, dropPath)
+                        this.handlers.dnd.readDroppedFiles(item, null, dropPath)
                     }
                 }
             }

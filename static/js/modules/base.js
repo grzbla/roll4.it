@@ -4,6 +4,7 @@ import v4 from "./3rd/uuid/v4.js"
     SHIT HERE IS SUPPOSED TO BE INITIALIZED FIRST
 */
 
+//system paths
 const path =
 {
     user: "user.json",
@@ -11,6 +12,7 @@ const path =
     home: "home"
 }
 
+//
 const url =
 {
     source:
