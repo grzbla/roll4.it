@@ -15,10 +15,7 @@
 </head>
 
 <body>
-    <div id="screen">
-        <div id="home" class="tiles-grid tiles-group size-11" data-group-title="General" data-fs-path="home" ondrop="window.rpg.handlers.dnd.drop(event);" ondragover="window.rpg.handlers.dnd.drag(event);"></div>
-    </div>
-    <script src="lib/metroui/js/metro.min.js"></script>
+    <div id="screen" system-path="home" ondrop="window.rpg.ui.dnd.drop(event);" ondragover="window.rpg.ui.dnd.drag(event);"></div>
     <script src="js/system.js" type="module"></script>
 </body>
 </html>
