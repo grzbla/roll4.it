@@ -82,13 +82,14 @@ body
 {
     left: 0;
     top: 0;
-    padding: 40px 60px 40px 60px;
+    padding: 40px 50px 40px 50px;
     overflow: hidden;
     position: relative;
     margin: inherit;
-    width: calc(100%+24px);
+    width: calc(100% + 24px);
     height: inherit;
     overflow-y: scroll;
+    position: absolute;
 }
 
 .color1
@@ -97,7 +98,7 @@ body
     border: 3px solid var(--color-1d);
 }
 
-.tile
+[class*="-tile"]
 {
     width: 160px;
     height: 160px;
@@ -107,7 +108,7 @@ body
     box-sizing: border-box;
     cursor: pointer;
 }
-.tile:hover
+[class*="-tile"]:hover
 {
     animation-name: border_flash;
 	animation-duration: 0.7s;
@@ -119,40 +120,52 @@ body
 	from { border-color: var(--color-1d); }
 	to { border-color: var(--color-1c); }
 }
-.tile:active
+[class*="-tile"].placed
+{
+    position: absolute;
+}
+[class*="-tile"]:active
 {
     animation: none;
 }
-.tile.click-effect-left:active, .tile.click-effect-right:hover
+[class*="-tile"].click-effect-left:active, [class*="-tile"].click-effect-right:hover
 {
     -webkit-transform-origin: right 50%;
     transform-origin: right 50%;
     -webkit-transform: perspective(500px) rotateY(-0.7rad) !important;
     transform: perspective(500px) rotateY(-0.07rad) !important;
 }
-.tile.click-effect-right:active, .tile.click-effect-right:hover
+[class*="-tile"].click-effect-right:active, [class*="-tile"].click-effect-right:hover
 {
     -webkit-transform-origin: left 50%;
     transform-origin: left 50%;
     -webkit-transform: perspective(500px) rotateY(0.07rad) !important;
     transform: perspective(500px) rotateY(0.07rad) !important;
 }
-.tile.click-effect-top:active, .tile.click-effect-top:hover
+[class*="-tile"].click-effect-top:active, [class*="-tile"].click-effect-top:hover
 {
     -webkit-transform-origin: 50% bottom;
     transform-origin: 50% bottom;
     -webkit-transform: perspective(500px) rotateX(0.7rad) !important;
     transform: perspective(500px) rotateX(0.7rad) !important;
 }
-.tile.click-effect-bottom:active, .tile.click-effect-bottom:hover
+[class*="-tile"].click-effect-bottom:active, [class*="-tile"].click-effect-bottom:hover
 {
     -webkit-transform-origin: 50% top;
     transform-origin: 50% top;
     -webkit-transform: perspective(500px) rotateX(-0.7rad) !important;
     transform: perspective(500px) rotateX(-0.7rad) !important;
 }
+[class*="mini-"] { width: 80px; height: 80px; }
+[class*="base-"] { width: 160px; height: 160px; }
+[class*="wide-"] { width: 320px; height: 160px; }
+[class*="tall-"] { width: 160px; height: 320px; }
+[class*="large-"] { width: 320px; height: 320px; }
+[class*="wider-"] { width: 640px; height: 320px; }
+[class*="taller-"] { width: 320px; height: 640px; }
+[class*="larger-"] { width: 640px; height: 640px; }
 
-.tile .bar
+[class*="-tile"] .bar
 {
     padding: 0.2vh 0 0.2vh 0.4vw;
     border-radius: 0.1vw;
