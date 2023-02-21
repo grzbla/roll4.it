@@ -97,23 +97,26 @@ function RPG()
             // cosnt r =
 
             //todo select closest side
-            let effect;
-            if (right)
+            const result = this.ui.raycast({x: x, y: y}, [{x: width * 0.5, y: 0, side: "top"}, {x: width, y: height * 0.5, side: "right"},
+                                           {x: width * 0.5, y: height, side: "bottom"}, {x: 0, y: height * 0.5, side: "left"}])
+            console.log(result)
+            result.sort((a, b) =>
             {
-                effect = "click-effect-right"
-            }
-            else if (top)
-            {
-                effect = "click-effect-top"
-            }
-            else if (!right && !top)
-            {
-                effect = "click-effect-left"
-            }
-            else
-            {
-                effect = "click-effect-bottom"
-            }
+                const aAverage = (a.x + a.y) * 0.5
+                const bAverage = (b.x + b.y) * 0.5
+                if (aAverage < bAverage)
+                    return -1
+                else if (aAverage > bAverage)
+                    return 1
+
+                return 0
+            })
+            const direction = result[0]
+
+
+            let effect = "click-effect-" + direction.side
+            console.log(effect)
+
             event.target.classList.add(effect)
             setTimeout((target) =>
             {
@@ -182,6 +185,18 @@ function RPG()
 
             return position
         },
+        raycast: (point, targets) =>
+        {
+            let output = []
+            for (let i = 0, l = targets.length; i < l; i++)
+            {
+                const target =  targets[i]
+
+                const out = {...target, x: this.ui.subMinFromMax(point.x, target.x), y: this.ui.subMinFromMax(point.y, target.y)}
+                output.push(out)
+            }
+            return output
+        },
         // drag and drop1
         dnd:
         {
@@ -229,18 +244,6 @@ function RPG()
             mouseDown: (event) =>
             {
                 this.ui.getCursorPosition(event)
-            },
-            raycast: (point, targets) =>
-            {
-                let output = []
-                for (let i = 0, l = targets.length; i < l; i++)
-                {
-                    const target =  array[i]
-                    let distance = {};
-
-                    output.push({x: this.ui.subMinFromMax(point.x, target.x), y: this.ui.subMinFromMax(point.y, target.y)})
-                }
-                return output;
             },
             saveFile: (item, path, event) => //saves item as blob to path
             {
@@ -301,15 +304,6 @@ function RPG()
                     const name = this.sanitize(item.name)
                     const p = dropPath + "/" + path + name
 
-                    if (path.split("/").length == 1) //if path one segment long
-                    {
-                        //reload #home
-                        const home = get("#home")
-                        const string = home.innerHTML
-
-                        this.ui.createTile(item, event)
-                    }
-
                     if (!(await fs.exists(p)))
                         await fs.createDirectory(p)
 
@@ -325,6 +319,15 @@ function RPG()
                 else if (item.isFile)//save file if file
                 {
                     this.ui.dnd.saveFile(item, dropPath + "/" + path)
+                }
+
+                if (path.split("/").length == 1) //if path one segment long
+                {
+                    //reload #home
+                    const home = get("#home")
+                    const string = home.innerHTML
+
+                    this.ui.createTile(item, event)
                 }
             },
             getFiles: (event) => // gets files from data transfer

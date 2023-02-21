@@ -128,33 +128,33 @@ body
 {
     animation: none;
 }
-[class*="-tile"].click-effect-left:active, [class*="-tile"].click-effect-right:hover
+[class*="-tile"].click-effect-left
 {
     -webkit-transform-origin: right 50%;
     transform-origin: right 50%;
-    -webkit-transform: perspective(500px) rotateY(-0.7rad) !important;
-    transform: perspective(500px) rotateY(-0.07rad) !important;
+    -webkit-transform: perspective(500px) rotateY(-0.077rad) !important;
+    transform: perspective(500px) rotateY(-0.077rad) !important;
 }
-[class*="-tile"].click-effect-right:active, [class*="-tile"].click-effect-right:hover
+[class*="-tile"].click-effect-right
 {
     -webkit-transform-origin: left 50%;
     transform-origin: left 50%;
-    -webkit-transform: perspective(500px) rotateY(0.07rad) !important;
-    transform: perspective(500px) rotateY(0.07rad) !important;
+    -webkit-transform: perspective(500px) rotateY(0.077rad) !important;
+    transform: perspective(500px) rotateY(0.077rad) !important;
 }
-[class*="-tile"].click-effect-top:active, [class*="-tile"].click-effect-top:hover
+[class*="-tile"].click-effect-top
 {
     -webkit-transform-origin: 50% bottom;
     transform-origin: 50% bottom;
-    -webkit-transform: perspective(500px) rotateX(0.7rad) !important;
-    transform: perspective(500px) rotateX(0.7rad) !important;
+    -webkit-transform: perspective(500px) rotateX(0.077rad) !important;
+    transform: perspective(500px) rotateX(0.077rad) !important;
 }
-[class*="-tile"].click-effect-bottom:active, [class*="-tile"].click-effect-bottom:hover
+[class*="-tile"].click-effect-bottom
 {
     -webkit-transform-origin: 50% top;
     transform-origin: 50% top;
-    -webkit-transform: perspective(500px) rotateX(-0.7rad) !important;
-    transform: perspective(500px) rotateX(-0.7rad) !important;
+    -webkit-transform: perspective(500px) rotateX(-0.077rad) !important;
+    transform: perspective(500px) rotateX(-0.077rad) !important;
 }
 [class*="mini-"] { width: 80px; height: 80px; }
 [class*="base-"] { width: 160px; height: 160px; }
