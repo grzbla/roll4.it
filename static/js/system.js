@@ -358,6 +358,16 @@ function RPG()
         */
         begin: async () =>
         {
+            let root;
+            try
+            {
+                root = await fs.exists("/")
+            }
+            catch (e) //indexedb can't connect because blocked cookies/local storage
+            {
+                console.error("Can't access local database. Enable cookies or some shit.")
+                return
+            }
             /* USER, CLIENT AND INSTANCE DATA */
             let user, client;
             if(!(await fs.exists(path.user)))
