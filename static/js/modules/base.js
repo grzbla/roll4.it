@@ -5,7 +5,7 @@ import v4 from "./3rd/uuid/v4.js"
 */
 
 //system paths
-const path =
+const systemPath =
 {
     user: "user.json",
     client: "client.json",
@@ -66,4 +66,4 @@ export function uuid(length)
     return length ? v4().replace("-", "").substring(0, length) : v4().replace("-", "")
 }
 
-export {path, style, url}
+export {systemPath, style, url}

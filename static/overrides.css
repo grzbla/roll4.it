@@ -40,26 +40,26 @@
 {
     position: absolute;
 }
-[file-type="image"] .branding-bar
+[type="image"] .branding-bar
 {
     top: 0;
     left: unset;
 }
-[file-type="image"] .icon
+[type="image"] .icon
 {
     top: 0;
     left: 0;
 }
-[file-type="image"], [file-type="image"]
+[type="image"], [type="image"]
 {
     background-color: var(--color-file-image);
 }
-[file-type="video"], [file-type="video"]
+[type="video"], [type="video"]
 {
     background-color: var(--color-file-video);
 }
-[file-type="image"] .icon::after, [file-type="image"] .icon::before,
-[file-type="video"] .icon::after, [file-type="video"] .icon::before
+[type="image"] .icon::after, [type="image"] .icon::before,
+[type="video"] .icon::after, [type="video"] .icon::before
 {
     opacity: 0.2;
     box-sizing: border-box;
