@@ -202,6 +202,7 @@ div[class*='-tile'] .icon
     width: 100%;
     text-align: center;
     position: absolute;
+    pointer-events: none;
 }
 
 div[class*='-tile'] .icon:before,

@@ -1,24 +1,12 @@
-// imports
+// internal modules
 import {uuid, systemPath, style} from "./modules/base.js"
+const fs =
+{
+    get: localforage.getItem,
+    set: localforage.setItem
+}
 
-// third party imports
-import fs from "../lib/indexed.filesystem.js"
-/*
-    isFile,
-    exists,
-    copyFile,
-    moveFile,
-    readFile,
-    writeFile,
-    removeFile,
-    renameFile,
-    fileDetails,
-    readDirectory,
-    createDirectory,
-    removeDirectory,
-    rootDirectoryName
-*/
-
+// third party modules
 import browserDetect from "../lib/browser-detect.es5.js"
 
 { //make b go out of scope fast
@@ -40,6 +28,7 @@ function get(selector)
 
 function RPG()
 {
+    this.verbosity = true //output everything or output nothing
     this.fileDelay = 100
 
     /*
@@ -47,6 +36,7 @@ function RPG()
     */
     this.replacer = (string, disallowedChars, replacement) =>
     {
+        if (string && string.length > 0)
         for (let i = 0, l = disallowedChars.length; i < l; i++)
         {
             const char = disallowedChars.charAt(i)
@@ -140,39 +130,26 @@ function RPG()
             /*
                 HOME SCREEN INITIALIZATION
             */
-            if(!(await fs.exists(systemPath.home)))
-            {//indexeddb-fs is very whiny when it comes to not existing directories
-            //need to preemptively create those
-                console.log("%cHome directory needs to be created.", style.color2a)
-                let home = await fs.createDirectory(systemPath.home)
-            }
+            const home = await fs.get(systemPath.home)
+            console.log(home)
 
-            const dir = await fs.readDirectory(systemPath.home)
-            console.log("%cHome directory: " + JSON.stringify(dir, null, 2), style.color2c)
-
+            console.log("%cHome directory: " + JSON.stringify(home, null, 2), style.color2c)
             //iterate home directory directories
             //for each dir/file put tile under stored coordinates
-            const home = await fs.readDirectory("home")
             const homeElement = get("#home")
             home.directories.forEach((directory) =>
             {
-                this.ui.createTile(directory, "/home", homeElement)
+                this.ui.createTile(directory, homeElement, "home")
             })
 
             //iterate home directory files
             home.files.forEach((file) =>
             {
-                this.ui.createTile(file, "/home", homeElement)
+                this.ui.createTile(file, homeElement, "home")
             })
         },
-        createTile: async (item, path, parent) =>
+        createTile: async (item, parent, path) =>
         {
-            const isFile = await fs.isFile(item.fullPath)
-            if ( isFile && !(item.filesystem))
-            { //read from fs if file doesn't look like drag n dropped
-                item = await fs.readFile(item.fullPath)
-            }
-
             let tile = document.createElement("div")
             tile.className = (item.tile && item.tile.size ? item.tile.size : "base") + "-tile"
             tile.style.setProperty("background-color", "var(--color-" + (Math.floor(Math.random() * 7) + 1)  + "c)")
@@ -183,7 +160,7 @@ function RPG()
             tile.setAttribute("type", ((item.type == "directory") ? "directory" : item.type))
 
             let icon = document.createElement("span")
-            if (isFile)
+            if (item.type == "directory")
             {
                 icon.className = "icon fa-duotone fa-file-lines"
                 // icon.className = "icon fa-duotone fa-file-image"
@@ -200,7 +177,7 @@ function RPG()
 
             let bar = document.createElement("span")
             bar.className = "bar"
-            bar.textContent = item.name.toLowerCase()
+            bar.textContent = item.name
 
             tile.appendChild(bar)
             if (parent)
@@ -237,13 +214,56 @@ function RPG()
             }
             return output
         },
-        // drag and drop1
+        saveFile: (item, path, event) => //saves item as blob to path
+        {
+            // Get file
+            item.file((file) =>
+            {
+                file.arrayBuffer().then((arrayBuffer) =>
+                {
+                    const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
+                    const splat = file.name.split(".")
+
+                    //create file object
+                    const f = { name: this.sanitize(file.name), originalName: file.name, extension: ((splat.length > 1) ? splat.pop() : null), blob: blob, type: file.type != "" ? file.type : null, size: file.size }
+                    this.ui.writeFile(f, path, event)
+
+                    console.log(path)
+                    // and adds tiles to home folder
+                    const splort = path.split("/")
+                    console.log(splort)
+                    console.log(splort.length)
+                    if (splort.length == 2)
+                    { //qualify only top files/dirs for display in home directory
+                        this.ui.createTile(f, get("#home"), path)
+                    }
+
+                    // and then adds tiles to whatever is currently displayed in viewer
+                    // or whatever you call that shit now
+                });
+            });
+        },
+        writeFile: async (file, path, event) => // writes f to path
+        {
+            //indexeddb-fs allows only limited char set
+            //TODO this sucks, change indexeddb-fs to something else
+            const pathSanitized = this.sanitize(path)
+            path = pathSanitized.slice(0, -1) + "/" + file.name
+
+            await fs.writeFile(path, file)
+
+            //produce strings
+            let dir = path.split("/")
+            let filename = dir.pop()
+            const statsPath = dir.join("/") + "/stats.json"
+        },
+        // drag and drop
         dnd:
         {
             //disallowed file name char list
             disallowedChars:
             {
-                remove: "\\*?!\"'|()[]{}<>+`",
+                remove: "\\*@?!\"'|()[]{}<>+`",
                 underscore: ": ",
             },
             drag: (event) => // prevent default on drag
@@ -285,47 +305,17 @@ function RPG()
             {
                 this.ui.getCursorPosition(event)
             },
-            saveFile: (item, path, event) => //saves item as blob to path
+            readDroppedFiles: async (item, transferPath, dropPath, event) => // reads files at current path recursively
             {
-                // Get file
-                item.file((file) =>
-                {
-                    file.arrayBuffer().then((arrayBuffer) =>
-                    {
-                        const blob = new Blob([new Uint8Array(arrayBuffer)], { type: file.type });
-                        const splat = file.name.split(".")
-
-                        //create file object
-                        const f = { name: this.sanitize(file.name), extension: ((splat.length > 1) ? splat.pop() : null), blob: blob, type: file.type != "" ? file.type : null, size: file.size }
-                        this.ui.dnd.writeFile(f, path, event)
-                    });
-                });
-            },
-            writeFile: async (file, path, event) => // writes f to path
-            {
-                //indexeddb-fs allows only limited char set
-                //TODO this sucks, change indexeddb-fs to something else
-                const pathSanitized = this.sanitize(path)
-                path = pathSanitized.slice(0, -1) + "/" + file.name
-
-                await fs.writeFile(path, file)
-
-                //produce strings
-                let dir = path.split("/")
-                let filename = dir.pop()
-                const statsPath = dir.join("/") + "/stats.json"
-            },
-            readDroppedFiles: async (item, path, dropPath, event) => // reads files at current path recursively
-            {
-                path = path || "";
+                transferPath = transferPath || "";
 
                 // writes files to indexeddb
-                // create a+nd traverse directory if directory
+                // create directory and traverse when directory
                 if (item.isDirectory)
                 {// indexeddb-fs is whiny when it comes to directories
                 // which do not exist
                     const name = this.sanitize(item.name)
-                    const p = dropPath + "/" + path + name
+                    const p = dropPath + transferPath + name
 
                     if (!(await fs.exists(p)))
                         await fs.createDirectory(p)
@@ -335,23 +325,14 @@ function RPG()
                     {
                         for (var i = 0; i < entries.length; i++)
                         {
-                            this.ui.dnd.readDroppedFiles(entries[i], path + name + "/", dropPath, event)
+                            this.ui.dnd.readDroppedFiles(entries[i], transferPath + name + "/", dropPath, event)
                         }
                     })
                 }//save file if file
                 else if (item.isFile)
                 {
-                    this.ui.dnd.saveFile(item, dropPath + "/" + path)
+                    this.ui.saveFile(item, dropPath + "/" + transferPath)
                 }
-
-                // and adds tiles to home folder
-                const splat = path.split("/")
-                if (splat.length == 1)
-                { //qualify only top files/dirs for display in home directory
-                    this.ui.createTile(item, "/home", get("#home"))
-                }
-
-                // and then adds tiles to whatever is currently displayed in viewer or whatever you call that shit now
             },
             getFiles: (event) => // gets files from data transfer
             {
@@ -367,7 +348,6 @@ function RPG()
                     }
                 }
             }
-
         },
     }
 
@@ -383,44 +363,36 @@ function RPG()
         {
             //TODO some color saving and shit = stuff
             document.body.style.setProperty("--background-color", "var(--color-" + (Math.floor(Math.random() * 7) + 1) + "e)");
-            let root;
-            try
-            {
-                root = await fs.exists("root")
-            }
-            catch (e) //indexedb can't connect because blocked cookies/local storage
-            {
-                //TODO display ui error and confirmation prompt
-                console.error("Can't access local database. Enable cookies or some shit.\nTried reading root directory and it failed, disabled cookies/local storage is top reason.\nI'm not loading. Actual reason though:")
-                console.error(e)
-                return;
-            }
+
+
             /* USER, CLIENT AND INSTANCE DATA */
-            let user, client;
-            if(!(await fs.exists(systemPath.user)))
+            //read user for checking, declare client for assignment in following if()
+            let  user = await fs.get("user"), client
+            console.groupCollapsed("%cInitialize ID's", style.color2a)
+            if (!user)
             {
                 console.log("%cFresh start.", style.color2a)
                 console.log("%cUser and client IDs need to be created.", style.color2a)
-                user =
-                {
-                    id: uuid(4)
-                }
-                client =
-                {
-                    id: uuid(3),
-                    browser: browser
-                }
-
-                fs.writeFile(systemPath.user, user)
-                fs.writeFile(systemPath.client, user)
+                user = { id: uuid(4) }
+                client = { id: uuid(3), browser: browser }
+                await fs.set("user", user)
+                await fs.set("client", client)
+            }
+            else
+            {
+                client = await fs.get("client")
+                console.log("%cUser and client already initialized.", style.color2b)
+                console.log("%cUser", style.color2c, user)
+                console.log("%cClient", style.color2c, client)
             }
 
-            console.log("%cInstance ID needs to be created.", style.color2a)
+            console.log("%cInstance ID always needs to be created.", style.color2b)
             this.instance =
             {
                 id: uuid(3)
             }
-            console.log("%cInstance ID: " + JSON.stringify(this.instance, null, 2), style.color2b)
+            console.log("%cInstance ID: " + JSON.stringify(this.instance, null, 2), style.color2c)
+            console.groupEnd()
 
             this.ui.loadHome()
         }

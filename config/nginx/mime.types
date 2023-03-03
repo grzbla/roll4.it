@@ -4,7 +4,7 @@ types {
     text/css                                         css;
     image/gif                                        gif;
     image/jpeg                                       jpeg jpg;
-    application/javascript                           js;
+    application/javascript                           js cjs ts;
     image/png                                        png;
     image/svg+xml                                    svg svgz;
     image/tiff                                       tif tiff;
@@ -15,7 +15,7 @@ types {
     image/x-ms-bmp                                   bmp;
 
     application/font-woff                            woff woff2;
-    application/json                                 json;
+    application/json                                 json map;
     application/zip                                  zip;
 
     audio/mpeg                                       mp3;
@@ -24,7 +24,6 @@ types {
 
     application/manifest+json                        webmanifest;
     text/cache-manifest                              appcache;
-    application/leaflet.map                          map;
     application/roll4it.chunk                        chunk;
     font/ttf                                         ttf;
     font/otf                                         otf;

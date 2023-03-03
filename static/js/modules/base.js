@@ -9,7 +9,7 @@ const systemPath =
 {
     user: "user.json",
     client: "client.json",
-    home: "home"
+    home: "/home"
 }
 
 //
@@ -60,10 +60,10 @@ const style =
     blue: "white-space: break-spaces; color: #8383d2; text-shadow: #8383d2 1px 0 12px"
 }
 
-export function uuid(length)
+function uuid(length)
 {
     //if (length is defined) ? get length long uuid :else get full uuid (no -'s)
     return length ? v4().replace("-", "").substring(0, length) : v4().replace("-", "")
 }
 
-export {systemPath, style, url}
+export {systemPath, style, url, uuid}
