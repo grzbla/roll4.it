@@ -1,5 +1,5 @@
 // internal modules
-import {uuid, systemPath, style} from "./modules/base.js"
+import { directory, style, uuid, url, string, txt as txt2, File as File2} from "./modules/base.js"
 const fs =
 {
     get: localforage.getItem,
@@ -24,6 +24,11 @@ import browserDetect from "../lib/browser-detect.es5.js"
 function get(selector)
 {
     return document.querySelector(selector)
+}
+
+function txt(str)
+{
+    return txt2(str, window.rpg.language)
 }
 
 function RPG()
@@ -127,26 +132,29 @@ function RPG()
         },
         loadHome: async () =>
         {
+            console.group("%c%s", style.color2b, txt("Loading Home screen"))
             /*
                 HOME SCREEN INITIALIZATION
             */
-            const home = await fs.get(systemPath.home)
+            const home = await fs.get(directory.home)
+
+            console.log("%c%s", style.color2c, txt("Home directory: "))
             console.log(home)
 
-            console.log("%cHome directory: " + JSON.stringify(home, null, 2), style.color2c)
             //iterate home directory directories
             //for each dir/file put tile under stored coordinates
             const homeElement = get("#home")
-            home.directories.forEach((directory) =>
-            {
-                this.ui.createTile(directory, homeElement, "home")
-            })
-
-            //iterate home directory files
-            home.files.forEach((file) =>
-            {
-                this.ui.createTile(file, homeElement, "home")
-            })
+            // home.directories.forEach((directory) =>
+            // {
+            //     this.ui.createTile(directory, homeElement, "home")
+            // })
+            //
+            // //iterate home directory files
+            // home.files.forEach((file) =>
+            // {
+            //     this.ui.createTile(file, homeElement, "home")
+            // })
+            console.groupEnd()
         },
         createTile: async (item, parent, path) =>
         {
@@ -307,8 +315,6 @@ function RPG()
             },
             readDroppedFiles: async (item, transferPath, dropPath, event) => // reads files at current path recursively
             {
-                transferPath = transferPath || "";
-
                 // writes files to indexeddb
                 // create directory and traverse when directory
                 if (item.isDirectory)
@@ -317,8 +323,9 @@ function RPG()
                     const name = this.sanitize(item.name)
                     const p = dropPath + transferPath + name
 
-                    if (!(await fs.exists(p)))
-                        await fs.createDirectory(p)
+                    let home = await fs.get(p)
+                    if (!home)
+                        await fs.set(p, {})
 
                     var dirReader = item.createReader();
                     dirReader.readEntries((entries) =>
@@ -344,7 +351,7 @@ function RPG()
                     var item = items[i].webkitGetAsEntry();
                     if (item)
                     {
-                        this.ui.dnd.readDroppedFiles(item, null, dropPath, event)
+                        this.ui.dnd.readDroppedFiles(item, "/", dropPath, event)
                     }
                 }
             }
@@ -367,33 +374,39 @@ function RPG()
 
             /* USER, CLIENT AND INSTANCE DATA */
             //read user for checking, declare client for assignment in following if()
-            let  user = await fs.get("user"), client
-            console.groupCollapsed("%cInitialize ID's", style.color2a)
+            let user = await fs.get("user"), client
+            console.groupCollapsed("%c%s", style.color2a, txt("Initialize application ID's"))
             if (!user)
             {
-                console.log("%cFresh start.", style.color2a)
-                console.log("%cUser and client IDs need to be created.", style.color2a)
+                console.log("%c%s", style.color2a, txt("Fresh start."))
+                console.log("%c%s", style.color2a, txt("User and client IDs need to be created."))
                 user = { id: uuid(4) }
-                client = { id: uuid(3), browser: browser }
+
+                client = { id: uuid(3), browser: browser, language: {code: navigator.language.substring(0, 2), locale: navigator.language.substring(2, 2)}}
+                this.language = client.language.code
                 await fs.set("user", user)
                 await fs.set("client", client)
             }
             else
             {
                 client = await fs.get("client")
-                console.log("%cUser and client already initialized.", style.color2b)
-                console.log("%cUser", style.color2c, user)
-                console.log("%cClient", style.color2c, client)
+                console.log("%c%s", style.color2b, txt("User and client already initialized."))
+                console.log("%c%s", style.color2c, txt("User"))
+                console.log("%c%s", style.color2c, txt("Client"))
+                this.language = client.language
             }
 
-            console.log("%cInstance ID always needs to be created.", style.color2b)
+            console.log("%c%s", style.color2b, txt("Instance ID always needs to be created."))
             this.instance =
             {
                 id: uuid(3)
             }
-            console.log("%cInstance ID: " + JSON.stringify(this.instance, null, 2), style.color2c)
-            console.groupEnd()
+            console.log("%c%s" + JSON.stringify(this.instance, null, 2), style.color2c, txt("Instance ID: "))
 
+            const home = await fs.get(directory.home)
+            if (!home)
+                await fs.set(directory.home, new File2())
+            console.groupEnd()
             this.ui.loadHome()
         }
     }
