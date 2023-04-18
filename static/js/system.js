@@ -1,5 +1,5 @@
 // internal modules
-import { directory, style, uuid, url, string, txt as txt2, File as File2} from "./modules/base.js"
+import { directory, style, uuid, url, string, txt as txt2} from "./modules/base.js"
 const fs =
 {
     get: localforage.getItem,
@@ -138,8 +138,7 @@ function RPG()
             */
             const home = await fs.get(directory.home)
 
-            console.log("%c%s", style.color2c, txt("Home directory: "))
-            console.log(home)
+            console.log("%c%s", style.color2c, txt("Home directory: ")), console.log(home)
 
             //iterate home directory directories
             //for each dir/file put tile under stored coordinates
@@ -405,7 +404,7 @@ function RPG()
 
             const home = await fs.get(directory.home)
             if (!home)
-                await fs.set(directory.home, new File2())
+                await fs.set(directory.home, {name:"home", path: "", files: {}})
             console.groupEnd()
             this.ui.loadHome()
         }

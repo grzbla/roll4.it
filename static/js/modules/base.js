@@ -80,16 +80,6 @@ function uuid(length)
     return length ? v4().replace("-", "").substring(0, length) : v4().replace("-", "")
 }
 
-function File()
-{
-    this.array = []
-
-    this.add = () => {}
-    this.get = (name) => {}
-    this.delete = (name) => {}
-    //
-}
-
 const txt = (str, language) =>
 {
     const text = string[str][language]
@@ -144,4 +134,4 @@ const string =
 }
 
 
-export { directory, style, url, uuid, string, txt, File }
+export { directory, style, url, uuid, string, txt }

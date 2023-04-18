@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        /* STYLES */
+        :root
+        {
+            --background-color: #232323;
+            --style-border-color: #729fcf;
+            --style-background-midpoint-color: #4B6179;
+            --stat-background-midpoint-color: #526865;
+            --item-editor-background-color: #323232;
+            --stat-border-color: #81aca6;
+            --competences-border-color: #4d818f;
+            --prof-icon-color: #67979B;
+            --overlay-color: var(--background-color);
+            --fluff-color: #cf9372;
+            --fluff-background-midpoint-color: #9C7A62;
+            --fluff-background-color: #686152;
+        }
+        .hidden
+        {
+            display: none;
+        }
+        body
+        {
+            background-color: var(--background-color);
+            overflow: hidden;
+            margin: 0;
+            white-space: nowrap;
+        }
+        character
+        {
+            display: block;
+            position: relative;
+            border: 1px solid red;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            user-select: none;
+            /* opacity: 0; */
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            scroll-behavior: smooth;
+        }
+        fluff
+        {
+            height: 5vw;
+            min-height: 192px;
+            max-height: 384px;
+        }
+        information
+        {
+            display: inline-block;
+            width: 25%;
+            height: 100%;
+        }
+        information > name,
+        information > alignment,
+        information > level,
+        information > location
+        {
+            width: 20vw;
+            height: 3vw;
+            color: var(--fluff-color);
+            border: 1px solid var(--fluff-color);
+            font-size: 1.7vw;
+            font-family: "Fantiasie Artistique";
+            font-variant: small-caps;
+            text-shadow: -0.23vw 0px 0px var(--background-color), 0.23vw 0px 0px var(--background-color),
+            0.08vw 0.08vw 0.08vw var(--background-color), 0.08vw -0.08vw 0.08vw var(--background-color),
+            -0.08vw 0.08vw 0.08vw var(--background-color), -0.08vw -0.08vw 0.08vw var(--background-color),
+            0.08vw 0px 0.08vw var(--background-color), 0px 0.08vw 0.08vw var(--background-color),
+            -0.08vw 0px 0.08vw var(--background-color), 0px -0.08vw 0.08vw var(--background-color);
+            outline: none;
+            text-align: center;
+            line-height: 3vw;
+            transition: border 0.3s ease-out;
+            opacity: 1;
+            top: 1vw;
+            cursor: pointer;
+            background-color: var(--background-color);
+        }
+        information > name:hover,
+        information > alignment:hover,
+        information > level:hover,
+        information > location:hover
+        {
+            border: 1px solid var(--fluff-background-midpoint-color);
+        }
+        appearance
+        {
+            position: absolute;
+            display: inline-block;
+            position: relative;
+            min-height: 500px;
+            height: 25%;
+            min-width: 500px;
+            width: 80%;
+            border: 1px solid blue;
+            left: 0px;
+
+        }
+        appearance[type="weapon"]
+        {
+            position: absolute;
+        }
+    </style>
+    <script src="base.js"></script>
+</head>
+<body>
+    <character-sheet system="dnd9" language="en" source="indexeddb/local/uri|httpuri|base64data">
+        <section class="fluff">
+            <information>
+                <full-name value="bob the bob"/>
+                <character-experience exp="12000"/>
+                <origin-place name="caves of blogronthaurd" source="indexeddb/local/uri|httpuri|base64data"/>
+            </information>
+
+            <item-card type="weapon" source="indexeddb/local/uri|httpuri|base64data"/>
+            <item-card type="portrait" source="indexeddb/local/uri|httpuri|base64data"/>
+            <item-card type="apparel" source="indexeddb/local/uri|httpuri|base64data"/>
+        </section>
+
+        <section class="attributes">
+            <primary-stat type="str" value="14" proficient/>
+            <primary-stat type="int" value="8" proficient/>
+            <armor-class type="ac" value="24"/>
+            <hit-points type="hp" value="8"/>
+            <attack-skill type="attack" value="12"/>
+            <primary-stat type="wis" value="12" proficient/>
+            <primary-stat type="dex" value="18" proficient/>
+        </section>
+
+        <section class="secondary">
+            <proficiency-bonus value="2"/>
+            <initiative-score value="3">
+            <speed-rating value="4"/>
+        </section>
+
+        <section class="gear">
+            <div class="arms">
+                <item-card type="left wrist"/>
+                <item-card type="forearms"/>
+                <item-card type="right wrist"/>
+            </div>
+
+            <div class="hands">
+                <item-card type="left ring"/>
+                <item-card type="hands"/>
+                <item-card type="right ring"/>
+            </div>
+
+            <div class="head">
+                <item-card type="ears"/>
+                <item-card type="head"/>
+            </div>
+
+            <div class="shoulders">
+                <item-card type="shoulders"/>
+                <item-card type="neck"/>
+            </div>
+
+            <item-card type="waist"/>
+            <item-card type="feet"/>
+        </section>
+
+        <section class="talent">
+            <character-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <racial-bonuses klupatron="3" efregmnal="2" notrandomname="1"/>
+            <racial-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <class-bonuses fighter="4" wizard="3" rogue="2" ramgner="1"/>
+            <class-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <subclass-bonuses barbarian="1" conjurer="3" swashbuckler="2" beastmaster="1"/>
+            <subclass-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <spells/>
+            <specialabilities/>
+        </section>
+
+        <section class="wealth">
+            <wealth-carrying />
+            <currency-owned />
+            <valuables-owned />
+            <assets-owned />
+            <properties-owned />
+        </section>
+
+        <section class="contacts">
+            <active-companions />
+            <world-of-pcs-and-npcs />
+        </section>
+    </character-sheet>
+</body>
+</html>
