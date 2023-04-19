@@ -108,20 +108,20 @@
             position: absolute;
         }
     </style>
-    <script src="base.js"></script>
+    <script type="module" src="rpghub.js"></script>
 </head>
 <body>
-    <character-sheet system="dnd9" language="en" source="indexeddb/local/uri|httpuri|base64data">
+    <character-sheet system="dnd9" language="en" source="indexeddb/local/uri|httpuri.json|base64data">
         <section class="fluff">
             <information>
                 <full-name value="bob the bob"/>
                 <character-experience exp="12000"/>
-                <origin-place name="caves of blogronthaurd" source="indexeddb/local/uri|httpuri|base64data"/>
+                <origin-place name="caves of blogronthaurd" source="indexeddb/local/uri|httpuri.json|base64data"/>
             </information>
 
-            <item-card type="weapon" source="indexeddb/local/uri|httpuri|base64data"/>
-            <item-card type="portrait" source="indexeddb/local/uri|httpuri|base64data"/>
-            <item-card type="apparel" source="indexeddb/local/uri|httpuri|base64data"/>
+            <item-card type="weapon" source="indexeddb/local/uri|httpuri.json|base64data"/>
+            <item-card type="portrait" source="indexeddb/local/uri|httpuri.json|base64data"/>
+            <item-card type="apparel" source="indexeddb/local/uri|httpuri.json|base64data"/>
         </section>
 
         <section class="attributes">
@@ -168,28 +168,36 @@
         </section>
 
         <section class="talent">
-            <character-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <character-options data="indexeddb/local/uri|httpuri.json|base64data"/>
             <racial-bonuses klupatron="3" efregmnal="2" notrandomname="1"/>
-            <racial-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <racial-options data="indexeddb/local/uri|httpuri.json|base64data"/>
             <class-bonuses fighter="4" wizard="3" rogue="2" ramgner="1"/>
-            <class-options data="indexeddb/local/uri|httpuri|base64data"/>
+            <class-options data="indexeddb/local/uri|httpuri.json|base64data"/>
             <subclass-bonuses barbarian="1" conjurer="3" swashbuckler="2" beastmaster="1"/>
-            <subclass-options data="indexeddb/local/uri|httpuri|base64data"/>
-            <spells/>
-            <specialabilities/>
+            <subclass-options data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <spell-book data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <special-abilities data="indexeddb/local/uri|httpuri.json|base64data"/>
         </section>
 
         <section class="wealth">
-            <wealth-carrying />
-            <currency-owned />
-            <valuables-owned />
-            <assets-owned />
-            <properties-owned />
+            <cash-carried cash="120" goods="400"/>
+            <currency-stashed value="2500"/>
+            <valuables-stored data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <personal-properties data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <assets-owned data="indexeddb/local/uri|httpuri.json|base64data"/>
         </section>
 
         <section class="contacts">
-            <active-companions />
-            <world-of-pcs-and-npcs />
+            <active-fellowship data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <potential-allies data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <definite-enemies data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <known-characters data="indexeddb/local/uri|httpuri.json|base64data"/>
+        </section>
+
+        <section class="reputation">
+            <character-accomplishments data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <heroic-deeds data="indexeddb/local/uri|httpuri.json|base64data"/>
+            <legendary-achievements data="indexeddb/local/uri|httpuri.json|base64data"/>
         </section>
     </character-sheet>
 </body>
