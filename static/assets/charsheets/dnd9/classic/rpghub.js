@@ -7,7 +7,7 @@ class CharacterSheetElement extends HTMLElement
     {
         super()
 
-        test()
+        test(this)
     }
 }
 
@@ -30,6 +30,7 @@ class SpeedRatingElement extends HTMLElement { constructor() { super() } }
 
 class CharacterOptionsElement extends HTMLElement { constructor() { super() } }
 class RacialBonusesElement extends HTMLElement { constructor() { super() } }
+class RacialOptionsElement extends HTMLElement { constructor() { super() } }
 class ClassBonusesElement extends HTMLElement { constructor() { super() } }
 class ClassOptionsElement extends HTMLElement { constructor() { super() } }
 class SubclassBonusesElement extends HTMLElement { constructor() { super() } }
@@ -49,37 +50,39 @@ class DefiniteEnemiesElement extends HTMLElement { constructor() { super() } }
 
 customElements.define('character-sheet', CharacterSheetElement);
 
-customElements.define('full-name', EmptyElement)
-customElements.define('character-experience', EmptyElement)
-customElements.define('origin-place', EmptyElement)
+customElements.define('full-name', FullNameElement)
+customElements.define('character-experience', CharacterExperienceElement)
+customElements.define('origin-place', OriginPlaceElement)
 
-customElements.define('item-card', EmptyElement)
+customElements.define('item-card', ItemCardElement)
 
-customElements.define('primary-stat', EmptyElement)
-customElements.define('armor-class', EmptyElement)
-customElements.define('hit-points', EmptyElement)
-customElements.define('attack-skill', EmptyElement)
+customElements.define('primary-stat', PrimaryStatElement)
+customElements.define('armor-class', ArmorClassElement)
+customElements.define('hit-points', HitPointsElement)
+customElements.define('attack-skill', AttackSkillElement)
 
-customElements.define('proficiency-bonus', EmptyElement)
-customElements.define('initiative-score', EmptyElement)
-customElements.define('speed-rating', EmptyElement)
+customElements.define('proficiency-bonus', ProficiencyBonusElement)
+customElements.define('initiative-score', InitiativeScoreElement)
+customElements.define('speed-rating', SpeedRatingElement)
 
-customElements.define('character-options', EmptyElement)
-customElements.define('racial-bonuses', EmptyElement)
-customElements.define('racial-options', EmptyElement)
-customElements.define('class-bonuses', EmptyElement)
-customElements.define('class-options', EmptyElement)
-customElements.define('subclass-bonuses', EmptyElement)
-customElements.define('subclass-options', EmptyElement)
-customElements.define('spell-book', EmptyElement)
-customElements.define('special-abilities', EmptyElement)
+customElements.define('character-options', CharacterOptionsElement)
+customElements.define('racial-bonuses', RacialBonusesElement)
+customElements.define('racial-options', RacialOptionsElement)
 
-customElements.define('cash-carried', EmptyElement)
-customElements.define('currency-stashed', EmptyElement)
-customElements.define('valuables-stored', EmptyElement)
-customElements.define('personal-properties', EmptyElement)
-customElements.define('assets-owned', EmptyElement)
+customElements.define('class-bonuses', ClassBonusesElement)
+customElements.define('class-options', ClassOptionsElement)
+customElements.define('subclass-bonuses', SubclassBonusesElement)
+customElements.define('subclass-options', SubclassOptionsElement)
 
-customElements.define('active-fellowship', EmptyElement)
-customElements.define('potential-allies', EmptyElement)
-customElements.define('definite-enemies', EmptyElement)
+customElements.define('spell-book', SpellbookElement)
+customElements.define('special-abilities', SpecialAbilitiesElement)
+
+customElements.define('cash-carried', CashCarriedElement)
+customElements.define('currency-stashed', CurrencyStashedElement)
+customElements.define('valuables-stored', ValuablesStoredElement)
+customElements.define('personal-properties', PersonalPropertiesElement)
+customElements.define('assets-owned', AssetsOwnedElement)
+
+customElements.define('active-fellowship', ActiveFellowshipElement)
+customElements.define('potential-allies', PotentialAlliesElement)
+customElements.define('definite-enemies', DefiniteEnemiesElement)
