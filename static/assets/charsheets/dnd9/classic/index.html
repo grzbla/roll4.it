@@ -111,17 +111,17 @@
     <script type="module" src="rpghub.js"></script>
 </head>
 <body>
-    <character-sheet system="dnd9" language="en" source="indexeddb/local/uri|httpuri.json|base64source">
+    <character-sheet system="dnd9" language="en" source="https://roll4.it/assets/charsheets/dnd9/classic/fetchme.json">
         <section class="fluff">
             <information>
                 <full-name value="bob the bob"/>
                 <character-experience exp="12000"/>
-                <origin-place name="caves of blogronthaurd" source="indexeddb/local/uri|httpuri.json|base64source"/>
+                <origin-place name="caves of blogronthaurd" source="indexeddb/local/uri|http/uri.json|base64source"/>
             </information>
 
-            <item-card type="weapon" source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <item-card type="portrait" source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <item-card type="apparel" source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <item-card type="weapon" source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <item-card type="portrait" source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <item-card type="apparel" source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="attributes">
@@ -167,43 +167,45 @@
             <item-card type="feet"/>
         </section>
 
-        <section class="background">
-            <character-options source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <racial-bonuses klupatron="3" efregmnal="2" notrandomname="1"/>
-            <racial-options source="indexeddb/local/uri|httpuri.json|base64source"/>
+        <section class="identity">
+            <character-options source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <racial-bonuses halfelf="3" halforc="2" halfworchestershiresauce="1"/>
+            <racial-options source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <background-bonuses medic="3" blacksmith="2" noble="1"/>
+            <background-options source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="talent">
             <class-bonuses fighter="4" wizard="3" rogue="2" ramgner="1"/>
-            <class-options source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <class-options source="indexeddb/local/uri|http/uri.json|base64source"/>
             <subclass-bonuses barbarian="1" conjurer="3" swashbuckler="2" beastmaster="1"/>
-            <subclass-options source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <subclass-options source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="expertise">
-            <spell-book source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <special-abilities source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <spell-book source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <special-abilities source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="wealth">
             <cash-carried cash="120" goods="400"/>
             <currency-stashed value="2500"/>
-            <valuables-stored source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <personal-properties source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <assets-owned source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <valuables-stored source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <personal-properties source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <assets-owned source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="contacts">
-            <active-fellowship source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <potential-allies source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <definite-enemies source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <known-characters source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <active-fellowship source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <potential-allies source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <definite-enemies source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <known-characters source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
 
         <section class="reputation">
-            <character-accomplishments source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <heroic-deeds source="indexeddb/local/uri|httpuri.json|base64source"/>
-            <legendary-achievements source="indexeddb/local/uri|httpuri.json|base64source"/>
+            <character-accomplishments source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <heroic-deeds source="indexeddb/local/uri|http/uri.json|base64source"/>
+            <legendary-achievements source="indexeddb/local/uri|http/uri.json|base64source"/>
         </section>
     </character-sheet>
 </body>

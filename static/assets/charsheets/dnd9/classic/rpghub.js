@@ -1,19 +1,108 @@
-import { test } from "./system.js"
+import { grab, element } from "./system.js"
 
-
-class CharacterSheetElement extends HTMLElement
+/*  CORE RPG HUB ELEMENT
+    from which every custom element should inherit  */
+class RPGHubElement extends HTMLElement
 {
+    /*  constructor with super() is required    */
+    constructor()
+    {
+        super()
+    }
+
+    /*  attributeChangedCallback(name, oldValue, newValue)
+        [    triggers when attribute is changed             ]
+        [    or set for the first time while loading html   ]
+
+        element.processElementAttribute(name, oldValue, newValue)
+        [   contains attributeNameJunction branching:       ]
+
+        [   responsible for launching                       ]
+        {   proper function for separate attributes         }
+        {   returns result if applicable                    }
+        {   source attribute will return .json file         }
+
+        this.processElement({name, result, oldValue, newValue})
+        [   is declared in elements extending RPGHubElement ]
+        [   contains element specific processing for        ]
+        [   attribute change events, which include          ]
+        [   first time html parse                           ]*/
+    async attributeChangedCallback(name, oldValue, newValue)
+    {
+        const event = {
+            name: name,
+            oldValue: oldValue,
+            newValue: newValue,
+            progressCallback: this.progressCallback
+        }
+
+        const response = await element.processElementAttribute(event)
+
+        console.log(response)
+        if (response)
+        {
+            if(response[0] == "{")
+                event.response = JSON.parse(response)
+        }
+
+        if (this.processElement)
+            this.processElement(event)
+    }
+
+}
+
+
+class CharacterSheetElement extends RPGHubElement
+{
+    /*
+        CharacterSheetElement has three control attributes
+
+        [   source is a link, idb path or base64 string     ]
+        {   result is a .json file with character data      }
+
+        [   language determines translation table if exists ]
+        {   result is element reload with new locale        }
+
+        [   system determines scripting and descriptions    ]
+        {   result is element reload with new terminology   }
+    */
+    static get observedAttributes()
+    {
+        return ['source', 'language', 'system'];
+    }
+
     constructor()
     {
         super()
 
-        test(this)
     }
+
+    processElement(event)
+    {
+        console.log("processElement", event)
+    }
+
+    progressCallback(progress)
+    {
+        console.log(progress)
+    }
+
+    /* getters and setters because i want that short
+        element.property = value instruction instead
+        of element.(get|set)Attribute */
+    get source() { return this.getAttribute("source") }
+    set source(v) { this.setAttribute("source", v) }
 }
 
 
 
-class FullNameElement extends HTMLElement { constructor() { super() } }
+class FullNameElement extends HTMLElement
+{
+    constructor()
+    {
+        super()
+    }
+}
 class CharacterExperienceElement extends HTMLElement { constructor() { super() } }
 class OriginPlaceElement extends HTMLElement { constructor() { super() } }
 
