@@ -50,7 +50,7 @@ function Junction()
             {
                 resolve(this.map.get(name)(arg))
             }
-            catch (e) { console.log("Junction name", name, "not found.")}
+            catch (e) { }
             finally { resolve(undefined) }
         })
     }
@@ -143,9 +143,11 @@ function Element()
                 if (data)
                     resolve(data)
                 else
+                {
                     resolve(undefined)
+                    console.log("data empty")
 
-                console.log("data empty")
+                }
             })
         },
         language: () => {}

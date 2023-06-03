@@ -1,3 +1,71 @@
 {
-    "I am file": "Fetch me daddy."
+    "information":
+    {
+        "full-name": {"value": "bob the bob"},
+        "character-experience": {"value": 12000},
+        "origin-place": { "name": "caves of blogronthaurd",
+            "information": {},
+            "location": "22.2,22.2"}
+    },
+    "fluff":
+    {
+        "weapon": {"name": "assword", "type": "longsword", "proficiency": "martial",
+                   "range": "melee", "description": "some sample text here", "traits": {}, "image": "blob", "originalImage": "blob"},
+        "portrait": {"image": "blob", "originalImage": "blob"},
+        "apparel": {"name": "gray cloack of relentless flasher", "type": "shoulders",
+                   "description": "some sample text here", "traits": {}, "image": "blob", "originalImage": "blob"}
+    },
+    "attributes":
+    {
+        "str": { "value": 14, "proficient": true },
+        "int": { "value": 8, "proficient": true },
+        "wis": { "value": 12, "proficient": true },
+        "dex": { "value": 18, "proficient": true },
+        "attack": {"value": 12 },
+        "ac": {"value": 24 },
+        "hp": {"value": 8 }
+    },
+    "secondary":
+    {
+        "proficiency-bonus": { "value": 2 },
+        "initiative-score": { "value": 3 },
+        "speed-rating": { "value": 4 }
+    },
+    "gear":
+    {
+        "forearms": { "name": "bracers of the racers", "bonuses": {},
+                      "slot": "forearms", "description": {}}
+    },
+    "identity":
+    {
+        "character-options": [],
+        "racial-bonuses": {"halfelf": 3, "halforc": 2, "halfworchestershiresauce": 1},
+        "racial-options": [],
+        "background-bonuses": {"medic": 3, "blacksmith": 2, "noble": 1},
+        "background-options": []
+    },
+    "talent":
+    {
+        "class-bonuses": {"fighter": 4, "wizard": 3, "rogue": 2, "ramgner": 1},
+        "class-options": [],
+        "subclass-bonuses": {"barbarian": 1, "conjurer": 2, "swashbuckler": 3, "beastmaster": 4},
+        "subclass-options": []
+    },
+    "expertise":
+    {
+
+    },
+    "wealth":
+    {
+        "cash-carried": {"cash": 120, "goods": 400},
+        "currency-stashed": {"value": 2500}
+    },
+    "contacts":
+    {
+
+    },
+    "reputation":
+    {
+
+    }
 }

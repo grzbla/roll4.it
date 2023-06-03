@@ -38,7 +38,6 @@ class RPGHubElement extends HTMLElement
 
         const response = await element.processElementAttribute(event)
 
-        console.log(response)
         if (response)
         {
             if(response[0] == "{")
@@ -74,7 +73,6 @@ class CharacterSheetElement extends RPGHubElement
     constructor()
     {
         super()
-
     }
 
     processElement(event)
